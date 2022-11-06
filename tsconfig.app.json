@@ -7,6 +7,17 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": [
+      "vite/client",
+      "vite-plugin-pages/client",
+      "vite-plugin-vue-layouts/client"
+    ],
+    "include": [
+      "vite.config.*",
+      "env.d.ts",
+      "src/**/*",
+      "src/**/*.vue"
+    ]
   }
 }

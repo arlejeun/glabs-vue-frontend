@@ -1,13 +1,13 @@
 <template>
   <div class="item">
     <i>
-      <slot name="icon"></slot>
+      <slot name="icon" />
     </i>
     <div class="details">
       <h3>
-        <slot name="heading"></slot>
+        <slot name="heading" />
       </h3>
-      <slot></slot>
+      <slot />
     </div>
   </div>
 </template>
@@ -48,8 +48,8 @@ h3 {
 
   i {
     top: calc(50% - 25px);
-    left: -26px;
-    position: absolute;
+    left: 0 px;
+    position: relative;
     border: 1px solid var(--color-border);
     background: var(--color-background);
     border-radius: 8px;
