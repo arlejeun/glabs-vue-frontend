@@ -7,8 +7,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    BasicNavBar: typeof import('./src/components/menu/BasicNavBar.vue')['default']
-    copy: typeof import('./src/components/menu/NavBar1 copy.vue')['default']
+    BasicNavBar: typeof import('./components/header/BasicNavBar.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
     ElCheckboxGroup: typeof import('element-plus/es')['ElCheckboxGroup']
@@ -28,17 +27,17 @@ declare module '@vue/runtime-core' {
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTimePicker: typeof import('element-plus/es')['ElTimePicker']
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
-    IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
-    IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
-    IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
-    IconSupport: typeof import('./src/components/icons/IconSupport.vue')['default']
-    IconTooling: typeof import('./src/components/icons/IconTooling.vue')['default']
-    NavBar: typeof import('./src/components/menu/NavBar.vue')['default']
-    NavBar1: typeof import('./src/components/menu/NavBar1.vue')['default']
+    HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    IconCommunity: typeof import('./components/icons/IconCommunity.vue')['default']
+    IconDocumentation: typeof import('./components/icons/IconDocumentation.vue')['default']
+    IconEcosystem: typeof import('./components/icons/IconEcosystem.vue')['default']
+    IconSupport: typeof import('./components/icons/IconSupport.vue')['default']
+    IconTooling: typeof import('./components/icons/IconTooling.vue')['default']
+    NavBar: typeof import('./components/header/NavBar.vue')['default']
+    NavBar1: typeof import('./components/header/NavBar1.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
-    WelcomeItem: typeof import('./src/components/WelcomeItem.vue')['default']
+    TheWelcome: typeof import('./components/TheWelcome.vue')['default']
+    WelcomeItem: typeof import('./components/WelcomeItem.vue')['default']
   }
 }

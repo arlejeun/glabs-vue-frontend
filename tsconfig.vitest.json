@@ -9,6 +9,6 @@
       "vite-plugin-vue-layouts/client",
       "vite-plugin-pages/client",
       "element-plus/global"
-    ],
+    ]
   }
 }

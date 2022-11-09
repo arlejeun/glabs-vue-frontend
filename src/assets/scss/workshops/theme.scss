@@ -69,8 +69,8 @@
 }
 @font-face {
     font-family: 'Novacento Sans Wide';
-    src: url("~assets/sass/workshops/fonts/Novecentosanswide-UltraLight-webfont.eot");
-    src: url("~assets/sass/workshops/fonts/Novecentosanswide-UltraLight-webfont.eot?#iefix") format("embedded-opentype"), url("~assets/sass/workshops/fonts/Novecentosanswide-UltraLight-webfont.woff2") format("woff2"), url("~assets/sass/workshops/fonts/Novecentosanswide-UltraLight-webfont.woff") format("woff"), url("~assets/sass/workshops/fonts/Novecentosanswide-UltraLight-webfont.ttf") format("truetype"), url("~assets/sass/workshops/fonts/Novecentosanswide-UltraLight-webfont.svg#novecento_sans_wideultralight") format("svg");
+    src: url("@/assets/scss/workshops/fonts/Novecentosanswide-UltraLight-webfont.eot");
+    src: url("@/assets/scss/workshops/fonts/Novecentosanswide-UltraLight-webfont.eot?#iefix") format("embedded-opentype"), url("@/assets/scss/workshops/fonts/Novecentosanswide-UltraLight-webfont.woff2") format("woff2"), url("@/assets/scss/workshops/fonts/Novecentosanswide-UltraLight-webfont.woff") format("woff"), url("@/assets/scss/workshops/fonts/Novecentosanswide-UltraLight-webfont.ttf") format("truetype"), url("@/assets/scss/workshops/fonts/Novecentosanswide-UltraLight-webfont.svg#novecento_sans_wideultralight") format("svg");
     font-style: normal;
     font-weight: 200;
 }
@@ -78,13 +78,13 @@
     font-family: 'Work Sans';
     font-style: normal;
     font-weight: 300;
-    src: url("~assets/sass/workshops/fonts/Work_Sans_300.eot?#iefix") format("embedded-opentype"), url("~assets/sass/workshops/fonts/Work_Sans_300.woff") format("woff"), url("~assets/sass/workshops/fonts/Work_Sans_300.woff2") format("woff2"), url("~assets/sass/workshops/fonts/Work_Sans_300.svg#WorkSans") format("svg"), url("~assets/sass/workshops/fonts/Work_Sans_300.ttf") format("truetype");
+    src: url("@/assets/scss/workshops/fonts/Work_Sans_300.eot?#iefix") format("embedded-opentype"), url("@/assets/scss/workshops/fonts/Work_Sans_300.woff") format("woff"), url("@/assets/scss/workshops/fonts/Work_Sans_300.woff2") format("woff2"), url("@/assets/scss/workshops/fonts/Work_Sans_300.svg#WorkSans") format("svg"), url("@/assets/scss/workshops/fonts/Work_Sans_300.ttf") format("truetype");
 }
 @font-face {
     font-family: 'Work Sans';
     font-style: normal;
     font-weight: 500;
-    src: url("~assets/sass/workshops/fonts/Work_Sans_500.eot?#iefix") format("embedded-opentype"), url("~assets/sass/workshops/fonts/Work_Sans_500.woff") format("woff"), url("~assets/sass/workshops/fonts/Work_Sans_500.woff2") format("woff2"), url("~assets/sass/workshops/fonts/Work_Sans_500.svg#WorkSans") format("svg"), url("~assets/sass/workshops/fonts/Work_Sans_500.ttf") format("truetype");
+    src: url("@/assets/scss/workshops/fonts/Work_Sans_500.eot?#iefix") format("embedded-opentype"), url("@/assets/scss/workshops/fonts/Work_Sans_500.woff") format("woff"), url("@/assets/scss/workshops/fonts/Work_Sans_500.woff2") format("woff2"), url("@/assets/scss/workshops/fonts/Work_Sans_500.svg#WorkSans") format("svg"), url("@/assets/scss/workshops/fonts/Work_Sans_500.ttf") format("truetype");
 }
 body {
     background: #fff;

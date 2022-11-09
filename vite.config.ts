@@ -1,7 +1,7 @@
 import { URL, fileURLToPath } from 'node:url'
 
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import Vue from '@vitejs/plugin-vue'
 import Pages from 'vite-plugin-pages'
 import Layouts from 'vite-plugin-vue-layouts'
 import Components from 'unplugin-vue-components/vite'
@@ -22,22 +22,25 @@ export default defineConfig({
     },
   },
   plugins: [
-    vue(),
-    Pages({}),
+    Vue(),
+    Pages({ extensions: ['vue', 'md'] }),
     Layouts(),
-    Components({
-      dirs: ['src/components'],
-      resolvers: [ElementPlusResolver()],
-      dts: true,
-    }),
     AutoImport({
-      include: [
-        /\.vue$/, /\.vue\?vue/, // .vue
-        /\.md$/, // .md
-      ],
-      imports: ['vue', 'vue-router', '@vueuse/core', 'pinia'],
+      imports: ['vue', 'vue-router', '@vueuse/head', '@vueuse/core', 'pinia'],
       resolvers: [ElementPlusResolver()],
       vueTemplate: true,
+      dirs: [
+        'src/composables',
+        'src/store',
+      ],
+      dts: 'src/auto-imports.d.ts',
+    }),
+    Components({
+      extensions: ['vue', 'md'],
+      dirs: ['src/components'],
+      resolvers: [ElementPlusResolver()],
+      include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
+      dts: 'src/components.d.ts',
     }),
     Markdown({
       wrapperClasses: 'prose prose-sm m-auto text-left',
@@ -49,9 +52,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-      '@bootstrap': fileURLToPath(
-        new URL('node_modules/bootstrap', import.meta.url),
-      ),
     },
   },
   build: {

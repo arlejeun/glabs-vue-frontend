@@ -46,5 +46,5 @@
 
 <route lang="yaml">
 meta:
-  layout: TopNavigationOnly1
+  layout: BasicTopNavigationLayout
   </route>

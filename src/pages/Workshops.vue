@@ -106,5 +106,5 @@ import TheWelcome from '../components/TheWelcome.vue'
 
 <route lang="yaml">
 meta:
-  layout: TopNavigationOnly
+  layout: BasicTopNavigationLayout
 </route>

@@ -101,10 +101,10 @@ import TheWelcome from '../components/TheWelcome.vue'
 </template>
 
 <style scoped lang="scss">
-// @import "@/assets/sass/workshops/home/site.scss";
+  @import "@/assets/scss/workshops/home/site.scss";
 </style>
 
 <route lang="yaml">
 meta:
-  layout: TopNavigationOnly1
+  layout: BasicTopNavigationLayout
 </route>

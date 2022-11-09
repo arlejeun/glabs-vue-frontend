@@ -18,6 +18,7 @@
       "vite.config.*",
       "env.d.ts",
       "src/**/*",
+      "**/*/*.d.ts",
       "src/**/*.vue"
     ]
   }
