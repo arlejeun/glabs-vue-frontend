@@ -142,6 +142,7 @@ import SupportIcon from './icons/IconSupport.vue'
     </template>
     <template #heading>
       Support Vue
+      <el-button type="danger">Danger</el-button>
     </template>
 
     As an independent project, Vue relies on community backing for its

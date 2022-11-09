@@ -1,4 +1,5 @@
 <script lang="ts">
+import { defineComponent, resolveComponent, h } from "vue";
 export default defineComponent({
   setup() {
     const routerView = resolveComponent('router-view')

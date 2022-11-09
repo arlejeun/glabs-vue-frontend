@@ -1,20 +1,50 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <el-row>
+    <el-col :span="24"><div class="grid-content ep-bg-purple-dark" /></el-col>
+  </el-row>
+  <el-row>
+    <el-col :span="12"><div class="grid-content ep-bg-purple" /></el-col>
+    <el-col :span="12"><div class="grid-content ep-bg-purple-light" /></el-col>
+  </el-row>
+  <el-row>
+    <el-col :span="8"><div class="grid-content ep-bg-purple" /></el-col>
+    <el-col :span="8"><div class="grid-content ep-bg-purple-light" /></el-col>
+    <el-col :span="8"><div class="grid-content ep-bg-purple" /></el-col>
+  </el-row>
+  <el-row>
+    <el-col :span="6"><div class="grid-content ep-bg-purple" /></el-col>
+    <el-col :span="6"><div class="grid-content ep-bg-purple-light" /></el-col>
+    <el-col :span="6"><div class="grid-content ep-bg-purple" /></el-col>
+    <el-col :span="6"><div class="grid-content ep-bg-purple-light" /></el-col>
+  </el-row>
+  <el-row>
+    <el-col :span="4"><div class="grid-content ep-bg-purple" /></el-col>
+    <el-col :span="4"><div class="grid-content ep-bg-purple-light" /></el-col>
+    <el-col :span="4"><div class="grid-content ep-bg-purple" /></el-col>
+    <el-col :span="4"><div class="grid-content ep-bg-purple-light" /></el-col>
+    <el-col :span="4"><div class="grid-content ep-bg-purple" /></el-col>
+    <el-col :span="4"><div class="grid-content ep-bg-purple-light" /></el-col>
+  </el-row>
 </template>
 
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
+<style lang="scss">
+.el-row {
+  margin-bottom: 20px;
+}
+.el-row:last-child {
+  margin-bottom: 0;
+}
+.el-col {
+  border-radius: 4px;
+}
+
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
 }
 </style>
 
 <route lang="yaml">
 meta:
-  layout: navigation
+  layout: TopNavigationOnly1
   </route>

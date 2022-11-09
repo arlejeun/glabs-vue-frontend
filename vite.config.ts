@@ -6,17 +6,28 @@ import Pages from 'vite-plugin-pages'
 import Layouts from 'vite-plugin-vue-layouts'
 import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Markdown from 'vite-plugin-vue-markdown'
 import DefineOptions from 'unplugin-vue-define-options/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      scss: { 
+         // example : additionalData: `@import "./src/design/styles/variables";`
+         // dont need include file extend .scss
+          //additionalData: `@import "src/assets/scss/style"`
+      }
+    },
+  },
   plugins: [
     vue(),
     Pages({}),
     Layouts(),
     Components({
       dirs: ['src/components'],
+      resolvers: [ElementPlusResolver()],
       dts: true,
     }),
     AutoImport({
@@ -25,6 +36,7 @@ export default defineConfig({
         /\.md$/, // .md
       ],
       imports: ['vue', 'vue-router', '@vueuse/core', 'pinia'],
+      resolvers: [ElementPlusResolver()],
       vueTemplate: true,
     }),
     Markdown({
