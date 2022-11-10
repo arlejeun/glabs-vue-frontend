@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const theme = useStorage('data-theme', undefined)
+//const theme = useStorage('data-theme', undefined)
 // const root = document.documentElement
 // if (theme.value === 'dark' && theme.value !== undefined)
 //   root.classList.add('dark-mode')

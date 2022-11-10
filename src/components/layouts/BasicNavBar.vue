@@ -2,22 +2,24 @@
 // import { useWindowSize } from '@vueuse/core'
 const { width } = useWindowSize()
 const isMobile = computed(() => width.value < 750)
-const theme = useLayoutGlobalState()
-const root = document.documentElement
+
+const useTheme = createGlobalState(() => useStorage('data-theme', 'dark'))
+const layoutState = useTheme()
+
+const state = useGlobalState()
 
 async function changeTheme() {
   // eslint-disable-next-line no-console
-  console.log(`Change Theme - current ${theme.value}`)
-  if (theme.value === 'dark') {
+  console.log(`Change Theme - current ${layoutState.value}`)
+  if (layoutState.value === 'dark') {
   // || theme.value === '' || theme.value === undefined) {
-    root.classList.remove('dark-mode')
+    document.documentElement.classList.remove('dark-mode')
     localStorage.setItem('data-theme', '')
-    await nextTick()
   }
   else {
-    root.classList.add('dark-mode')
+    document.documentElement.classList.add('dark-mode')
     localStorage.setItem('data-theme', 'dark')
-    await nextTick()
+    // await nextTick()
   }
 }
 </script>
@@ -28,9 +30,9 @@ async function changeTheme() {
     <nav class="navbar navbar-expand-xl pt-0 bg-primary">
       <div class="container">
         <!-- Logo START -->
-        <a
+        <router-link
           class="navbar-brand"
-          href="index.html"
+          to="/"
         >
           <img
             class="light-mode-item navbar-brand-item"
@@ -42,7 +44,7 @@ async function changeTheme() {
             src="@/assets/images/genesys_monogram_detail.svg"
             alt="logo"
           >
-        </a>
+      </router-link>
         <!-- Logo END -->
 
         <!-- Responsive navbar toggler -->
@@ -223,7 +225,7 @@ async function changeTheme() {
               <li>
                 <router-link
                   class="dropdown-item"
-                  to="/user/profile"
+                  to="/account/profile"
                 >
                   <i class="bi bi-bookmark-check fa-fw me-2" />My
                   Profile
@@ -232,7 +234,7 @@ async function changeTheme() {
               <li>
                 <router-link
                   class="dropdown-item"
-                  to="/user/settings"
+                  to="/account/settings"
                 >
                   <i class="bi bi-gear fa-fw me-2" />Settings
                 </router-link>
@@ -240,7 +242,7 @@ async function changeTheme() {
               <li>
                 <router-link
                   class="dropdown-item"
-                  to="/user/feedback"
+                  to="/account/feedback"
                 >
                   <i class="bi bi-info-circle fa-fw me-2" />Feedback / Issues
                 </router-link>
@@ -248,7 +250,7 @@ async function changeTheme() {
               <li>
                 <router-link
                   class="dropdown-item"
-                  to="user/settings"
+                  to="/account/settings"
                 >
                   <i class="bi bi-power fa-fw me-2" />Sign Out
                 </router-link>

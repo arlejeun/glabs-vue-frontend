@@ -61,50 +61,37 @@
             <!-- Sidebar menu item START -->
             <ul class="nav nav-pills-primary-soft flex-column">
               <li class="nav-item">
-                <a
+                <router-link
                   class="nav-link active"
-                  href="account-profile.html"
+                  to="/account/profile"
                 ><i class="bi bi-person fa-fw me-2" />My
-                  Profile</a>
+                  Profile</router-link>
               </li>
               <li class="nav-item">
-                <a
+                <router-link
                   class="nav-link"
-                  href="account-bookings.html"
-                ><i class="bi bi-ticket-perforated fa-fw me-2" />My
-                  Bookings</a>
+                  to="/account/organizations"
+                ><i class="bi bi-people fa-fw me-2" />Organizations</router-link>
+              </li>
+              
+              <li class="nav-item">
+                <router-link
+                  class="nav-link"
+                  to="/account/feedback"
+                ><i class="bi bi-heart fa-fw me-2" />Feedback & Issues</router-link>
               </li>
               <li class="nav-item">
-                <a
+                <router-link
                   class="nav-link"
-                  href="account-travelers.html"
-                ><i class="bi bi-people fa-fw me-2" />Travelers</a>
+                  to="/account/settings"
+                ><i class="bi bi-gear fa-fw me-2" />Settings</router-link>
               </li>
               <li class="nav-item">
-                <a
+                <router-link
                   class="nav-link"
-                  href="account-payment-details.html"
-                ><i class="bi bi-wallet fa-fw me-2" />Payment
-                  Details</a>
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  href="account-wishlist.html"
-                ><i class="bi bi-heart fa-fw me-2" />Wishlist</a>
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  href="account-settings.html"
-                ><i class="bi bi-gear fa-fw me-2" />Settings</a>
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  href="account-delete.html"
+                  to="/account/delete"
                 ><i class="bi bi-trash fa-fw me-2" />Delete
-                  Profile</a>
+                  Profile</router-link>
               </li>
               <li class="nav-item">
                 <a
