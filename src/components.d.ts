@@ -7,7 +7,8 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    BasicNavBar: typeof import('./components/header/BasicNavBar.vue')['default']
+    BasicNavBar: typeof import('./components/layouts/BasicNavBar.vue')['default']
+    copy: typeof import('./components/layouts/BasicNavBar copy.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
     ElCheckboxGroup: typeof import('element-plus/es')['ElCheckboxGroup']
@@ -37,6 +38,7 @@ declare module '@vue/runtime-core' {
     NavBar1: typeof import('./components/header/NavBar1.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SidebarProfile: typeof import('./components/layouts/SidebarProfile.vue')['default']
     TheWelcome: typeof import('./components/TheWelcome.vue')['default']
     WelcomeItem: typeof import('./components/WelcomeItem.vue')['default']
   }

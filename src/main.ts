@@ -11,6 +11,7 @@ app.use(ElementPlus)
 // Import Bootstrap
 import '@/assets/scss/style.scss'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+import '@/assets/scss/vendor/bootstrap-icons/bootstrap-icons.css'
 
 // Import Fontawesome
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
