@@ -2,32 +2,15 @@
 // import { useWindowSize } from '@vueuse/core'
 const { width } = useWindowSize()
 const isMobile = computed(() => width.value < 750)
+const isDark = useDark({valueDark: 'dark-mode', valueLight: 'light-mode'})
+const toggleDark = useToggle(isDark)
 
-const useTheme = createGlobalState(() => useStorage('data-theme', 'dark'))
-const layoutState = useTheme()
-
-const state = useGlobalState()
-
-async function changeTheme() {
-  // eslint-disable-next-line no-console
-  console.log(`Change Theme - current ${layoutState.value}`)
-  if (layoutState.value === 'dark') {
-  // || theme.value === '' || theme.value === undefined) {
-    document.documentElement.classList.remove('dark-mode')
-    localStorage.setItem('data-theme', '')
-  }
-  else {
-    document.documentElement.classList.add('dark-mode')
-    localStorage.setItem('data-theme', 'dark')
-    // await nextTick()
-  }
-}
 </script>
 
 <template>
   <header class="navbar-light header-sticky">
     <!-- Logo Nav START -->
-    <nav class="navbar navbar-expand-xl pt-0 bg-primary">
+    <nav class="navbar navbar-expand-xl pt-0" :class="{ 'bg-primary':!isDark }">
       <div class="container">
         <!-- Logo START -->
         <router-link
@@ -57,7 +40,7 @@ async function changeTheme() {
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span class="navbar-toggler-animation">
+          <span class="navbar-toggler-animation white">
             <span />
             <span />
             <span />
@@ -265,13 +248,17 @@ async function changeTheme() {
                   id="darkModeSwitch"
                   class="modeswitch-wrap"
                 >
-                  <div
+                <!--<button @click="toggleDark()">
+                    <i inline-block align-middle i="dark:carbon-moon carbon-sun" />
+                    <span class="ml-2">{{ isDark ? 'Dark' : 'Light' }}</span>
+                </button> -->
+                   <div
                     class="modeswitch-item"
-                    @click="changeTheme"
+                    @click="toggleDark()"
                   >
                     <div class="modeswitch-icon" />
                   </div>
-                  <span>Dark mode</span>
+                  <span>{{ isDark ? 'Dark mode' : 'Light mode' }}</span>
                 </div>
               </li>
               <!-- Dark mode switch END -->

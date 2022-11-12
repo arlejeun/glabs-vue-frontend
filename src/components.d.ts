@@ -48,5 +48,6 @@ declare module '@vue/runtime-core' {
     SidebarProfile: typeof import('./components/layouts/SidebarProfile.vue')['default']
     TheWelcome: typeof import('./components/TheWelcome.vue')['default']
     WelcomeItem: typeof import('./components/WelcomeItem.vue')['default']
+    WorkshopCard: typeof import('./components/workshops/WorkshopCard.vue')['default']
   }
 }
