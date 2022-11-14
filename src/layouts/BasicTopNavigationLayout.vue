@@ -1,16 +1,11 @@
-<script lang="ts">
+<script setup lang="ts">
 import BasicFooter from '@/components/layouts/BasicFooter.vue';
 </script>
 
 <template>
   <div class="main-layout">
     <el-container class="pt-0">
-      <!-- <el-header class="main-header">
-        <NavBar1></NavBar1>
-      </el-header>
-     -->
       <BasicNavBar />
-
       <el-main class="main-content">
         <RouterView />
       </el-main>

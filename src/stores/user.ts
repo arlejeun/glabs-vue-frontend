@@ -25,9 +25,9 @@ export const useUserStore = defineStore({
         async initUser() {
             const token = getToken();
             if (token) {
-                const res = await api.getUser();
-                if (res.code === 0) {
-                    this.updateUser(res.data);
+                const res = await apis.getUser();
+                if (res.data?.code === 0) {
+                    this.updateUser(res?.data.data);
                 }
             }
         },

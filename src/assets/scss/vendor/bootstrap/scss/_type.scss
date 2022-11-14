@@ -3,6 +3,7 @@
 //
 .h1 {
   @extend h1;
+  color: var(--bs-primary)
 }
 
 .h2 {

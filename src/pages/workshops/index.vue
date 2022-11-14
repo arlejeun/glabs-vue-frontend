@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useAxios } from '@vueuse/integrations/useAxios'
+import { useWorkshopStore } from '@/stores/workshop'
 
+const wStore = useWorkshopStore()
 const formatter = 'YYYY-MM-DD HH:mm:ss:SSS'
 const formatted = useDateFormat(useNow(), formatter)
 const config = {
@@ -9,12 +11,16 @@ const config = {
     Accept: 'application/json, text/plain, */*'
   }
 };
-const url = `http://localhost:5173/public/demo/data/workshops.json`;
+const url = `http://localhost:5173/demo/data/workshops.json`;
 
-const { data, isLoading, isFinished, error } = useAxios(url, config)
+const { data, isLoading, isFinished: isWorkshopsLoaded, error } = useAxios(url, config)
+
+watch(isWorkshopsLoaded, () => {
+  wStore.setWorkshops(data.value?.data);
+})
 
 const availableWorkshops = computed(() => {
-  return data.value?.data
+  return wStore.getAllWorkshops
 })
 
 // Reactivty
