@@ -1,14 +1,15 @@
 import { defineStore } from 'pinia'
-import type { NewTodo } from "@/interfaces/todo";
+import type { Item } from "@/interfaces";
+import type { RemovableRef } from '@vueuse/shared';
+
 
 export const useTodoStore = defineStore({
   id: 'todo',
   state: () => ({
-    todos: useStorage('todos', ['test']),
+    todos: [] as Item[]
   }),
   getters: {
-    getAllTodos(): Array<NewTodo> {
-      // @ts-ignore
+    getAllTodos(): Item[] {
       return this.todos
     },
     todoEmpty(): Boolean {
@@ -16,7 +17,7 @@ export const useTodoStore = defineStore({
     },
   },
   actions: {
-    addTodo(todo: NewTodo) {
+    addTodo(todo: String) {
       // @ts-ignore
       this.todos.push(todo)
     },      

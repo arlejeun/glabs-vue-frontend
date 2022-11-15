@@ -1,16 +1,11 @@
-<script lang="ts">
+<script setup lang="ts">
 import BasicFooter from '@/components/layouts/BasicFooter.vue';
 </script>
 
 <template>
   <div class="main-layout">
     <el-container class="pt-0">
-      <!-- <el-header class="main-header">
-        <NavBar1></NavBar1>
-      </el-header>
-     -->
       <BasicNavBar />
-
       <el-main class="main-content">
         <RouterView />
       </el-main>
@@ -29,16 +24,21 @@ import BasicFooter from '@/components/layouts/BasicFooter.vue';
   top: 0;
 }
 
-/* .main-content {
+.main-layout {
+  position: relative;
+  min-height: 100vh;
+}
+.main-content {
   padding: 0 0 0 0;
-} */
+}
 
 .footer {
   background-color: var(--el-color-info);
   font-family: AmazonEmberBold, Helvetica, Arial, "Sans-Serif";
   padding: 15px 0;
-  position: relative;
-  bottom: 0;
+  position: absolute;
+  bottom: 5px;
   width: 100%;
+  height: 2.5 rem;
 }
 </style>

@@ -182,7 +182,7 @@ import AccountOrganizationSummary from '../organizations/AccountOrganizationSumm
                 </div>
                 <!-- Image -->
                 <div class="col-md-3 text-end">
-                  <img src="assets/images/element/17.svg" class="mb-n5" alt="">
+                  <!-- <img src="assets/images/element/17.svg" class="mb-n5" alt=""> -->
                 </div>
               </div>
             </div>

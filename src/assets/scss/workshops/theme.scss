@@ -431,21 +431,21 @@ fieldset {
     vertical-align: middle;
     text-align: center;
 }
-@media only all and (max-width: 59.938em) {
-    #body-doc .nav {
-        display: table-cell;
-        position: static;
-        top: auto;
-        width: 50%;
-        text-align: center;
-        height: 100px;
-        line-height: 100px;
-        padding-top: 0;
-    }
-    #body-doc .nav > i {
-        display: inline-block;
-    }
-}
+// @media only all and (max-width: 59.938em) {
+//     #body-doc .nav {
+//         display: table-cell;
+//         position: static;
+//         top: auto;
+//         width: 50%;
+//         text-align: center;
+//         height: 100px;
+//         line-height: 100px;
+//         padding-top: 0;
+//     }
+//     #body-doc .nav > i {
+//         display: inline-block;
+//     }
+// }
 #body-doc .nav:hover {
     background: #F6F6F6;
 }

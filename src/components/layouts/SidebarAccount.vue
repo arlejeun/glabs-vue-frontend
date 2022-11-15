@@ -98,7 +98,7 @@
                   class="nav-link text-danger bg-danger-soft-hover"
                   href="#"
                 ><i
-                  class="fas fa-sign-out-alt fa-fw me-2"
+                  class="bi bi-box-arrow-right fa-fw me-2"
                 />Sign Out</a>
               </li>
             </ul>
