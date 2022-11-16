@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import type { FormInstance, FormRules } from 'element-plus'
 
 const formSize = ref('large')
@@ -6,12 +7,17 @@ const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive({
   firstName: 'Arnaud',
   lastName: 'Lejeune',
-  email: '',
-  phone: '',
-  company: '',
-  status: '',
-  country: '',
-  accessGroups: ['Public Demos']
+  emailWork: '',
+  emailPersonal: '',
+  emailOther: '',
+  phoneWork:'',
+  phoneCell:'',
+  phoneHome: '',
+  address: '',
+  city: '',
+  state: '',
+  zipcode: '',
+  country: ''
 })
 
   const phoneNumber = ref()
@@ -92,6 +98,7 @@ const options = Array.from({ length: 10000 }).map((_, idx) => ({
   value: `${idx + 1}`,
   label: `${idx + 1}`,
 }))
+
 </script>
 
 <template>
@@ -107,43 +114,17 @@ const options = Array.from({ length: 10000 }).map((_, idx) => ({
     </div>
 
     <div class="vstack gap-4">
-      <!-- Verified message -->
-      <div class="bg-light rounded p-3">
-        <!-- Progress bar -->
-        <div class="overflow-hidden">
-          <h6 class="text-primary">Complete Your Profile</h6>
-          <div class="progress progress-sm bg-success bg-opacity-10">
-            <div class="progress-bar bg-success aos" role="progressbar" data-aos="slide-right" data-aos-delay="200"
-              data-aos-duration="1000" data-aos-easing="ease-in-out" style="width: 85%" aria-valuenow="85"
-              aria-valuemin="0" aria-valuemax="100">
-              <span class="progress-percent-simple h6 fw-light ms-auto">85%</span>
-            </div>
-          </div>
-          <p class="mb-0">Get the best out of booking by adding the remaining details!</p>
-        </div>
-        <!-- Content -->
-        <div class="bg-body rounded p-3 mt-3">
-          <ul class="list-inline hstack flex-wrap gap-2 justify-content-between mb-0">
-            <li class="list-inline-item h6 fw-normal mb-0"><a href="#"><i
-                  class="bi bi-check-circle-fill text-success me-2"></i>Verified Email</a></li>
-            <li class="list-inline-item h6 fw-normal mb-0"><a href="#"><i
-                  class="bi bi-check-circle-fill text-success me-2"></i>Verified Mobile Number</a></li>
-            <li class="list-inline-item h6 fw-normal mb-0"><a href="#" class="text-primary"><i
-                  class="bi bi-plus-circle-fill me-2"></i>Complete Basic Info</a></li>
-          </ul>
-        </div>
-      </div>
+     
 
       <!-- Personal info START -->
       <div class="card border">
         <!-- Card header -->
         <div class="card-header border-bottom">
-          <h4 class="card-header-title">Personal Information</h4>
+          <h4 class="card-header-title text-primary">Customer Information</h4>
         </div>
 
         <!-- Card body START -->
         <div class="card-body">
-          <!-- Form START -->
 
           <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="120px" label-position="top"
             class="demo-ruleForm" :size="formSize" status-icon>
@@ -161,8 +142,8 @@ const options = Array.from({ length: 10000 }).map((_, idx) => ({
             </el-row>
             <el-row :gutter="20">
               <el-col :span="18">
-              <el-form-item label="Company" prop="address">
-                <el-input v-model="ruleForm.company" />
+              <el-form-item label="Address" prop="address">
+                <el-input v-model="ruleForm.address" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -173,24 +154,56 @@ const options = Array.from({ length: 10000 }).map((_, idx) => ({
           </el-row>
 
           <el-row :gutter="20">
-              <el-col :span="12">
-              <el-form-item label="Email" prop="city">
-                <el-input v-model="ruleForm.email" />
+              <el-col :span="8">
+              <el-form-item label="City" prop="city">
+                <el-input v-model="ruleForm.city" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="Phone Number" prop="state">
-                <el-input v-model="ruleForm.phone" />
+              <el-form-item label="State" prop="state">
+                <el-input v-model="ruleForm.state" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="Zipcode" prop="zipcode">
+                <el-input v-model="ruleForm.zipcode" />
               </el-form-item>
             </el-col>
           </el-row>
 
-
           <el-row :gutter="20">
-              <el-col :span="24">
-              
+              <el-col :span="12">
+              <el-form-item label="Work Email" prop="email">
+                <el-input v-model="ruleForm.emailWork" />
+              </el-form-item>
             </el-col>
-
+            <el-col :span="12">
+              <el-form-item label="Personal Email" prop="email">
+                <el-input v-model="ruleForm.emailPersonal" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="Other Email" prop="email">
+                <el-input v-model="ruleForm.emailOther" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+              <el-col :span="8">
+              <el-form-item label="Work Phone" prop="phone">
+                <el-input v-model="ruleForm.phoneWork" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="Cell Phone" prop="phone">
+                <el-input v-model="ruleForm.phoneCell" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="Home Phone" prop="phone">
+                <el-input v-model="ruleForm.phoneHome" />
+              </el-form-item>
+            </el-col>
           </el-row>
            <!-- <el-row :gutter="20">
               <el-col :span="12">
@@ -219,7 +232,6 @@ const options = Array.from({ length: 10000 }).map((_, idx) => ({
             </el-form-item> 
           </el-form>
 
-          <!-- Form END -->
         </div>
         <!-- Card body END -->
       </div>

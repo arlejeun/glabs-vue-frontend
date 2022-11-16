@@ -374,7 +374,7 @@ Hotel grid START -->
 <!-- =======================
 Hotel grid END -->
 
-  <pre lang="json">{{ availableWorkshops }}</pre>
+  <!-- <pre lang="json">{{ availableWorkshops }}</pre> -->
 </template>
 
 <style scoped lang="scss">
