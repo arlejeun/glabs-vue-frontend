@@ -1,3 +1,3 @@
-import * as login from './modules/login';
+import * as account from './modules/account';
 
-export default Object.assign({}, login);
+export default Object.assign({}, account);

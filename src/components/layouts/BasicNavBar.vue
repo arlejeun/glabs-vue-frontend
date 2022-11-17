@@ -1,9 +1,27 @@
 <script setup lang="ts">
-// import { useWindowSize } from '@vueuse/core'
+import { useUserStore } from '@/stores/user'
+import type { IDriveUser } from "@/interfaces";
+import type { Ref } from 'vue';
+import router from '@/router'
+const userStore = useUserStore()
+// const userName = computed(() => `${userStore?.user?.first_name} ${userStore?.user?.last_name}`)
+const isLoggedIn = computed(() => userStore.status == 'LoggedIn')
+const myUser = storeToRefs(userStore).user as Ref<IDriveUser>
+const myUsername = computed(() => `${myUser.value?.first_name} ${myUser.value?.last_name}`)
+
 const { width } = useWindowSize()
 const isMobile = computed(() => width.value < 750)
 const isDark = useDark({valueDark: 'dark-mode', valueLight: 'light-mode'})
 const toggleDark = useToggle(isDark)
+
+function mockSignIn() {
+  userStore.fetchUser()
+}
+
+function mockSignOut() {
+  userStore.logout()
+  router.push('/')
+}
 
 </script>
 
@@ -79,7 +97,7 @@ const toggleDark = useToggle(isDark)
         <!-- Main navbar END -->
 
         <!-- Profile and Notification START -->
-        <ul class="nav flex-row align-items-center list-unstyled ms-xl-auto">
+        <ul v-if="isLoggedIn" class="nav flex-row align-items-center list-unstyled ms-xl-auto">
           <!-- Notification dropdown START -->
           <li class="nav-item ms-0 ms-md-3 dropdown">
             <!-- Notification button -->
@@ -193,9 +211,9 @@ const toggleDark = useToggle(isDark)
                     <a
                       class="h6 mt-2 mt-sm-0"
                       href="#"
-                    >Lori Ferguson</a>
+                    >{{ myUsername }}</a>
                     <p class="small m-0">
-                      example@gmail.com
+                      {{myUser.contact_email}}
                     </p>
                   </div>
                 </div>
@@ -231,12 +249,9 @@ const toggleDark = useToggle(isDark)
                 </router-link>
               </li>
               <li>
-                <router-link
-                  class="dropdown-item"
-                  to="/account/settings"
-                >
-                  <i class="bi bi-power fa-fw me-2" />Sign Out
-                </router-link>
+                <a class="dropdown-item" @click="mockSignOut"><i class="bi bi-power fa-fw me-2" />Sign Out</a>
+                  
+                
               </li>
               <li>
                 <hr class="dropdown-divider">
@@ -273,6 +288,18 @@ const toggleDark = useToggle(isDark)
           </li> -->
         </ul>
         <!-- Profile and Notification START -->
+
+        <ul v-if="!isLoggedIn" class="nav flex-row align-items-center list-unstyled ms-xl-auto">
+
+          
+          <li @click="mockSignIn" class="nav-item"> <a class="nav-link text-white fw-bolder"><i class="bi bi-box-arrow-in-right me-2"></i>Sign In</a></li>
+
+          <!-- Button -->
+          <!-- <li class="nav-item ms-3 d-none d-sm-block">
+            <a class="btn btn-sm btn-primary-soft mb-0" href="#"><i class="bi bi-lightning-charge"></i> Upgrade now</a>
+          </li> -->
+        </ul>
+
       </div>
     </nav>
     <!-- Logo Nav END -->

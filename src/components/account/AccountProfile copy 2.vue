@@ -1,36 +1,29 @@
 <script setup lang="ts">
-
 import type { FormInstance, FormRules } from 'element-plus'
 import { useUserStore } from '@/stores/user'
-import type { IDriveUser, IDriveCustomer, IDriveIdentifier } from "@/interfaces";
+import type { IDriveUser } from "@/interfaces";
 import type { Ref } from 'vue';
 
 const userStore = useUserStore()
+const isLoggedIn = computed(() => userStore.status == 'LoggedIn')
 const myUser = storeToRefs(userStore).user as Ref<IDriveUser>
-const myCustomer = storeToRefs(userStore).getCustomerProfile as Ref<IDriveCustomer>
+const myUsername = computed(() => `${myUser.value?.first_name} ${myUser.value?.last_name}`)
 
 const formSize = ref('large')
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive({
   firstName: 'Arnaud',
   lastName: 'Lejeune',
-  emailWork: '',
-  emailPersonal: '',
-  emailOther: '',
-  phoneWork:'',
-  phoneCell:'',
-  phoneHome: '',
-  address: '',
-  city: '',
-  state: '',
-  zipcode: '',
-  country: ''
+  email: '',
+  phone: '',
+  company: '',
+  status: '',
+  country: '',
+  accessGroups: ['Public Demos']
 })
 
-const customerPhones = computed( () => myCustomer.value.identifiers?.filter( x => x.type == 'Voice'))
-const customerEmails = computed( () => myCustomer.value.identifiers?.filter( x => x.type == 'Email'))
-const isUserProvisioned = computed( () => myUser.value.contact_email?.length > 0)
-const isCustomerProvisioned = computed( () => myCustomer.value?.identifiers?.length > 0)
+  const phoneNumber = ref()
+  const results = ref()
 
 const rules = reactive<FormRules>({
   name: [
@@ -103,7 +96,6 @@ const resetForm = (formEl: FormInstance | undefined) => {
   formEl.resetFields()
 }
 
-
 </script>
 
 <template>
@@ -119,80 +111,111 @@ const resetForm = (formEl: FormInstance | undefined) => {
     </div>
 
     <div class="vstack gap-4">
-     
+      <!-- Verified message -->
+      <div class="bg-light rounded p-3">
+        <!-- Progress bar -->
+        <div class="overflow-hidden">
+          <h6 class="text-primary">Complete Your Profile</h6>
+          <div class="progress progress-sm bg-success bg-opacity-10">
+            <div class="progress-bar bg-success aos" role="progressbar" data-aos="slide-right" data-aos-delay="200"
+              data-aos-duration="1000" data-aos-easing="ease-in-out" style="width: 85%" aria-valuenow="85"
+              aria-valuemin="0" aria-valuemax="100">
+              <span class="progress-percent-simple h6 fw-light ms-auto">85%</span>
+            </div>
+          </div>
+          <p class="mb-0">Get the best out of booking by adding the remaining details!</p>
+        </div>
+        <!-- Content -->
+        <div class="bg-body rounded p-3 mt-3">
+          <ul class="list-inline hstack flex-wrap gap-2 justify-content-between mb-0">
+            <li class="list-inline-item h6 fw-normal mb-0"><a href="#"><i
+                  class="bi bi-check-circle-fill text-success me-2"></i>Verified Email</a></li>
+            <li class="list-inline-item h6 fw-normal mb-0"><a href="#"><i
+                  class="bi bi-check-circle-fill text-success me-2"></i>Verified Mobile Number</a></li>
+            <li class="list-inline-item h6 fw-normal mb-0"><a href="#" class="text-primary"><i
+                  class="bi bi-plus-circle-fill me-2"></i>Complete Basic Info</a></li>
+          </ul>
+        </div>
+      </div>
 
       <!-- Personal info START -->
       <div class="card border">
         <!-- Card header -->
         <div class="card-header border-bottom">
-          <h4 class="card-header-title text-primary">Customer Information</h4>
+          <h4 class="card-header-title">Personal Information</h4>
         </div>
 
         <!-- Card body START -->
         <div class="card-body">
+          <!-- Form START -->
 
-          <!-- <p>{{myUser}}</p>
-          <p>{{myCustomer}}</p> -->
-          <el-form ref="ruleFormRef" :model="myCustomer" :rules="rules" label-width="120px" label-position="top"
+          <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="120px" label-position="top"
             class="demo-ruleForm" :size="formSize" status-icon>
             <el-row :gutter="20">
               <el-col :span="12">
               <el-form-item label="First Name" prop="name">
-                <el-input v-model="myCustomer.first_name" />
+                <el-input v-model="ruleForm.firstName" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="Last Name" prop="name">
-                <el-input v-model="myCustomer.last_name" />
+                <el-input v-model="ruleForm.lastName" />
               </el-form-item>
             </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="18">
-              <el-form-item label="Address" prop="address">
-                <el-input v-model="myCustomer.address" />
+              <el-form-item label="Company" prop="address">
+                <el-input v-model="ruleForm.company" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="Country" prop="country">
-                <el-input v-model="myCustomer.country" />
+                <el-input v-model="ruleForm.country" />
               </el-form-item>
             </el-col>
           </el-row>
 
           <el-row :gutter="20">
-              <el-col :span="8">
-              <el-form-item label="City" prop="city">
-                <el-input v-model="myCustomer.city" />
+              <el-col :span="12">
+              <el-form-item label="Email" prop="city">
+                <el-input v-model="ruleForm.email" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="State" prop="state">
-                <el-input v-model="myCustomer.state" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="Zipcode" prop="zipcode">
-                <el-input v-model="myCustomer.zip" />
+              <el-form-item label="Phone Number" prop="state">
+                <el-input v-model="ruleForm.phone" />
               </el-form-item>
             </el-col>
           </el-row>
 
-          
+
           <el-row :gutter="20">
-            <el-col v-for="item in customerEmails" :span="8">
-              <el-form-item :label="item.name" prop="email">
-                <el-input v-model="item.value" />
-              </el-form-item>
+              <el-col :span="24">
+              
             </el-col>
-            <el-col v-for="item in customerPhones" :span="8">
-              <el-form-item :label="item.name" prop="phone">
-                <el-input v-model="item.value" />
-              </el-form-item>
-            </el-col>
-            
-          </el-row>
 
+          </el-row>
+           <!-- <el-row :gutter="20">
+              <el-col :span="12">
+                <MazPhoneNumberInput
+                    v-model="phoneNumber"
+                    show-code-on-list
+                    color="info"
+                    :preferred-countries="['FR', 'BE', 'DE', 'US', 'GB']"
+                    :ignored-countries="['AC']"
+                    @update="results = $event"
+                    :success="results?.isValid"
+                  />
+        
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="Last Name" prop="lastName">
+                <el-input v-model="ruleForm.name" />
+              </el-form-item>
+            </el-col>
+           
+           </el-row> -->
            
             <el-form-item>
               <el-button type="primary" @click="submitForm(ruleFormRef)">Save</el-button>
@@ -200,6 +223,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
             </el-form-item> 
           </el-form>
 
+          <!-- Form END -->
         </div>
         <!-- Card body END -->
       </div>

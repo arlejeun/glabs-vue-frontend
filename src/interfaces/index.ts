@@ -29,4 +29,26 @@ export interface IWorkshop {
     name?: string
 }
 
+
+export interface IDriveUser {
+    first_name: string,
+    last_name: string,
+    customer: IDriveCustomer,
+    contact_email: string,
+    [x: string]: string | IDriveCustomer,
+  }
+
+export interface IDriveCustomer {
+    identifiers: IDriveIdentifier[],
+    [x: string]: string | IDriveIdentifier[],
+  }
+
+export interface IDriveIdentifier {
+    name: string,
+    type: string,
+    value: string
+  }
+
+
+
 export type NewTodo1 = String

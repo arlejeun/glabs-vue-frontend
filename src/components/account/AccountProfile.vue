@@ -1,25 +1,37 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
+import { useUserStore } from '@/stores/user'
+import type { IDriveUser } from "@/interfaces";
+import type { Ref } from 'vue';
+
+const userStore = useUserStore()
+const myUser = storeToRefs(userStore).user as Ref<IDriveUser>
+
 
 const formSize = ref('large')
 const ruleFormRef = ref<FormInstance>()
-const ruleForm = reactive({
-  firstName: 'Arnaud',
-  lastName: 'Lejeune',
-  email: '',
-  phone: '',
-  company: '',
-  status: '',
-  country: '',
-  accessGroups: ['Public Demos']
-})
-
-  const phoneNumber = ref()
-  const results = ref()
+// const ruleForm = reactive({
+//   firstName: 'Arnaud',
+//   lastName: 'Lejeune',
+//   email: '',
+//   phone: '',
+//   company: '',
+//   status: '',
+//   country: '',
+//   accessGroups: ['Public Demos']
+// })
 
 const rules = reactive<FormRules>({
-  name: [
-    { required: true, message: 'Please input Activity name', trigger: 'blur' },
+  first_name: [
+    { required: true, message: 'Please input first name', trigger: 'blur' },
+    { min: 2, max: 30, message: 'Length should be 2 to 30', trigger: 'blur' },
+  ],
+  last_name: [
+    { required: true, message: 'Please input last name', trigger: 'blur' },
+    { min: 2, max: 30, message: 'Length should be 2 to 30', trigger: 'blur' },
+  ],
+  company: [
+    { required: true, message: 'Please input last name', trigger: 'blur' },
     { min: 2, max: 30, message: 'Length should be 2 to 30', trigger: 'blur' },
   ],
   country: [
@@ -28,54 +40,14 @@ const rules = reactive<FormRules>({
       message: 'Please select Country',
       trigger: 'change',
     },
-  ],
-  count: [
-    {
-      required: true,
-      message: 'Please select Activity count',
-      trigger: 'change',
-    },
-  ],
-  date1: [
-    {
-      type: 'date',
-      required: true,
-      message: 'Please pick a date',
-      trigger: 'change',
-    },
-  ],
-  date2: [
-    {
-      type: 'date',
-      required: true,
-      message: 'Please pick a time',
-      trigger: 'change',
-    },
-  ],
-  type: [
-    {
-      type: 'array',
-      required: true,
-      message: 'Please select at least one activity type',
-      trigger: 'change',
-    },
-  ],
-  resource: [
-    {
-      required: true,
-      message: 'Please select activity resource',
-      trigger: 'change',
-    },
-  ],
-  desc: [
-    { required: true, message: 'Please input activity form', trigger: 'blur' },
-  ],
+  ]  
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {
+      //userStore.updatePersonalProfile(myUser)
       console.log('submit!')
     } else {
       console.log('error submit!', fields)
@@ -88,10 +60,6 @@ const resetForm = (formEl: FormInstance | undefined) => {
   formEl.resetFields()
 }
 
-const options = Array.from({ length: 10000 }).map((_, idx) => ({
-  value: `${idx + 1}`,
-  label: `${idx + 1}`,
-}))
 </script>
 
 <template>
@@ -145,42 +113,42 @@ const options = Array.from({ length: 10000 }).map((_, idx) => ({
         <div class="card-body">
           <!-- Form START -->
 
-          <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="120px" label-position="top"
+          <el-form ref="ruleFormRef" :model="myUser" :rules="rules" label-width="120px" label-position="top"
             class="demo-ruleForm" :size="formSize" status-icon>
             <el-row :gutter="20">
               <el-col :span="12">
-              <el-form-item label="First Name" prop="name">
-                <el-input v-model="ruleForm.firstName" />
+              <el-form-item label="First Name" prop="first_name">
+                <el-input v-model="myUser.first_name" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="Last Name" prop="name">
-                <el-input v-model="ruleForm.lastName" />
+              <el-form-item label="Last Name" prop="last_name">
+                <el-input v-model="myUser.last_name" />
               </el-form-item>
             </el-col>
             </el-row>
             <el-row :gutter="20">
-              <el-col :span="18">
-              <el-form-item label="Company" prop="address">
-                <el-input v-model="ruleForm.company" />
+              <el-col :span="12">
+              <el-form-item label="Company" prop="company">
+                <el-input v-model="myUser.company" />
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="12">
               <el-form-item label="Country" prop="country">
-                <el-input v-model="ruleForm.country" />
+                <el-input v-model="myUser.country" />
               </el-form-item>
             </el-col>
           </el-row>
 
           <el-row :gutter="20">
               <el-col :span="12">
-              <el-form-item label="Email" prop="city">
-                <el-input v-model="ruleForm.email" />
+              <el-form-item label="Email" prop="email">
+                <el-input v-model="myUser.contact_email" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="Phone Number" prop="state">
-                <el-input v-model="ruleForm.phone" />
+                <el-input v-model="myUser.phone" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -188,30 +156,10 @@ const options = Array.from({ length: 10000 }).map((_, idx) => ({
 
           <el-row :gutter="20">
               <el-col :span="24">
-              
-            </el-col>
 
+              </el-col>
           </el-row>
-           <!-- <el-row :gutter="20">
-              <el-col :span="12">
-                <MazPhoneNumberInput
-                    v-model="phoneNumber"
-                    show-code-on-list
-                    color="info"
-                    :preferred-countries="['FR', 'BE', 'DE', 'US', 'GB']"
-                    :ignored-countries="['AC']"
-                    @update="results = $event"
-                    :success="results?.isValid"
-                  />
-        
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="Last Name" prop="lastName">
-                <el-input v-model="ruleForm.name" />
-              </el-form-item>
-            </el-col>
            
-           </el-row> -->
            
             <el-form-item>
               <el-button type="primary" @click="submitForm(ruleFormRef)">Save</el-button>
@@ -222,9 +170,12 @@ const options = Array.from({ length: 10000 }).map((_, idx) => ({
           <!-- Form END -->
         </div>
         <!-- Card body END -->
+
+        
       </div>
       <!-- Personal info END -->
 
+    
 
     </div>
   </div>

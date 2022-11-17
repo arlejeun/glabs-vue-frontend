@@ -2,6 +2,7 @@
 import { useAxios } from '@vueuse/integrations/useAxios'
 import { useWorkshopStore } from '@/stores/workshop'
 
+
 const wStore = useWorkshopStore()
 const formatter = 'YYYY-MM-DD HH:mm:ss:SSS'
 const formatted = useDateFormat(useNow(), formatter)
@@ -11,7 +12,7 @@ const config = {
     Accept: 'application/json, text/plain, */*'
   }
 };
-const url = `http://localhost:5173/demo/data/workshops.json`;
+const url = `http://localhost:5173/demo/api/workshops.json`;
 
 const { data, isLoading, isFinished: isWorkshopsLoaded, error } = useAxios(url, config)
 
