@@ -1,11 +1,30 @@
 <script setup lang="ts">
 import { useAxios } from '@vueuse/integrations/useAxios'
 import { useWorkshopStore } from '@/stores/workshop'
+import type { IWorkshop } from '@/interfaces';
+const route = useRoute()
 
 const wStore = useWorkshopStore()
+const workshops = wStore.getAllWorkshops
 const formatter = 'YYYY-MM-DD HH:mm:ss:SSS'
 const formatted = useDateFormat(useNow(), formatter)
 
+
+//const workshopUrl = `https://workshop.genesys.com/workshops-gdemo/workshop-${route.params.id}/`
+const workshopUrl = `https://workshop.genesys.com/workshops-gdemo/workshop-cxAsCodeDevlab/`
+
+function workshopDefaultName(workshop: IWorkshop) {
+  if (workshop.name && workshop.name.length > 0) {
+    return workshop.name;
+  } else {
+    const idname = workshop.title.replace(/\s/g, "-");
+    return idname;
+  }
+}
+
+
+//https://workshop.genesys.com/workshops-gdemo/workshop-cxAsCodeDevlab/ . --> ok
+// https://workshop.genesys.com/workshops-gdemo/workshop-Automation-with-CX-as-Code/ --> ko
 </script>
 
 <template>
@@ -20,7 +39,7 @@ const formatted = useDateFormat(useNow(), formatter)
           <iframe
             ref="workshopIframe"
             class="iframe-worshop"
-            src="https://workshop.genesys.com/workshops-gdemo/workshop-Build-a-Bot/"
+            :src="workshopUrl"
             height="100%"
             width="100%"
           >

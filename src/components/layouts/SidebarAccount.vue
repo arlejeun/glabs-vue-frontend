@@ -70,6 +70,12 @@
               <li class="nav-item">
                 <router-link
                   class="nav-link"
+                  to="/account/customer"
+                ><i class="bi bi-gear fa-fw me-2" />Customer Record</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link
+                  class="nav-link"
                   to="/account/organizations"
                 ><i class="bi bi-people fa-fw me-2" />Organizations</router-link>
               </li>
