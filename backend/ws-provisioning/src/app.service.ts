@@ -6,7 +6,7 @@ import { AxiosResponse } from 'axios';
 var shell = require('shelljs');
 const fs = require('fs');
 
-const WORKSHOPS_PATH = "~/Projects/glabs-ui/public/workshops/"
+const WORKSHOPS_PATH = "../../public/ws/"
 const REPO_OWNER = "genesys-samples/"
 
 @Injectable()
@@ -15,7 +15,7 @@ export class AppService {
   constructor(private readonly httpService: HttpService) { }
 
   getHello(): string {
-    return 'Use /update/<workshop repo name>';
+    return 'Useage:   /update/workshop-repo-name';
   }
 
   private async download(workshop: string, file: string) {
@@ -36,18 +36,21 @@ export class AppService {
     const wsPath: string = WORKSHOPS_PATH + workshop;
 
     const donePromise = new Promise(async () => {
+
       await this.download(REPO_OWNER + workshop, 'repo.zip');
       await this.download('matcornic/hugo-theme-learn', 'template.zip');
 
       shell.mkdir(WORKSHOPS_PATH);
-      shell.rm('-r', wsPath);
-      shell.mkdir(wsPath);
+      shell.pushd(WORKSHOPS_PATH);
+      shell.rm('-r', workshop);
+      shell.mkdir(workshop);
+      shell.popd();
       shell.exec(`unzip -o -qq repo.zip -d ${wsPath}`);
       shell.exec(`unzip -o -qq template.zip -d ${wsPath}`);
       shell.rm('repo.zip')
       shell.rm('template.zip')
 
-      shell.cd(wsPath)
+      shell.pushd(wsPath)
       shell.mkdir('temp')
 
       shell.mv('genesys-samples*/*', 'temp')
@@ -60,6 +63,7 @@ export class AppService {
       shell.cd('..')
       shell.mv('temp/*', '.')
       shell.rm('-r', 'temp')
+      shell.popd();
     });
 
     donePromise.then(() => {
