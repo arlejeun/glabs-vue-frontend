@@ -1,4 +1,19 @@
 <script setup lang="ts">
+  import { useUserStore } from '@/stores/user'
+  import router from '@/router'
+ 
+  const route = useRoute()
+  const userStore = useUserStore()
+  const userName = computed(() => `${userStore?.user?.first_name} ${userStore?.user?.last_name}`)
+  const userEmail = userStore.user.contact_email
+  function mockSignOut() {
+    userStore.logout();
+    router.push('/')
+  }
+
+  function matchRoute(r: string) {
+    return r == route.path ? true: false
+  }
 </script>
 
 <template>
@@ -49,12 +64,12 @@
                 >
               </div>
               <h6 class="mb-0">
-                Jacqueline Miller
+                {{userName}}
               </h6>
               <a
                 href="#"
                 class="text-reset text-primary-hover small"
-              >hello@gmail.com</a>
+              >{{userEmail}}</a>
               <hr>
             </div>
 
@@ -62,33 +77,33 @@
             <ul class="nav nav-pills-primary-soft flex-column">
               <li class="nav-item">
                 <router-link
-                  class="nav-link active"
+                  class="nav-link" :class="{active:matchRoute('/account/profile')}"
                   to="/account/profile"
                 ><i class="bi bi-person fa-fw me-2" />My
                   Profile</router-link>
               </li>
               <li class="nav-item">
                 <router-link
-                  class="nav-link"
+                  class="nav-link" :class="{active:matchRoute('/account/customer')}"
                   to="/account/customer"
                 ><i class="bi bi-gear fa-fw me-2" />Customer Record</router-link>
               </li>
               <li class="nav-item">
                 <router-link
-                  class="nav-link"
+                  class="nav-link" :class="{active:matchRoute('/account/organizations')}"
                   to="/account/organizations"
                 ><i class="bi bi-people fa-fw me-2" />Organizations</router-link>
               </li>
               
               <li class="nav-item">
                 <router-link
-                  class="nav-link"
+                  class="nav-link" :class="{active:matchRoute('/account/feedback')}"
                   to="/account/feedback"
                 ><i class="bi bi-heart fa-fw me-2" />Feedback & Issues</router-link>
               </li>
               <li class="nav-item">
                 <router-link
-                  class="nav-link"
+                  class="nav-link" :class="{active:matchRoute('/account/settings')}"
                   to="/account/settings"
                 ><i class="bi bi-gear fa-fw me-2" />Settings</router-link>
               </li>
@@ -102,7 +117,7 @@
               <li class="nav-item">
                 <a
                   class="nav-link text-danger bg-danger-soft-hover"
-                  href="#"
+                  @click="mockSignOut"
                 ><i
                   class="bi bi-box-arrow-right fa-fw me-2"
                 />Sign Out</a>

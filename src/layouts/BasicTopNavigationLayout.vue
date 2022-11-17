@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import BasicFooter from '@/components/layouts/BasicFooter.vue';
+
 </script>
 
 <template>

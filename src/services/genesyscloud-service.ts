@@ -1,5 +1,6 @@
-import platformClient from 'purecloud-platform-client-v2'
-import config from '@/config/config'
+//import { platformClient } from 'purecloud-platform-client-v2'
+const platformClient = require('purecloud-platform-client-v2');
+import config from '@/config/pureEngageNow'
 
 const routingApi = new platformClient.RoutingApi()
 const notificationsApi = new platformClient.NotificationsApi()
@@ -24,19 +25,19 @@ export default {
 
   // Get the organization's queues.
   // NOTE: For this sample only get the first 100.
-  async getQueues (): Promise<undefined | platformClient.Models.Queue[]> {
+  async getQueues (): Promise<undefined | typeof platformClient.Models.Queue[]> {
     const data = await routingApi.getRoutingQueues({ pageSize: 100 })
     return data.entities
   },
 
-  async getQueue (queueId: string): Promise<platformClient.Models.Queue> {
+  async getQueue (queueId: string): Promise<typeof platformClient.Models.Queue> {
     const data = await routingApi.getRoutingQueue(queueId)
     return data
   },
 
   // Get the queue's members
   // NOTE: For this sample only get the first 100.
-  async getMembersOfQueue (queueId: string): Promise<undefined | platformClient.Models.QueueMember[]> {
+  async getMembersOfQueue (queueId: string): Promise<undefined | typeof platformClient.Models.QueueMember[]> {
     const data = await routingApi.getRoutingQueueMembers(queueId, { pageSize: 100, expand: ['presence', 'routingStatus'] })
     console.log(data)
     return data.entities
@@ -61,7 +62,7 @@ export default {
     }
 
     // Subscribe to topics
-    const topics:platformClient.Models.ChannelTopic[] = []
+    const topics:typeof platformClient.Models.ChannelTopic[] = []
     userIds.forEach(userId => {
       topics.push({
         id: `v2.users.${userId}?presence&routingStatus`
