@@ -7,84 +7,39 @@ import type { Ref } from 'vue';
 
 const userStore = useUserStore()
 const myUser = storeToRefs(userStore).user as Ref<IDriveUser>
-const myCustomer = storeToRefs(userStore).getCustomerProfile as Ref<IDriveCustomer>
-
+const myCustomerForm = storeToRefs(userStore).getCustomerProfile as Ref<IDriveCustomer>
+const { width } = useWindowSize()
+const isMobile = computed(() => width.value < 750)
+const dialogWidth = computed (() => isMobile.value ? '90%' : '30%')
 const formSize = ref('large')
 const ruleFormRef = ref<FormInstance>()
-const ruleForm = reactive({
-  firstName: 'Arnaud',
-  lastName: 'Lejeune',
-  emailWork: '',
-  emailPersonal: '',
-  emailOther: '',
-  phoneWork:'',
-  phoneCell:'',
-  phoneHome: '',
-  address: '',
-  city: '',
-  state: '',
-  zipcode: '',
-  country: ''
-})
 
-const customerPhones = computed( () => myCustomer.value.identifiers?.filter( x => x.type == 'Voice'))
-const customerEmails = computed( () => myCustomer.value.identifiers?.filter( x => x.type == 'Email'))
-const isUserProvisioned = computed( () => myUser.value.contact_email?.length > 0)
-const isCustomerProvisioned = computed( () => myCustomer.value?.identifiers?.length > 0)
+const emailDialogFormVisible = ref(false)
+const phoneDialogFormVisible = ref(false)
+
+const customerPhones = computed( () => myCustomerForm?.value?.identifiers?.filter( x => x.type == 'Voice'))
+const customerEmails = computed( () => myCustomerForm?.value?.identifiers?.filter( x => x.type == 'Email'))
+
+const hasWorkEmail = computed( () => customerEmails?.value?.filter(x => x.name == 'Work Email')?.length > 0)
+const hasPersonalEmail = computed( () => customerEmails?.value?.filter(x => x.name == 'Personal Email')?.length > 0)
+const hasOtherEmail = computed( () => customerEmails?.value?.filter(x => x.name == 'Other Email')?.length > 0)
 
 const rules = reactive<FormRules>({
-  name: [
-    { required: true, message: 'Please input Activity name', trigger: 'blur' },
+  first_name: [
+    { required: true, message: 'Please enter first name', trigger: 'blur' },
+    { min: 2, max: 30, message: 'Length should be 2 to 30', trigger: 'blur' },
+  ],
+  last_name: [
+    { required: true, message: 'Please enter first name', trigger: 'blur' },
     { min: 2, max: 30, message: 'Length should be 2 to 30', trigger: 'blur' },
   ],
   country: [
     {
       required: true,
-      message: 'Please select Country',
+      message: 'Please enter Country',
       trigger: 'change',
     },
-  ],
-  count: [
-    {
-      required: true,
-      message: 'Please select Activity count',
-      trigger: 'change',
-    },
-  ],
-  date1: [
-    {
-      type: 'date',
-      required: true,
-      message: 'Please pick a date',
-      trigger: 'change',
-    },
-  ],
-  date2: [
-    {
-      type: 'date',
-      required: true,
-      message: 'Please pick a time',
-      trigger: 'change',
-    },
-  ],
-  type: [
-    {
-      type: 'array',
-      required: true,
-      message: 'Please select at least one activity type',
-      trigger: 'change',
-    },
-  ],
-  resource: [
-    {
-      required: true,
-      message: 'Please select activity resource',
-      trigger: 'change',
-    },
-  ],
-  desc: [
-    { required: true, message: 'Please input activity form', trigger: 'blur' },
-  ],
+  ]
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
@@ -102,6 +57,75 @@ const resetForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.resetFields()
 }
+
+const addPhoneConfig = () => {
+  console.log('Add Phone Request')
+  phoneDialogFormVisible.value = true
+}
+
+const addPhoneSubmit = () => {
+  console.log('Add Phone Submitted')
+  //emailTypeOptions.map(x => x.label == emailDialogForm.name)
+  emailTypeOptions.filter( opt  => opt.label == emailDialogForm.name )
+  myCustomerForm.value?.identifiers.push(emailDialogForm)
+  emailDialogFormVisible.value = false
+}
+
+
+const addEmail = () => {
+  console.log('Add Email')
+  emailDialogFormVisible.value = true
+}
+
+const  phoneDialogForm = reactive({
+  name: 'Personal Phone',
+  value: '',
+  type: 'Voice'
+})
+
+const  emailDialogForm = reactive({
+  name: '',
+  value: '',
+  type: 'Email'
+})
+
+const emailTypeOptions = reactive([
+  {
+    value: '1',
+    label: 'Work Email',
+    disabled: hasWorkEmail
+
+  },
+  {
+    value: '2',
+    label: 'Personal Email',
+    disabled: hasPersonalEmail
+  },
+  {
+    value: '3',
+    label: 'Other Email',
+    disabled: hasOtherEmail
+  }
+])
+
+const phoneTypeOptions = ref([
+  {
+    value: '1',
+    label: 'Work Phone',
+    disabled: true
+  },
+  {
+    value: '2',
+    label: 'Mobile Phone'
+  },
+  {
+    value: '3',
+    label: 'Home Phone',
+  }
+])
+
+const formLabelWidth = '100px'
+
 
 
 </script>
@@ -133,64 +157,73 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
           <!-- <p>{{myUser}}</p>
           <p>{{myCustomer}}</p> -->
-          <el-form ref="ruleFormRef" :model="myCustomer" :rules="rules" label-width="120px" label-position="top"
+          <el-form ref="ruleFormRef" :model="myCustomerForm" :rules="rules" label-width="120px" label-position="top"
             class="demo-ruleForm" :size="formSize" status-icon>
             <el-row :gutter="20">
-              <el-col :span="12">
+              <el-col :xs="24" :span="12">
               <el-form-item label="First Name" prop="name">
-                <el-input v-model="myCustomer.first_name" />
+                <el-input v-model="myCustomerForm.first_name" />
               </el-form-item>
             </el-col>
-            <el-col :span="12">
+            <el-col :xs="24" :span="12">
               <el-form-item label="Last Name" prop="name">
-                <el-input v-model="myCustomer.last_name" />
+                <el-input v-model="myCustomerForm.last_name" />
               </el-form-item>
             </el-col>
             </el-row>
-            <el-row :gutter="20">
+            <el-row :xs="24" :gutter="20">
               <el-col :span="18">
               <el-form-item label="Address" prop="address">
-                <el-input v-model="myCustomer.address" />
+                <el-input v-model="myCustomerForm.address" />
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :xs="24" :span="6">
               <el-form-item label="Country" prop="country">
-                <el-input v-model="myCustomer.country" />
+                <el-input v-model="myCustomerForm.country" />
               </el-form-item>
             </el-col>
           </el-row>
 
           <el-row :gutter="20">
-              <el-col :span="8">
+              <el-col :xs="24" :span="8">
               <el-form-item label="City" prop="city">
-                <el-input v-model="myCustomer.city" />
+                <el-input v-model="myCustomerForm.city" />
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :xs="24" :span="8">
               <el-form-item label="State" prop="state">
-                <el-input v-model="myCustomer.state" />
+                <el-input v-model="myCustomerForm.state" />
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :xs="24" :span="8">
               <el-form-item label="Zipcode" prop="zipcode">
-                <el-input v-model="myCustomer.zip" />
+                <el-input v-model="myCustomerForm.zip" />
               </el-form-item>
             </el-col>
           </el-row>
 
+          <el-row :gutter="20">
+            <el-col><h4 class="card-header-title text-primary mt-2 pb-2">Emails<a @click.prevent.stop="addEmail" href=""><i class="small text-primary bi bi-plus-circle mx-3"></i></a></h4></el-col>
+          </el-row>
           
           <el-row :gutter="20">
-            <el-col v-for="item in customerEmails" :span="8">
+            <el-col v-for="item in customerEmails" :xs="24" :span="8">
               <el-form-item :label="item.name" prop="email">
                 <el-input v-model="item.value" />
               </el-form-item>
             </el-col>
-            <el-col v-for="item in customerPhones" :span="8">
+          </el-row>
+
+          <el-row :xs="24" :gutter="20">
+            <el-col><h4 class="card-header-title text-primary mt-2 pb-2">Phones<a @click.prevent.stop="addPhoneConfig" href=""><i class="small text-primary bi bi-plus-circle mx-3"></i></a></h4></el-col>
+          </el-row>
+          
+          <el-row :gutter="20">
+            <el-col v-for="item in customerPhones" :xs="24" :span="8">
               <el-form-item :label="item.name" prop="phone">
                 <el-input v-model="item.value" />
               </el-form-item>
-            </el-col>
-            
+            </el-col>            
           </el-row>
 
            
@@ -208,6 +241,35 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
     </div>
   </div>
+
+  <el-dialog v-model="emailDialogFormVisible" :width="dialogWidth" title="Add Email">
+    <el-form :model="emailDialogForm">
+      <el-form-item label="Type" :label-width="formLabelWidth">
+        <el-select v-model="emailDialogForm.name" placeholder="Select Type">
+          <el-option
+            v-for="item in emailTypeOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.label"
+            :disabled="item.disabled"
+          />
+        </el-select>
+      </el-form-item>
+        <el-form-item label="Email" :label-width="formLabelWidth">
+          <el-input v-model="emailDialogForm.value" autocomplete="off" />
+      </el-form-item>
+    </el-form>
+    
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="emailDialogFormVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="addPhoneSubmit">
+          Confirm
+        </el-button>
+      </span>
+    </template>
+
+  </el-dialog>
   <!-- Main content END -->
 </template>
 

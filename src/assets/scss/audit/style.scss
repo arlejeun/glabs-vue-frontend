@@ -1,22 +1,23 @@
 // Bootstrap variables
-@import "vendor/bootstrap/scss/functions";
-@import "vendor/bootstrap/scss/variables";
 
-// Theme variables
+@import "vendor/bootstrap/functions";
+@import "vendor/bootstrap/variables";
+
+// // Theme variables
 @import "variables";
 
-// User variables
+// // User variables
 @import "user-variables";
 
 
-// Bootstrap core
-@import "vendor/bootstrap/scss/bootstrap";
+// // Bootstrap core
+@import "vendor/bootstrap/bootstrap";
 
-// Extended bootstrap utilities
+// // Extended bootstrap utilities
+@import "vendor/bootstrap/utilities/api";
 @import "custom/utilities";
-@import "vendor/bootstrap/scss/utilities/api";
 
-// Extended bootstrap components
+// // Extended bootstrap components
 @import "custom/accordion";
 @import "custom/breadcrumb";
 @import "custom/buttons";
@@ -35,7 +36,7 @@
 @import "custom/forms/form-check";
 @import "custom/forms/form-control";
 
-// Theme components 
+// // Theme components 
 @import "components/general";
 @import "components/avatar";
 @import "components/form-guest";
@@ -44,14 +45,16 @@
 @import "components/vendor/choices";
 @import "components/vendor/tiny-slider";
 @import "components/vendor/stepper";
-//@import "components/vendor/quill";
-//@import "components/vendor/splide-slider";
-//@import "components/vendor/nouislider";
-//@import "components/vendor/flatpickr";
+@import "components/vendor/quill";
+@import "components/vendor/splide-slider";
+@import "components/vendor/nouislider";
+@import "components/vendor/flatpickr";
 @import "components/vendor/dropzone";
 
-// Theme dark
+
+// // Theme dark
 @import "dark-mode";
 
-// In this scss you can write your scss/css
+// // In this scss you can write your scss/css
 @import "user";
+

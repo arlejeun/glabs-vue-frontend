@@ -1,47 +1,27 @@
-<script lang="ts" setup>
-import { reactive } from 'vue'
-
-// do not use same name with ref
-const form = reactive({
-  name: '',
-  region: '',
-  date1: '',
-  date2: '',
-  delivery: false,
-  type: [],
-  resource: '',
-  desc: '',
-})
-
-const onSubmit = () => {
-  console.log('submit!')
-}
-</script>
-
 <template>
-  <el-row>
-    <el-col :span="24"><div class="grid-content ep-bg-purple-dark" /></el-col>
-  </el-row>
-  <el-row>
-    <el-col :span="12"><div class="grid-content ep-bg-purple" /></el-col>
-    <el-col :span="12"><div class="grid-content ep-bg-purple-light" /></el-col>
-  </el-row>
-  <el-row>
-    <el-col :span="8"><div class="grid-content ep-bg-purple" /></el-col>
-    <el-col :span="8"><div class="grid-content ep-bg-purple-light" /></el-col>
-    <el-col :span="8"><div class="grid-content ep-bg-purple" /></el-col>
-  </el-row>
-  <el-row>
-    <el-col :span="6"><div class="grid-content ep-bg-purple" /></el-col>
-    <el-col :span="6"><div class="grid-content ep-bg-purple-light" /></el-col>
-    <el-col :span="6"><div class="grid-content ep-bg-purple" /></el-col>
-    <el-col :span="6"><div class="grid-content ep-bg-purple-light" /></el-col>
-  </el-row>
-  <el-row>
-    <el-col :span="24">
-  <el-form :model="form" label-width="120px">
+
+<form>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Email address</label>
+    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Password</label>
+    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+  </div>
+  <div class="form-check">
+    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+  <el-form :model="form" form="string" label-width="120px">
     <el-form-item label="Activity name">
-      <el-input v-model="form.name" />
+      <el-input v-model="form.surname"  />
+      <el-input v-model="input" type="string" class="form-control" placeholder="Please input" />
     </el-form-item>
     <el-form-item label="Activity zone">
       <el-select v-model="form.region" placeholder="please select your zone">
@@ -94,35 +74,28 @@ const onSubmit = () => {
       <el-button>Cancel</el-button>
     </el-form-item>
   </el-form>
-
-
-</el-col>
-    
-    <el-col :span="4"></el-col>
-  </el-row>
 </template>
 
-<style lang="scss">
-.el-row {
-  margin-bottom: 20px;
-}
-.el-row:last-child {
-  margin-bottom: 0;
-}
-.el-col {
-  border-radius: 4px;
-}
-.ep-bg-purple {
-  background-color: blue;
-}
+<script lang="ts" setup>
+import { reactive } from 'vue'
 
-.grid-content {
-  border-radius: 4px;
-  min-height: 36px;
-}
-</style>
+// do not use same name with ref
+const form = reactive({
+  surname: '',
+  region: '',
+  date1: '',
+  date2: '',
+  delivery: false,
+  type: [],
+  resource: '',
+  desc: '',
+})
 
-<route lang="yaml">
-meta:
-  layout: BasicTopNavigationLayout
-  </route>
+const input = ref('')
+
+const onSubmit = () => {
+  console.log('submit!')
+}
+</script>
+
+<style scoped></style>
