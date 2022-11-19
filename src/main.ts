@@ -1,17 +1,18 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
-// Import ELementPlus (Vite Plugin to auto import component on demand)
-/*
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-app.use(ElementPlus)
-*/
+
+//import ElementPlus from 'element-plus'
+//import '@/assets/scss/vendor/bootstrap/scss/bootstrap.scss'
+//import '@/assets/scss/element/index.scss'
 
 // Import Bootstrap
-import '@/assets/scss/style.scss'
+import '@/assets/scss/audit/style.scss'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
-import '@/assets/scss/vendor/bootstrap-icons/bootstrap-icons.css'
+import '@/assets/scss/audit/vendor/bootstrap-icons/bootstrap-icons.css'
+
+// import '@/assets/scss/element/index.scss'
+// import 'element-plus/dist/index.css'
 
 // Import Fontawesome
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -27,7 +28,7 @@ import App from '@/App.vue'
 library.add(fas)
 
 const app = createApp(App)
-
+//app.use(ElementPlus)
 app.use(createPinia())
 app.use(router)
 

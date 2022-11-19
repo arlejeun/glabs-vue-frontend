@@ -1,10 +1,5 @@
 <script setup lang="ts">
-//const theme = useStorage('data-theme', undefined)
-// const root = document.documentElement
-// if (theme.value === 'dark' && theme.value !== undefined)
-//   root.classList.add('dark-mode')
-// else
-//   root.classList.remove('dark-mode')
+
 </script>
 
 <template>
@@ -12,7 +7,6 @@
 </template>
 
 <style lang="scss">
-// @import "@/assets/sass/workshops/home/site.scss";
 
 .logo {
   display: block;

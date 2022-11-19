@@ -5,6 +5,10 @@
     height: 70px;
 }
 
+::selection {
+    background: var(--el-color-primary-light-8);
+}
+
 /* Banner Image */
 .hero-image {
     // background-image: url('/img/workshops/Genesys-Banner-Red.png');

@@ -44,6 +44,7 @@
     "vite-plugin-pages": "~0.27.1",
     "vite-plugin-vue-layouts": "~0.7.0",
     "unplugin-vue-define-options": "~0.12.7",
+    "unplugin-element-plus":"~0.4.1",
     "eslint": "^8.22.0",
     "eslint-plugin-vue": "^9.3.0",
     "jsdom": "^20.0.1",

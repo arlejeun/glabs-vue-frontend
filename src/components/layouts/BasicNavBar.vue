@@ -10,9 +10,12 @@ const myUser = storeToRefs(userStore).user as Ref<IDriveUser>
 const myUsername = computed(() => `${myUser.value?.first_name} ${myUser.value?.last_name}`)
 
 const { width } = useWindowSize()
-const isMobile = computed(() => width.value < 750)
+const isMobile = computed(() => width.value < 1200)
 const isDark = useDark({valueDark: 'dark-mode', valueLight: 'light-mode'})
 const toggleDark = useToggle(isDark)
+
+const showProfileMenu = ref(false)
+const showNotificationsMenu = ref(false)
 
 function mockSignIn() {
   userStore.fetchUser()
@@ -263,10 +266,6 @@ function mockSignOut() {
                   id="darkModeSwitch"
                   class="modeswitch-wrap"
                 >
-                <!--<button @click="toggleDark()">
-                    <i inline-block align-middle i="dark:carbon-moon carbon-sun" />
-                    <span class="ml-2">{{ isDark ? 'Dark' : 'Light' }}</span>
-                </button> -->
                    <div
                     class="modeswitch-item"
                     @click="toggleDark()"

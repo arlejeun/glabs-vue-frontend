@@ -15,10 +15,14 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
+        //additionalData: `@use "@/assets/scss/element/index.scss" as *;`,
         // example : additionalData: `@import "./src/design/styles/variables";`
         // dont need include file extend .scss
-        // additionalData: `@import "src/assets/scss/style"`
+        // additionalData: `@import "src/assets/scss/element/index.scss";`
       },
+      dirs: [
+        'src/assets/scss/element'
+      ],
     },
   },
   plugins: [

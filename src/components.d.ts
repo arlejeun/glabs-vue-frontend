@@ -7,6 +7,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    2: typeof import('./components/account/AccountProfile copy 2.vue')['default']
     AccountDelete: typeof import('./components/account/AccountDelete.vue')['default']
     AccountFeedback: typeof import('./components/account/AccountFeedback.vue')['default']
     AccountOrganizations: typeof import('./components/account/AccountOrganizations.vue')['default']
@@ -17,24 +18,32 @@ declare module '@vue/runtime-core' {
     BasicFooter: typeof import('./components/layouts/BasicFooter.vue')['default']
     BasicNavBar: typeof import('./components/layouts/BasicNavBar.vue')['default']
     CustomerRecord: typeof import('./components/account/CustomerRecord.vue')['default']
+<<<<<<< HEAD
     ElContainer: typeof import('element-plus/es')['ElContainer']
+=======
+    ElButton: typeof import('element-plus/es')['ElButton']
+    ElCol: typeof import('element-plus/es')['ElCol']
+    ElContainer: typeof import('element-plus/es')['ElContainer']
+    ElDialog: typeof import('element-plus/es')['ElDialog']
+>>>>>>> master
     ElFooter: typeof import('element-plus/es')['ElFooter']
     ElMain: typeof import('element-plus/es')['ElMain']
 <<<<<<<
 
 =======
     ElOption: typeof import('element-plus/es')['ElOption']
-    ElPagination: typeof import('element-plus/es')['ElPagination']
-    ElRadio: typeof import('element-plus/es')['ElRadio']
-    ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
     ElRow: typeof import('element-plus/es')['ElRow']
     ElSelect: typeof import('element-plus/es')['ElSelect']
+<<<<<<< HEAD
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTimePicker: typeof import('element-plus/es')['ElTimePicker']
 >>>>>>>
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+=======
+    HelloWorld: typeof import('./components/testing/HelloWorld.vue')['default']
+>>>>>>> master
     IconCommunity: typeof import('./components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./components/icons/IconDocumentation.vue')['default']
     IconEcosystem: typeof import('./components/icons/IconEcosystem.vue')['default']
