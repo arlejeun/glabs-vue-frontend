@@ -34,8 +34,16 @@ export interface IDriveUser {
     first_name: string,
     last_name: string,
     customer: IDriveCustomer,
-    contact_email: string,
-    [x: string]: string | IDriveCustomer,
+    email: string,
+    avatar_url: string,
+    date_created: string,
+    date_updated: string,
+    date_approved: string,
+    date_lastLogin: string,
+    date_expired: string,
+    groups: ITag[]
+    [x: string]: string | IDriveCustomer | ITag[],
+
   }
 
 export interface IDriveCustomer {
@@ -47,6 +55,15 @@ export interface IDriveIdentifier {
     name: string,
     type: string,
     value: string
+  }
+
+  export interface IDriveProfileActivity {
+    content: string,
+    timestamp: string,
+    size?: string,
+    type?: string,
+    icon?: string,
+    hollow?: boolean
   }
 
 

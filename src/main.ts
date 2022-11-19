@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-
+import { abilitiesPlugin } from '@casl/vue'
+import ability from '@/plugins/casl/ability'
 
 //import ElementPlus from 'element-plus'
 //import '@/assets/scss/vendor/bootstrap/scss/bootstrap.scss'
@@ -34,5 +35,9 @@ app.use(router)
 
 app.component('fa', FontAwesomeIcon)
 app.component('MazPhoneNumberInput', MazPhoneNumberInput)
+
+app.use(abilitiesPlugin, ability, {
+    useGlobalProperties: true,
+  })
 
 app.mount('#app')

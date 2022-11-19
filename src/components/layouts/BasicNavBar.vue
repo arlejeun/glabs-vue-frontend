@@ -1,13 +1,19 @@
 <script setup lang="ts">
+
 import { useUserStore } from '@/stores/user'
-import type { IDriveUser } from "@/interfaces";
-import type { Ref } from 'vue';
 import router from '@/router'
+
 const userStore = useUserStore()
 // const userName = computed(() => `${userStore?.user?.first_name} ${userStore?.user?.last_name}`)
-const isLoggedIn = computed(() => userStore.status == 'LoggedIn')
-const myUser = storeToRefs(userStore).user as Ref<IDriveUser>
-const myUsername = computed(() => `${myUser.value?.first_name} ${myUser.value?.last_name}`)
+
+const {user, status, token} = storeToRefs(userStore)
+const {fetchUser, logout} = userStore
+
+const avatarUrl = computed(() => user.value?.avatar_url || '/src/assets/images/avatar/01.jpg') 
+
+const isLoggedIn = computed(() => status.value == 'LoggedIn')
+// const myUser = storeToRefs(userStore).user as Ref<IDriveUser>
+const myUsername = computed(() => `${user.value?.first_name} ${user.value?.last_name}`)
 
 const { width } = useWindowSize()
 const isMobile = computed(() => width.value < 1200)
@@ -18,11 +24,11 @@ const showProfileMenu = ref(false)
 const showNotificationsMenu = ref(false)
 
 function mockSignIn() {
-  userStore.fetchUser()
+  fetchUser()
 }
 
 function mockSignOut() {
-  userStore.logout()
+  logout()
   router.push('/')
 }
 
@@ -189,7 +195,7 @@ function mockSignOut() {
             >
               <img
                 class="avatar-img rounded-circle"
-                src="@/assets/images/avatar/01.jpg"
+                :src="avatarUrl"
                 alt="avatar"
               >
             </a>
@@ -206,7 +212,7 @@ function mockSignOut() {
                   <div class="avatar me-3">
                     <img
                       class="avatar-img rounded-circle shadow"
-                      src="@/assets/images/avatar/01.jpg"
+                      :src="avatarUrl"
                       alt="avatar"
                     >
                   </div>
@@ -216,7 +222,7 @@ function mockSignOut() {
                       href="#"
                     >{{ myUsername }}</a>
                     <p class="small m-0">
-                      {{myUser.contact_email}}
+                      {{myUser.email}}
                     </p>
                   </div>
                 </div>

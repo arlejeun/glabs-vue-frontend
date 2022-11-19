@@ -36,10 +36,18 @@ import BasicFooter from '@/components/layouts/BasicFooter.vue';
 .footer {
   background-color: var(--el-color-info);
   font-family: AmazonEmberBold, Helvetica, Arial, "Sans-Serif";
-  padding: 15px 0;
+  /* padding: 15px 0; */
   position: absolute;
   bottom: 5px;
   width: 100%;
   height: 2.5 rem;
 }
+
+
+* {
+  --el-color-success: #0cbc87;
+  --el-color-danger:  #d6293e;
+  --el-color-primary: #23395D
+}
+
 </style>
