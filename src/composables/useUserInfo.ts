@@ -15,4 +15,7 @@ export const myUser = storeToRefs(userStore).user as Ref<IDriveUser>
 
 export const myUsername = computed(() => `${myUser.value?.first_name} ${myUser.value?.last_name}`)
 
+export const isAdmin = computed(() => myUser.value?.is_admin)
+
 export const getUserData = computed(() => `${myUser.value}`)
+

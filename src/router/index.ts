@@ -9,7 +9,6 @@ import ability from '@/plugins/casl/ability'
 
 
 const canNavigate = (to: RouteLocationNormalized) => {
-  // @ts-expect-error We should allow passing string | undefined to can because for admin ability we omit defining action & subject
  return true
   //return to.matched.some(route => ability.can(route.meta.action, route.meta.subject))
 }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import page401 from '@/assets/images/pages/401.png'
+// import page401 from '@/assets/images/pages/401.png'
 
 
 </script>
@@ -19,18 +19,7 @@ import page401 from '@/assets/images/pages/401.png'
 
     <!-- 👉 Image -->
     <div class="misc-avatar w-100 text-center">
-      <VImg
-        :src="page401"
-        alt="Coming Soon"
-        :max-width="800"
-        class="mx-auto"
-      />
-      <VBtn
-        to="/"
-        class="mt-10"
-      >
-        Back to Home
-      </VBtn>
+      
     </div>
 
 

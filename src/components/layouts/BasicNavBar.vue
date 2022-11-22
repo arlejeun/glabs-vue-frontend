@@ -2,6 +2,8 @@
 
 import { useUserStore } from '@/stores/user'
 import router from '@/router'
+import defaultAvatarUrl from '@/assets/images/avatar/01.jpg'
+import type { Primitive } from 'type-fest';
 
 const userStore = useUserStore()
 // const userName = computed(() => `${userStore?.user?.first_name} ${userStore?.user?.last_name}`)
@@ -9,10 +11,9 @@ const userStore = useUserStore()
 const {user, status, token} = storeToRefs(userStore)
 const {fetchUser, logout} = userStore
 
-const avatarUrl = computed(() => user.value?.avatar_url || '/src/assets/images/avatar/01.jpg') 
+const avatarUrl = computed(() => user.value?.avatar_url || defaultAvatarUrl)
 
 const isLoggedIn = computed(() => status.value == 'LoggedIn')
-// const myUser = storeToRefs(userStore).user as Ref<IDriveUser>
 const myUsername = computed(() => `${user.value?.first_name} ${user.value?.last_name}`)
 
 const { width } = useWindowSize()
@@ -98,7 +99,31 @@ function mockSignOut() {
                 class="nav-link text-white fw-bolder"
                 to="/environments"
               >
-                Environments
+                Demos
+              </router-link>
+            </li>
+            <li class="nav-item dropdown">
+              <router-link
+                class="nav-link text-white fw-bolder"
+                to="/environments"
+              >
+                Verticals
+              </router-link>
+            </li>
+            <li class="nav-item dropdown">
+              <router-link
+                class="nav-link text-white fw-bolder"
+                to="/environments"
+              >
+                Integration
+              </router-link>
+            </li>
+            <li class="nav-item dropdown">
+              <router-link
+                class="nav-link text-white fw-bolder"
+                to="/environments"
+              >
+                AppFoundry
               </router-link>
             </li>
           </ul>
@@ -258,7 +283,7 @@ function mockSignOut() {
                 </router-link>
               </li>
               <li>
-                <a class="dropdown-item" @click="mockSignOut"><i class="bi bi-power fa-fw me-2" />Sign Out</a>
+                <a class="dropdown-item" @click.stop.prevent="mockSignOut"><i class="bi bi-power fa-fw me-2" />Sign Out</a>
                   
                 
               </li>
@@ -297,7 +322,7 @@ function mockSignOut() {
         <ul v-if="!isLoggedIn" class="nav flex-row align-items-center list-unstyled ms-xl-auto">
 
           
-          <li @click="mockSignIn" class="nav-item"> <a class="nav-link text-white fw-bolder"><i class="bi bi-box-arrow-in-right me-2"></i>Sign In</a></li>
+          <li @click.stop.prevent="mockSignIn" class="nav-item"> <a class="nav-link text-white fw-bolder"><i class="bi bi-box-arrow-in-right me-2"></i>Sign In</a></li>
 
           <!-- Button -->
           <!-- <li class="nav-item ms-3 d-none d-sm-block">

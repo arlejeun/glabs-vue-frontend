@@ -1,5 +1,18 @@
 <script setup lang="ts">
-import AccountOrganizationSummary from '../organizations/AccountOrganizationSummary.vue';
+import AccountOrganizationSummary from '../organizations/AccountOrganizationSummary.vue'
+import { useUserStore } from '@/stores/user'
+import type { IDriveCustomerOrg } from '@/interfaces'
+
+const userStore = useUserStore()
+const { customer, orgs } = storeToRefs(userStore)
+
+
+const selfManagedOrgs = computed(() => orgs.value.filter((organization) => organization.is_owned_by_gts))
+const customOrgs = computed(() => orgs.value.filter((organization) => !organization.is_owned_by_gts))
+
+function isOrgActive(org: IDriveCustomerOrg): boolean {
+  return false
+}
 
 </script>
 
@@ -41,85 +54,23 @@ import AccountOrganizationSummary from '../organizations/AccountOrganizationSumm
 
           <!-- Tab content item START -->
           <div class="tab-pane fade show active" id="tab-1">
-            <h6>Orgnizations for demonstrations only with restricted permissions</h6>
-            <AccountOrganizationSummary />
-            
-            <div class="card border mb-4">
-              <!-- Card header -->
-              <div class="card-header d-md-flex justify-content-md-between align-items-center">
-                <!-- Icon and Title -->
-                <div class="d-flex align-items-center">
-                  <div class="icon-lg bg-light rounded-circle flex-shrink-0"><i class="fa-solid fa-plane"></i>
-                  </div>
-                  <!-- Title -->
-                  <div class="ms-2">
-                    <h6 class="card-title mb-0">PureCloudNowAdmin</h6>
-                    <ul class="nav nav-divider small">
-                      <li class="nav-item">Region: us-east</li>
-                    </ul>
-                  </div>
-                </div>
 
-                <!-- Button -->
-                <div class="mt-2 mt-md-0">
-                  <a href="#" class="btn btn-primary-soft mb-0 mr-1">Provision User</a>
-                </div>
+            <div class="row pt-1 pb-2 mb-2">
+              <div class="col">
+                <h6>Hands-on orgnizations managed by GTS ({{ selfManagedOrgs.length }})</h6>
               </div>
+              <div class="col-auto">
+                <div class="mt-2 mt-md-0">
+                  <a href="#" class="btn btn-primary-soft mb-0 mr-1">Add Org</a>
+                </div>
 
+              </div>
             </div>
 
-            <!-- Card item START -->
-            <div class="card border mb-4">
-              <!-- Card header -->
-              <div class="card-header d-md-flex justify-content-md-between align-items-center">
-                <!-- Icon and Title -->
-                <div class="d-flex align-items-center">
-                  <div class="icon-lg bg-light rounded-circle flex-shrink-0"><i class="fa-solid fa-plane"></i>
-                  </div>
-                  <!-- Title -->
-                  <div class="ms-2">
-                    <h6 class="card-title mb-0">GC1</h6>
-                    <ul class="nav nav-divider small">
-                      <li class="nav-item">Region: us-east</li>
-                      <li class="nav-item">Pricing Tier 1</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <!-- Button -->
-                <div class="mt-2 mt-md-0">
-                  <a href="#" class="btn btn-primary-soft mb-0 mr-1">Provision User</a>
-                </div>
-              </div>
-
+            <div v-for="org in (selfManagedOrgs)" class="mb-4">
+              <AccountOrganizationSummary :org="org" :active="isOrgActive(org)" />
             </div>
-            <!-- Card item END -->
-            <!-- Card item START -->
-            <div class="card border mb-4">
-              <!-- Card header -->
-              <div class="card-header d-md-flex justify-content-md-between align-items-center">
-                <!-- Icon and Title -->
-                <div class="d-flex align-items-center">
-                  <div class="icon-lg bg-light rounded-circle flex-shrink-0"><i class="fa-solid fa-plane"></i>
-                  </div>
-                  <!-- Title -->
-                  <div class="ms-2">
-                    <h6 class="card-title mb-0">GC2</h6>
-                    <ul class="nav nav-divider small">
-                      <li class="nav-item">Region: us-east</li>
-                      <li class="nav-item">Pricing Tier 2</li>
-                    </ul>
-                  </div>
-                </div>
 
-                <!-- Button -->
-                <div class="mt-2 mt-md-0">
-                  <a href="#" class="btn btn-primary-soft mb-0 mr-1">Provision User</a>
-                </div>
-              </div>
-
-            </div>
-            <!-- Card item END -->
           </div>
           <!-- Tabs content item END -->
 
@@ -127,21 +78,21 @@ import AccountOrganizationSummary from '../organizations/AccountOrganizationSumm
           <div class="tab-pane fade" id="tab-2">
             <div class="row pt-1 pb-2 mb-2">
               <div class="col">
-              <h6>Development Organizations (1)</h6>
-            </div>
-            <div class="col-auto">
-              <div class="mt-2 mt-md-0">
+                <h6>Development Organizations (1)</h6>
+              </div>
+              <div class="col-auto">
+                <div class="mt-2 mt-md-0">
                   <a href="#" class="btn btn-primary-soft mb-0 mr-1">Add Org</a>
                 </div>
-              
+
+              </div>
             </div>
-            </div>
-            
-            
+
+
 
             <!-- Card item START -->
-                        <!-- Card item START -->
-                        <div class="card border mb-4">
+            <!-- Card item START -->
+            <div class="card border mb-4">
               <!-- Card header -->
               <div class="card-header d-md-flex justify-content-md-between align-items-center">
                 <!-- Icon and Title -->
@@ -170,25 +121,6 @@ import AccountOrganizationSummary from '../organizations/AccountOrganizationSumm
           </div>
           <!-- Tabs content item END -->
 
-          <!-- Tab content item START -->
-          <div class="tab-pane fade" id="tab-3">
-            <div class="bg-mode shadow p-4 rounded overflow-hidden">
-              <div class="row g-4 align-items-center">
-                <!-- Content -->
-                <div class="col-md-9">
-                  <h6>Looks like you have never booked with BOOKING</h6>
-                  <h4 class="mb-2">When you book your trip will be shown here.</h4>
-                  <a href="hotel-list.html" class="btn btn-primary-soft mb-0">Start booking now</a>
-                </div>
-                <!-- Image -->
-                <div class="col-md-3 text-end">
-                  <!-- <img src="assets/images/element/17.svg" class="mb-n5" alt=""> -->
-                </div>
-              </div>
-            </div>
-
-          </div>
-          <!-- Tabs content item END -->
         </div>
 
       </div>
@@ -196,6 +128,9 @@ import AccountOrganizationSummary from '../organizations/AccountOrganizationSumm
     </div>
 
   </div>
+
+  <!-- <pre>{{orgs}}</pre> -->
+  <!-- <pre>{{customer}}</pre> -->
   <!-- Main content END -->
 </template>
 
