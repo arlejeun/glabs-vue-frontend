@@ -33,20 +33,50 @@ export interface IWorkshop {
 export interface IDriveUser {
     first_name: string,
     last_name: string,
-    customer: IDriveCustomer,
-    contact_email: string,
-    [x: string]: string | IDriveCustomer,
+    customer: IDriveCustomer[],
+    orgs: IDriveCustomerOrg[],
+    email: string,
+    avatar_url: string,
+    date_created: string,
+    date_updated: string,
+    date_approved: string,
+    date_lastLogin: string,
+    date_expired: string,
+    groups: ITag[]
+    [x: string]: string | IDriveCustomer[] | ITag[] | IDriveCustomerOrg[],
+
   }
 
 export interface IDriveCustomer {
-    identifiers: IDriveIdentifier[],
     [x: string]: string | IDriveIdentifier[],
+    identifiers: IDriveIdentifier[]
+  }
+
+export interface IDriveCustomerOrg {
+    id: number,
+    is_owned_by_gts:boolean,
+    user_id: number,
+    [x: string]: string | IDriveCustomerOrgSettings | number | boolean,
+    org_user_settings: IDriveCustomerOrgSettings
   }
 
 export interface IDriveIdentifier {
     name: string,
     type: string,
     value: string
+  }
+
+export interface IDriveCustomerOrgSettings {
+  [x: string]: string | undefined
+}
+
+  export interface IDriveProfileActivity {
+    content: string,
+    timestamp: string,
+    size?: string,
+    type?: string,
+    icon?: string,
+    hollow?: boolean
   }
 
 

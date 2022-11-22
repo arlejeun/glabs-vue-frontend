@@ -1,13 +1,21 @@
 <script setup lang="ts">
   import { useUserStore } from '@/stores/user'
   import router from '@/router'
- 
+  import defaultAvatarUrl from '@/assets/images/avatar/01.jpg'
+
   const route = useRoute()
-  const userStore = useUserStore()
-  const userName = computed(() => `${userStore?.user?.first_name} ${userStore?.user?.last_name}`)
-  const userEmail = userStore.user.contact_email
+
+  const userStore = useUserStore()  
+  const {user} = storeToRefs(userStore)
+  const {logout: userLogout} = userStore
+
+  const userName = computed(() => `${user.value?.first_name} ${user.value?.last_name}`)
+  const userEmail = user.value?.email
+  const avatarUrl = computed(() => user.value?.avatar_url || defaultAvatarUrl) 
+
+  
   function mockSignOut() {
-    userStore.logout();
+    userLogout();
     router.push('/')
   }
 
@@ -59,7 +67,7 @@
               <div class="avatar avatar-xl mb-2">
                 <img
                   class="avatar-img rounded-circle border border-2 border-white"
-                  src="@/assets/images/avatar/01.jpg"
+                  :src="avatarUrl"
                   alt=""
                 >
               </div>

@@ -7,41 +7,51 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    2: typeof import('./components/account/AccountProfile copy 2.vue')['default']
     AccountDelete: typeof import('./components/account/AccountDelete.vue')['default']
     AccountFeedback: typeof import('./components/account/AccountFeedback.vue')['default']
     AccountOrganizations: typeof import('./components/account/AccountOrganizations.vue')['default']
     AccountOrganizationSummary: typeof import('./components/organizations/AccountOrganizationSummary.vue')['default']
     AccountProfile: typeof import('./components/account/AccountProfile.vue')['default']
-    'AccountProfile copy 2': typeof import('./components/account/AccountProfile copy 2.vue')['default']
+    'AccountProfile copy': typeof import('./components/account/AccountProfile copy.vue')['default']
     AccountSettings: typeof import('./components/account/AccountSettings.vue')['default']
     BasicFooter: typeof import('./components/layouts/BasicFooter.vue')['default']
     BasicNavBar: typeof import('./components/layouts/BasicNavBar.vue')['default']
+    copy: typeof import('./components/account/AccountProfile copy.vue')['default']
     CustomerRecord: typeof import('./components/account/CustomerRecord.vue')['default']
 <<<<<<< HEAD
     ElContainer: typeof import('element-plus/es')['ElContainer']
 =======
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
+    ElCheckboxGroup: typeof import('element-plus/es')['ElCheckboxGroup']
     ElCol: typeof import('element-plus/es')['ElCol']
+    ElCollapse: typeof import('element-plus/es')['ElCollapse']
+    ElCollapseItem: typeof import('element-plus/es')['ElCollapseItem']
+    ElColorPicker: typeof import('element-plus/es')['ElColorPicker']
     ElContainer: typeof import('element-plus/es')['ElContainer']
+    ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDialog: typeof import('element-plus/es')['ElDialog']
->>>>>>> master
+    ElDivider: typeof import('element-plus/es')['ElDivider']
     ElFooter: typeof import('element-plus/es')['ElFooter']
     ElMain: typeof import('element-plus/es')['ElMain']
 <<<<<<<
 
 =======
     ElOption: typeof import('element-plus/es')['ElOption']
+    ElPagination: typeof import('element-plus/es')['ElPagination']
+    ElProgress: typeof import('element-plus/es')['ElProgress']
+    ElRadio: typeof import('element-plus/es')['ElRadio']
+    ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
     ElRow: typeof import('element-plus/es')['ElRow']
     ElSelect: typeof import('element-plus/es')['ElSelect']
-<<<<<<< HEAD
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
+    ElTag: typeof import('element-plus/es')['ElTag']
+    ElTimeline: typeof import('element-plus/es')['ElTimeline']
+    ElTimelineItem: typeof import('element-plus/es')['ElTimelineItem']
     ElTimePicker: typeof import('element-plus/es')['ElTimePicker']
->>>>>>>
-    HelloWorld: typeof import('./components/HelloWorld.vue')['default']
-=======
+    ElTooltip: typeof import('element-plus/es')['ElTooltip']
     HelloWorld: typeof import('./components/testing/HelloWorld.vue')['default']
 >>>>>>> master
     IconCommunity: typeof import('./components/icons/IconCommunity.vue')['default']
