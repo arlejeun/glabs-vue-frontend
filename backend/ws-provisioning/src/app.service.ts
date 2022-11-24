@@ -21,6 +21,7 @@ export class AppService {
   }
 
   private async download(workshop: string, file: string) {
+    console.log('Loading...')
     var res: AxiosResponse<any, any> = await firstValueFrom(
       this.httpService.get(`https://api.github.com/repos/${workshop}/zipball`, {
         responseType: 'arraybuffer', // Important
@@ -29,14 +30,18 @@ export class AppService {
         }
       }));
 
+    console.log('Loaded!')
     var b = Buffer.from(res.data, 'binary');
     fs.writeFileSync(file, b, 'binary', () => { console.log('done') });
+    console.log('Saved!')
   }
 
   private walk = function (dir: string) {
     var menu = {
-      title: "",
-      pages: [],
+      name: "",
+      weight: 0,
+      path: "",
+      body: "",
       submenus: [],
     }
 
@@ -53,14 +58,19 @@ export class AppService {
         const data = fs.readFileSync(file, { encoding: 'utf8', flag: 'r' });
         const res = fm(data);
         if (file.indexOf('/_index.md') >= 0) {
-          menu.title = res.attributes?.title;
+          menu.name = res.attributes?.title
+          menu.weight = res.attributes?.weight
+          menu.path = file
+          menu.body = res.body
         }
-        menu.pages.push({
-          name: res.attributes?.title,
-          weight: res.attributes?.weight,
-          path: file,
-          body: res.body
-        });
+        else {
+          menu.submenus.push({
+            name: res.attributes?.title,
+            weight: res.attributes?.weight,
+            path: file,
+            body: res.body
+          });
+        }
       }
     });
 
