@@ -2,9 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { AxiosResponse } from 'axios';
+import { stringify } from 'querystring';
 
-var shell = require('shelljs');
+const shell = require('shelljs');
 const fs = require('fs');
+const fm = require('front-matter');
 
 const WORKSHOPS_PATH = "../../public/ws/"
 const REPO_OWNER = "genesys-samples/"
@@ -27,9 +29,44 @@ export class AppService {
         }
       }));
 
-    var b = new Buffer(res.data, 'binary');
+    var b = Buffer.from(res.data, 'binary');
     fs.writeFileSync(file, b, 'binary', () => { console.log('done') });
   }
+
+  private walk = function (dir: string) {
+    var menu = {
+      title: "",
+      pages: [],
+      submenus: [],
+    }
+
+    var list = fs.readdirSync(dir);
+    var self = this;
+
+    list.forEach(function (file) {
+      file = dir + '/' + file;
+      var stat = fs.statSync(file);
+      if (stat && stat.isDirectory()) {
+        menu.submenus.push(self.walk(file));
+      }
+      else {
+        const data = fs.readFileSync(file, { encoding: 'utf8', flag: 'r' });
+        const res = fm(data);
+        if (file.indexOf('/_index.md') >= 0) {
+          menu.title = res.attributes?.title;
+        }
+        menu.pages.push({
+          name: res.attributes?.title,
+          weight: res.attributes?.weight,
+          path: file,
+          body: res.body
+        });
+      }
+    });
+
+    return menu;
+  }
+
 
   async getWorkshop(workshop: string): Promise<string> {
 
@@ -38,7 +75,8 @@ export class AppService {
     const donePromise = new Promise(async () => {
 
       await this.download(REPO_OWNER + workshop, 'repo.zip');
-      await this.download('matcornic/hugo-theme-learn', 'template.zip');
+      //- removed processing of theme and hugo run
+      //-await this.download('matcornic/hugo-theme-learn', 'template.zip'); 
 
       shell.mkdir(WORKSHOPS_PATH);
       shell.pushd(WORKSHOPS_PATH);
@@ -46,24 +84,32 @@ export class AppService {
       shell.mkdir(workshop);
       shell.popd();
       shell.exec(`unzip -o -qq repo.zip -d ${wsPath}`);
-      shell.exec(`unzip -o -qq template.zip -d ${wsPath}`);
+      //-shell.exec(`unzip -o -qq template.zip -d ${wsPath}`);
       shell.rm('repo.zip')
-      shell.rm('template.zip')
+      //-shell.rm('template.zip')
 
       shell.pushd(wsPath)
       shell.mkdir('temp')
 
       shell.mv('genesys-samples*/*', 'temp')
       shell.rm('-r', 'genesys-samples*')
-      shell.mv('matcornic-hugo-theme-learn*/*', 'temp/themes/hugo-theme-learn/')
-      shell.rm('-r', 'matcornic-hugo-theme-learn*')
+      //-shell.mv('matcornic-hugo-theme-learn*/*', 'temp/themes/hugo-theme-learn/')
+      //-shell.rm('-r', 'matcornic-hugo-theme-learn*')
 
-      shell.cd('temp')
-      shell.exec('hugo')
-      shell.cd('..')
+      //-shell.cd('temp')
+      //-shell.exec('hugo')
+      //-shell.cd('..')
       shell.mv('temp/*', '.')
       shell.rm('-r', 'temp')
       shell.popd();
+
+      shell.pushd(wsPath + '/content');
+      const manifest = JSON.stringify(this.walk('.'), null, 4);
+      //console.log('RESULT: ', manifest)
+      fs.writeFileSync('manifest.json', manifest);
+      shell.popd();
+      return
+
     });
 
     donePromise.then(() => {

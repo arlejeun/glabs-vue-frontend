@@ -5,7 +5,8 @@ import type { IWorkshop } from "@/interfaces";
 export const useWorkshopStore = defineStore({
   id: 'workshop',
   state: () => ({
-    workshops: [] as IWorkshop[]
+    workshops: [] as IWorkshop[],
+    openedWorkshopName: ""
   }),
   getters: {
     getAllWorkshops(): IWorkshop[] {
@@ -16,12 +17,13 @@ export const useWorkshopStore = defineStore({
     },
   },
   actions: {
+    loadWorkshop(workshop: string) { },
     addWorkshop(todo: IWorkshop) {
       this.workshops.push(todo)
     },
-    
+
     setWorkshops(workshops: IWorkshop[]) {
-      this.workshops = {...workshops}
+      this.workshops = { ...workshops }
     },
 
     removeWorkshop(index: number) {
