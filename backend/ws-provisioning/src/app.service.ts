@@ -21,7 +21,7 @@ export class AppService {
   }
 
   private async download(workshop: string, file: string) {
-    console.log('Loading...')
+    console.log(`Workshop ${workshop} is loading...`)
     var res: AxiosResponse<any, any> = await firstValueFrom(
       this.httpService.get(`https://api.github.com/repos/${workshop}/zipball`, {
         responseType: 'arraybuffer', // Important
