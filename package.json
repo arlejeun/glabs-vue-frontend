@@ -27,6 +27,7 @@
     "purecloud-platform-client-v2":"^153.0.0",
     "@vueuse/core": "~9.4.0",
     "@vueuse/integrations": "^9.5.0",
+    "@vueuse/router":"9.6.0",
     "universal-cookie": "4.0.4"
   },
   "devDependencies": {

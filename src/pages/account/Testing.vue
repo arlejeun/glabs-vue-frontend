@@ -1,13 +1,14 @@
 <template>
-  <!-- Header END -->
-
   <!-- **************** MAIN CONTENT START **************** -->
   <main>
-
-    <!-- =======================
-  Content START -->
+    <!-- ======================= Content START -->
     <section class="pt-3">
-      <EnviromentOrganization></EnviromentOrganization>
+      <div class="container">
+        <div class="row">
+          <SidebarAccount />
+          <AccountTesting />
+        </div>
+      </div>
     </section>
     <!-- =======================
   Content END -->
@@ -26,8 +27,9 @@
   }
 }
 </style>
-
+  
 <route lang="yaml">
-meta:
-  layout: BasicTopNavigationLayout
-</route>
+  meta:
+    layout: BasicTopNavigationLayout
+  </route>
+  

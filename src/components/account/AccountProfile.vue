@@ -1,10 +1,12 @@
 <script setup lang="ts">
 
 import type { FormInstance, FormRules, ElProgress } from 'element-plus'
-import { useUserStore } from '@/stores/user'
+// import { useUserStore } from '@/stores/user'
+import { user, isStatusActive } from '@/composables/useUserInfo'
 
-const userStore = useUserStore()
-const { user } = storeToRefs(userStore)
+
+// const userStore = useUserStore()
+// const { user } = storeToRefs(userStore)
 
 const createdDate = computed(() => {
   return user.value?.date_created ?
@@ -16,9 +18,9 @@ const isEmailVerified = computed(() => {
   return !!user.value.email
 })
 
-const isStatusActive = computed(() => {
-  return user.value.status == 'Active'
-})
+// const isStatusActive = computed(() => {
+//   return user.value.status == 'Active'
+// })
 
 const isAlreadyLoggedIn = computed(() => {
   return loginDate.value != 'N/A'

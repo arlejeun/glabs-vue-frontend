@@ -51,7 +51,6 @@ export interface IDriveCustomer {
     [x: string]: string | IDriveIdentifier[],
     identifiers: IDriveIdentifier[]
   }
-
 export interface IDriveCustomerOrg {
     id: number,
     is_owned_by_gts:boolean,
@@ -80,5 +79,6 @@ export interface IDriveCustomerOrgSettings {
   }
 
 
-
-export type NewTodo1 = String
+export interface IGenesysCloudRegion {
+  [x: string]: string
+}

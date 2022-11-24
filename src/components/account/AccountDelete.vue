@@ -1,4 +1,7 @@
 <script setup lang="ts">
+
+console.log(import.meta.env.VITE_WEB3_STORAGE_TOKEN) 
+
 </script>
 
 <template>

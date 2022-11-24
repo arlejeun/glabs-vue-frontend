@@ -5,13 +5,11 @@ import type { IDriveCustomerOrg } from '@/interfaces'
 
 const userStore = useUserStore()
 const { customer, orgs } = storeToRefs(userStore)
-
-
 const selfManagedOrgs = computed(() => orgs.value.filter((organization) => organization.is_owned_by_gts))
 const customOrgs = computed(() => orgs.value.filter((organization) => !organization.is_owned_by_gts))
 
 function isOrgActive(org: IDriveCustomerOrg): boolean {
-  return false
+  return true
 }
 
 </script>

@@ -4,14 +4,14 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
-const { status, customer } = storeToRefs(userStore)
+const { customer } = storeToRefs(userStore)
 //const customer = ref(user.value?.customer?.[0] as IDriveCustomer)
 
 const { width } = useWindowSize()
 const isMobile = computed(() => width.value < 750)
 const dialogWidth = computed (() => isMobile.value ? '90%' : '30%')
 const formSize = ref('large')
-const ruleFormRef = ref<FormInstance>()
+const customerFormRef = ref<FormInstance>()
 
 const emailDialogFormVisible = ref(false)
 const phoneDialogFormVisible = ref(false)
@@ -39,11 +39,30 @@ const rules = reactive<FormRules>({
   ],
   country: [
     {
-      //required: true,
+      required: true,
       message: 'Please enter Country',
       trigger: 'change',
+    }
+  ],
+  phone: [
+    {
+      required: true,
+      message: 'Please enter Phone number e.164 format',
+      trigger: 'change',
+      pattern: /^\+[1-9]\d{1,14}$/
     },
-  ]
+  ],
+  email: [
+    {
+      type: 'string',
+      required: true,
+      pattern:
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      message: 'Please enter email address',
+      trigger: 'change',
+    },
+    { min: 3, message: 'Please enter email', trigger: 'blur' },
+  ],
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
@@ -70,7 +89,7 @@ const addPhoneNumber = () => {
 const addPhoneSubmit = () => {
   console.log('Add Phone Submitted')
   //emailTypeOptions.map(x => x.label == emailDialogForm.name)
- phoneTypeOptions.filter( opt  => opt.label == phoneDialogForm.name )
+  phoneTypeOptions.filter( opt  => opt.label == phoneDialogForm.name )
   customer.value?.identifiers.push(phoneDialogForm)
   phoneDialogFormVisible.value = false
 }
@@ -161,16 +180,16 @@ const formLabelWidth = '100px'
     <!-- Card body START -->
     <div class="card-body">
 
-      <el-form ref="ruleFormRef" :model="customer" :rules="rules" label-width="120px" label-position="top"
+      <el-form ref="customerFormRef" :model="customer" :rules="rules" label-width="120px" label-position="top"
         class="demo-ruleForm" :size="formSize" status-icon>
         <el-row :gutter="20">
           <el-col :xs="24" :span="12">
-          <el-form-item label="First Name" prop="name">
+          <el-form-item label="First Name" prop="first_name">
             <el-input v-model="customer.first_name" />
           </el-form-item>
         </el-col>
         <el-col :xs="24" :span="12">
-          <el-form-item label="Last Name" prop="name">
+          <el-form-item label="Last Name" prop="last_name">
             <el-input v-model="customer.last_name" />
           </el-form-item>
         </el-col>
@@ -206,8 +225,10 @@ const formLabelWidth = '100px'
         </el-col>
       </el-row>
 
+      <el-divider></el-divider>
+
       <el-row :gutter="20">
-        <el-col><h4 class="card-header-title text-primary mt-2 pb-2">Emails<a @click.prevent.stop="addEmail" href=""><i class="small text-primary bi bi-plus-circle mx-3"></i></a></h4></el-col>
+        <el-col><h4 class="card-header-title text-primary mt-2 pb-2">Emails<a @click.prevent="addEmail" href=""><i class="small text-primary bi bi-plus-circle mx-3"></i></a></h4></el-col>
       </el-row>
       
       <el-row :gutter="20">
@@ -218,8 +239,10 @@ const formLabelWidth = '100px'
         </el-col>
       </el-row>
 
+      <el-divider></el-divider>
+
       <el-row :xs="24" :gutter="20">
-        <el-col><h4 class="card-header-title text-primary mt-2 pb-2">Phones<a @click.prevent.stop="addPhoneNumber" href=""><i class="small text-primary bi bi-plus-circle mx-3"></i></a></h4></el-col>
+        <el-col><h4 class="card-header-title text-primary mt-2 pb-2">Phones<a @click.prevent="addPhoneNumber" href=""><i class="small text-primary bi bi-plus-circle mx-3"></i></a></h4></el-col>
       </el-row>
       
       <el-row :gutter="20">
@@ -230,10 +253,12 @@ const formLabelWidth = '100px'
         </el-col>            
       </el-row>
 
+      <el-divider></el-divider>
+
        
         <el-form-item>
-          <el-button type="primary" @click.prevent="submitForm(ruleFormRef)">Save</el-button>
-          <el-button @click="resetForm(ruleFormRef)">Reset</el-button>
+          <el-button type="primary" @click.prevent="submitForm(customerFormRef)">Save</el-button>
+          <el-button @click="resetForm(customerFormRef)">Reset</el-button>
         </el-form-item> 
       </el-form>
 
@@ -275,7 +300,7 @@ const formLabelWidth = '100px'
 
 </el-dialog>
 
-<el-dialog v-model="phoneDialogFormVisible" :width="dialogWidth" title="Add Email">
+<el-dialog v-model="phoneDialogFormVisible" :width="dialogWidth" title="Add Phone Number">
 <el-form :model="phoneDialogForm">
   <el-form-item label="Type" :label-width="formLabelWidth">
     <el-select v-model="phoneDialogForm.name" placeholder="Select Type">
