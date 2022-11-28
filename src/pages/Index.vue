@@ -405,4 +405,5 @@ import TheWelcome from '../components/TheWelcome.vue'
 <route lang="yaml">
 meta:
   layout: BasicTopNavigationLayout
+  title: Genesys Workshops
 </route>

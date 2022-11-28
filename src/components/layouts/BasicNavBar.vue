@@ -1,15 +1,11 @@
 <script setup lang="ts">
 
 import { useUserStore } from '@/stores/user'
-import { user, status, avatarUrl, username, userEmail, isLoggedIn, isAdmin } from '@/composables/useUserInfo'
 import router from '@/router'
-import defaultAvatarUrl from '@/assets/images/avatar/01.jpg'
-import type { Primitive } from 'type-fest';
 
-const userStore = useUserStore()
-// const userName = computed(() => `${userStore?.user?.first_name} ${userStore?.user?.last_name}`)
-// const {user, status, token} = storeToRefs(userStore)
-const {fetchUser, logout} = userStore
+const store = useUserStore()
+const  { user, status, avatarUrl, username, userEmail, isLoggedIn, isAdmin } = storeToRefs(store)
+const {fetchUser, logout} = store
 // const avatarUrl = computed(() => user.value?.avatar_url || defaultAvatarUrl)
 // const isLoggedIn = computed(() => status.value == 'LoggedIn')
 //const username = computed(() => `${user.value?.first_name} ${user.value?.last_name}`)
@@ -81,6 +77,7 @@ function mockSignOut() {
           <ul
             class="navbar-nav navbar-nav-scroll"
             :class="{ 'bg-secondary': isMobile }"
+            v-show="isLoggedIn"
           >
             <!-- Nav item Listing -->
             <li class="nav-item dropdown">

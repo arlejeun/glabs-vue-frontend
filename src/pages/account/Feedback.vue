@@ -34,4 +34,6 @@
 <route lang="yaml">
 meta:
   layout: BasicTopNavigationLayout
+  title: Feedback
+  requiresAuth: true
 </route>

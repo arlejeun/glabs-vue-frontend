@@ -1,4 +1,12 @@
 <script setup lang="ts">
+  // import { useState } from "vue-gtag-next";
+  // const { isEnabled } = useState();
+  // const enableTracking = () => {
+  //   //isEnabled.value = true;
+  // };
+  // onMounted(() => {
+  //   enableTracking()
+  // })
 
 </script>
 

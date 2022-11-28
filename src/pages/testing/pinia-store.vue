@@ -50,5 +50,5 @@ export default {
 
 <route lang="yaml">
 meta:
-  layout: BasicTopNavigationLayout
+  layout: blank1
 </route>

@@ -1,12 +1,11 @@
 <script setup lang="ts">
   import { useUserStore } from '@/stores/user'
   import router from '@/router'
-  import { username, user, userEmail, avatarUrl } from '@/composables/useUserInfo';
-  import defaultAvatarUrl from '@/assets/images/avatar/01.jpg'
 
   const route = useRoute()
-
   const userStore = useUserStore()  
+  const  {username, user, userEmail, avatarUrl} = storeToRefs(userStore)
+
  // const {user} = storeToRefs(userStore)
   const {logout: userLogout} = userStore
 

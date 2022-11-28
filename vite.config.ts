@@ -27,7 +27,18 @@ export default defineConfig({
   },
   plugins: [
     Vue(),
-    Pages({ extensions: ['vue', 'md'] }),
+    Pages({
+      extendRoute(route, parent) {
+        return route
+        // if (route.path === '/' || route.name == 'not-authorized') {
+        //  return route
+        // }
+        // return {
+        //   ...route,
+        //   meta: { requiresAuth: true, title: route.name },
+        // }
+      },
+    extensions: ['vue', 'md'] }),
     Layouts(),
     AutoImport({
       imports: ['vue', 'vue-router', '@vueuse/head', '@vueuse/core', 'pinia'],

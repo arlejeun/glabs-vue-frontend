@@ -2,17 +2,18 @@
 
 import type { FormInstance, FormRules, ElProgress } from 'element-plus'
 import { useAxios } from '@vueuse/integrations/useAxios'
-// import { useUserStore } from '@/stores/user'
-import  {DriveApiClient, JiraMiddlewareApiClient } from '@/apis/glabs'
-import { userEmail } from '@/composables/useUserInfo'
+import { useUserStore } from '@/stores/user'
+import  {GLabsApiClient, JiraMiddlewareApiClient } from '@/apis/glabs'
 
-const {data, isFinished, isLoading, error} = useAxios('/users/me', DriveApiClient)
-console.log(DriveApiClient);
+const userStore = useUserStore()
+
+const {data, isFinished, isLoading, error} = useAxios('/users/me', GLabsApiClient)
+console.log(GLabsApiClient);
 console.log(data.value);
 console.log(isFinished)
 
 const {execute: jiraExecute, data: jiraData, isFinished: jiraIsFinished, isLoading: jiraIsLoading, error: jiraError} = useAxios(`/jira/servicedesk/gdemosupport/customer/issues?email=arnaud.lejeune@genesys.com`, JiraMiddlewareApiClient, {immediate: false})
-console.log(DriveApiClient);
+console.log(GLabsApiClient);
 console.log(jiraData.value);
 console.log(jiraError)
 console.log(jiraIsFinished)

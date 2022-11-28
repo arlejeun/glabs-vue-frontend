@@ -33,7 +33,7 @@ export interface IWorkshop {
 export interface IDriveUser {
     first_name: string,
     last_name: string,
-    customer: IDriveCustomer[],
+    customer: IDriveCustomer,
     orgs: IDriveCustomerOrg[],
     email: string,
     avatar_url: string,
@@ -43,7 +43,7 @@ export interface IDriveUser {
     date_lastLogin: string,
     date_expired: string,
     groups: ITag[]
-    [x: string]: string | IDriveCustomer[] | ITag[] | IDriveCustomerOrg[],
+    [x: string]: string | IDriveCustomer | ITag[] | IDriveCustomerOrg[],
 
   }
 

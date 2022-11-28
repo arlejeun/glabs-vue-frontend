@@ -1,12 +1,10 @@
 <script setup lang="ts">
 
 import type { FormInstance, FormRules, ElProgress } from 'element-plus'
-// import { useUserStore } from '@/stores/user'
-import { user, isStatusActive } from '@/composables/useUserInfo'
+import { useUserStore } from '@/stores/user'
 
-
-// const userStore = useUserStore()
-// const { user } = storeToRefs(userStore)
+const userStore = useUserStore()
+const { user, isStatusActive } = storeToRefs(userStore)
 
 const createdDate = computed(() => {
   return user.value?.date_created ?

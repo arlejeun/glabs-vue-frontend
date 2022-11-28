@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import type { IDriveCustomerOrgSettings } from '@/interfaces'
 import type { FormInstance, FormRules } from 'element-plus'
-import { isAdmin } from '@/composables/useUserInfo';
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()  
+const  { isAdmin } = storeToRefs(userStore)
 
 const regionValues = [
   'APAC',

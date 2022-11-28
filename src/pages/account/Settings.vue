@@ -36,5 +36,7 @@
 <route lang="yaml">
   meta:
     layout: BasicTopNavigationLayout
+    title: Account Settings
+    requiresAuth: true
   </route>
   
