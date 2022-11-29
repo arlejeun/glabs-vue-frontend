@@ -14,7 +14,8 @@ function buildMenu(submenu: IWorkshopMenuItem[]): any {
   var result = []
   var menu = {
     name: '',
-    menus: [] as IWorkshopMenuItem[]
+    menus: [] as IWorkshopMenuItem[],
+    pages: [] as IWorkshopMenuItem[]
   }
 
   submenu.forEach((item: IWorkshopMenuItem) => {
@@ -22,6 +23,9 @@ function buildMenu(submenu: IWorkshopMenuItem[]): any {
     menu.menus = []
     if (item.menus && item.menus.length > 0) {
       menu.menus = { ...buildMenu(item.menus) }
+    }
+    if (item.pages && item.pages.length > 0) {
+      menu.pages = { ...buildMenu(item.pages) }
     }
     result.push({ ...menu })
   })

@@ -82,18 +82,6 @@ export class AppService {
 
     const donePromise = new Promise(async () => {
 
-      shell.pushd(wsPath + '/content');
-      try {
-        const manifes = JSON.stringify({ content: this.walk('.').menus }, null, 4);
-        //console.log('RESULT: ', manifest)
-        fs.writeFileSync('manifest.json', manifes);
-      }
-      catch (e) {
-        console.log('Manifest file error: \n', e)
-      }
-      shell.popd();
-      return
-
       await this.download(REPO_OWNER + workshop, 'repo.zip');
       //- removed processing of theme and hugo run
       //-await this.download('matcornic/hugo-theme-learn', 'template.zip'); 
@@ -125,9 +113,14 @@ export class AppService {
       shell.popd();
 
       shell.pushd(wsPath + '/content');
-      const manifest = JSON.stringify(this.walk('.'), null, 4);
-      //console.log('RESULT: ', manifest)
-      fs.writeFileSync('manifest.json', manifest);
+      try {
+        const manifes = JSON.stringify({ content: this.walk('.').menus }, null, 4);
+        //console.log('RESULT: ', manifest)
+        fs.writeFileSync('manifest.json', manifes);
+      }
+      catch (e) {
+        console.log('Manifest file error: \n', e)
+      }
       shell.popd();
       return
 

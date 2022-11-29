@@ -5,6 +5,7 @@ import type { IWorkshop } from '@/interfaces'
 import VueMarkdown from 'vue-markdown-render'
 import { useRoute } from 'vue-router'
 import { useDateFormat, useNow } from '@vueuse/core'
+import { computed, ref } from 'vue'
 
 const route = useRoute()
 
@@ -34,6 +35,9 @@ function workshopDefaultName(workshop: IWorkshop) {
   }
 }
 
+const searchValue = ref('')
+const wsName = computed(() => wStore.getWorkshopMenu.length > 0 && wStore.getWorkshopMenu[0].name || '')
+const wsMenu = computed(()=>wStore.getWorkshopMenu.length > 0 && wStore.getWorkshopMenu[0].menus) 
 wStore.loadWorkshop(route.params.id)
 
 //https://workshop.genesys.com/workshops-gdemo/workshop-cxAsCodeDevlab/ . --> ok
@@ -48,37 +52,28 @@ wStore.loadWorkshop(route.params.id)
     <div class="row">
       <div class="col-12 col-md-8 pr-0 workshop">
         <div class="left-side common-layout">
-          <el-container>
+          <el-container class="ws-body">
 
-            <el-breadcrumb separator="/">
-              <el-breadcrumb-item :to="{ path: '/' }">homepage</el-breadcrumb-item>
-              <el-breadcrumb-item><a href="/">promotion management</a></el-breadcrumb-item>
-              <el-breadcrumb-item>promotion list</el-breadcrumb-item>
-              <el-breadcrumb-item>promotion detail</el-breadcrumb-item>
-            </el-breadcrumb>
+            <el-container class="ws-body">
 
-            <el-header>Glide-Demo workshop</el-header>
+              <el-aside width="300px" class="ws-side">
+                <el-header class="ws-side-header ws-search">
+                  <el-input v-model="searchValue" 
+                    placeholder="Search..." clearable>
+                  </el-input>
+                </el-header>
+                <div class="ws-side-body">
+                  <ul>
+                    <li v-for="(item, index) in wsMenu">
+                      {{item.name}}
+                      <ul>
+                        <li v-for="(subitem, subindex) in item.pages" >{{subitem.name}}
+                        </li>
+                      </ul>
 
-            <el-steps :space="200" :active="1" finish-status="success">
-              <el-step title="Done" />
-              <el-step title="Processing" />
-              <el-step title="Step 3" />
-            </el-steps>
-
-            <el-container>
-
-              <el-aside width="300px">
-                <h5 class="mb-2">Default colors</h5>
-                <ul>
-                  <li v-for="(item, index) in wStore.getWorkshopMenu">
-                    {{item.name}}
-                    <ul>
-                      <li v-for="(subitem, subindex) in item.menus" >{{subitem.name}}
-                      </li>
-                    </ul>
-
-                  </li>
-                </ul>
+                    </li>
+                  </ul>
+                </div>
 
                 <!--el-menu default-active="2" class="el-menu--vertical" @open="handleOpen" @close="handleClose">
                   <el-menu-item v-for="(item, index) in wStore.getWorkshopMenu" >{{item.name}}
@@ -88,6 +83,9 @@ wStore.loadWorkshop(route.params.id)
               </el-aside>
 
               <el-main>
+                <el-header class="ws-header">
+                  <h3 class="fs-3 ws-header">{{ wsName }}</h3>
+                </el-header>
                 <vue-markdown :source="wStore.getWorkshopPage" />
               </el-main>
 
@@ -135,9 +133,35 @@ wStore.loadWorkshop(route.params.id)
 
 <style lang="scss">
 .workshop {
-    height: "100%";
-    width: "100%";
-    background-color: white;
+  height: "100%";
+  width: "100%";
+  background-color: white;
+}
+.ws-header {
+  color: #ff6428;
+  background-color: white;
+}
+.ws-side {
+  color: #ccc;
+  //  color: #ff6428;
+  background-color: #23395D;
+}
+.ws-side-body {
+  padding-top: 5ex;
+}
+
+.ws-side-header {
+  height: 150px;
+  font-size: 18px;
+  background-color: #ff6428;
+}
+.ws-search {
+  padding-top: 50px;
+  color: #23395D
+}
+
+.ws-body {
+  padding-top: 0px;
 }
 </style>
 
