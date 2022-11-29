@@ -11,6 +11,15 @@ const fm = require('front-matter');
 const WORKSHOPS_PATH = "../../public/ws/"
 const REPO_OWNER = "genesys-samples/"
 
+interface IMenu {
+  name: string,
+  weight?: number,
+  path?: string,
+  body?: string,
+  menus?: IMenu[],
+  pages?: IMenu[]
+}
+
 @Injectable()
 export class AppService {
 
@@ -37,13 +46,7 @@ export class AppService {
   }
 
   private walk = function (dir: string) {
-    var menu = {
-      name: "",
-      weight: 0,
-      path: "",
-      body: "",
-      submenus: [],
-    }
+    var menu = { name: '', menus: [], pages: [] } as IMenu
 
     var list = fs.readdirSync(dir);
     var self = this;
@@ -52,29 +55,24 @@ export class AppService {
       file = dir + '/' + file;
       var stat = fs.statSync(file);
       if (stat && stat.isDirectory()) {
-        menu.submenus.push(self.walk(file));
+        menu.menus.push(self.walk(file).menus);
       }
       else {
         const data = fs.readFileSync(file, { encoding: 'utf8', flag: 'r' });
         const res = fm(data);
         if (file.indexOf('/_index.md') >= 0) {
           menu.name = res.attributes?.title
-          menu.weight = res.attributes?.weight
-          menu.path = file
-          menu.body = res.body
         }
-        else {
-          menu.submenus.push({
-            name: res.attributes?.title,
-            weight: res.attributes?.weight,
-            path: file,
-            body: res.body
-          });
-        }
+        menu.pages.push({
+          name: res.attributes?.title,
+          weight: res.attributes?.weight,
+          path: file,
+          body: res.body
+        });
       }
     });
 
-    return menu;
+    return { menus: menu };
   }
 
 
@@ -84,9 +82,22 @@ export class AppService {
 
     const donePromise = new Promise(async () => {
 
+      shell.pushd(wsPath + '/content');
+      try {
+        const manifes = JSON.stringify({ content: this.walk('.').menus }, null, 4);
+        //console.log('RESULT: ', manifest)
+        fs.writeFileSync('manifest.json', manifes);
+      }
+      catch (e) {
+        console.log('Manifest file error: \n', e)
+      }
+      shell.popd();
+      return
+
       await this.download(REPO_OWNER + workshop, 'repo.zip');
       //- removed processing of theme and hugo run
       //-await this.download('matcornic/hugo-theme-learn', 'template.zip'); 
+
 
       shell.mkdir(WORKSHOPS_PATH);
       shell.pushd(WORKSHOPS_PATH);

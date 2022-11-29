@@ -3,6 +3,8 @@ import { useAxios } from '@vueuse/integrations/useAxios'
 import { useWorkshopStore } from '@/stores/workshop'
 import type { IWorkshop } from '@/interfaces'
 import VueMarkdown from 'vue-markdown-render'
+import { useRoute } from 'vue-router'
+import { useDateFormat, useNow } from '@vueuse/core'
 
 const route = useRoute()
 
@@ -13,11 +15,16 @@ const formatted = useDateFormat(useNow(), formatter)
 
 const md = '# header'
 
-
 //const workshopUrl = `https://workshop.genesys.com/workshops-gdemo/workshop-${route.params.id}/`
 const workshopUrl = `https://workshop.genesys.com/workshops-gdemo/workshop-cxAsCodeDevlab/`
 //const workshopUrl = `/ws/gride-demo/public/index.html`
 
+const handleOpen = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
+}
+const handleClose = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
+}
 function workshopDefaultName(workshop: IWorkshop) {
   if (workshop.name && workshop.name.length > 0) {
     return workshop.name;
@@ -27,6 +34,7 @@ function workshopDefaultName(workshop: IWorkshop) {
   }
 }
 
+wStore.loadWorkshop(route.params.id)
 
 //https://workshop.genesys.com/workshops-gdemo/workshop-cxAsCodeDevlab/ . --> ok
 // https://workshop.genesys.com/workshops-gdemo/workshop-Automation-with-CX-as-Code/ --> ko
@@ -39,8 +47,42 @@ function workshopDefaultName(workshop: IWorkshop) {
     <div>
     <div class="row">
       <div class="col-12 col-md-8 pr-0 workshop">
-        <div class="left-side">
-            <vue-markdown :source="md"/>
+        <div class="left-side common-layout">
+          <el-container>
+
+            <el-breadcrumb separator="/">
+              <el-breadcrumb-item :to="{ path: '/' }">homepage</el-breadcrumb-item>
+              <el-breadcrumb-item><a href="/">promotion management</a></el-breadcrumb-item>
+              <el-breadcrumb-item>promotion list</el-breadcrumb-item>
+              <el-breadcrumb-item>promotion detail</el-breadcrumb-item>
+            </el-breadcrumb>
+
+            <el-header>Glide-Demo workshop</el-header>
+
+            <el-steps :space="200" :active="1" finish-status="success">
+              <el-step title="Done" />
+              <el-step title="Processing" />
+              <el-step title="Step 3" />
+            </el-steps>
+
+            <el-container>
+
+              <el-aside width="300px">
+                <h5 class="mb-2">Default colors</h5>
+                <el-menu default-active="2" class="el-menu--vertical" @open="handleOpen" @close="handleClose">
+                  <el-menu-item v-for="(item, index) in wStore.getWorkshopMenu" >{{item.name}}
+                    <span v-for="(subitem, subindex) in item.menus[0]" >{{subitem.name}}</span>
+                  </el-menu-item>
+                </el-menu>
+              </el-aside>
+
+              <el-main>
+                <vue-markdown :source="wStore.getWorkshopPage" />
+              </el-main>
+
+            </el-container>
+
+          </el-container>
         </div>
       </div>
 
