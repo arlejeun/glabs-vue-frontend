@@ -1,12 +1,15 @@
 <template>
+  <!-- Header END -->
+
   <!-- **************** MAIN CONTENT START **************** -->
   <main>
-    <!-- ======================= Content START -->
+
+    <!-- =======================
+  Content START -->
     <section class="pt-3">
       <div class="container">
         <div class="row">
-          <SidebarAccount />
-          <AccountProfile />
+
         </div>
       </div>
     </section>
@@ -27,11 +30,8 @@
   }
 }
 </style>
-  
+
 <route lang="yaml">
-  meta:
-    layout: BasicTopNavigationLayout
-    title: Account Profile
-    requiresAuth: true
-  </route>
-    
+meta:
+  layout: BasicTopNavigationLayout
+</route>

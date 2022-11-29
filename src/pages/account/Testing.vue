@@ -6,7 +6,7 @@
       <div class="container">
         <div class="row">
           <SidebarAccount />
-          <AccountProfile />
+          <AccountTesting />
         </div>
       </div>
     </section>
@@ -31,7 +31,5 @@
 <route lang="yaml">
   meta:
     layout: BasicTopNavigationLayout
-    title: Account Profile
-    requiresAuth: true
   </route>
-    
+  

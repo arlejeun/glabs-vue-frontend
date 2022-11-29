@@ -1,17 +1,17 @@
 <script setup lang="ts">
   import { useUserStore } from '@/stores/user'
   import router from '@/router'
-  import defaultAvatarUrl from '@/assets/images/avatar/01.jpg'
 
   const route = useRoute()
-
   const userStore = useUserStore()  
-  const {user} = storeToRefs(userStore)
+  const  {username, user, userEmail, avatarUrl} = storeToRefs(userStore)
+
+ // const {user} = storeToRefs(userStore)
   const {logout: userLogout} = userStore
 
-  const userName = computed(() => `${user.value?.first_name} ${user.value?.last_name}`)
-  const userEmail = user.value?.email
-  const avatarUrl = computed(() => user.value?.avatar_url || defaultAvatarUrl) 
+ // const username = computed(() => user.value.first_name ?  `${user.value?.first_name} ${user.value?.last_name}` : 'Anonymous')
+ // const userEmail = user.value?.email
+ // const avatarUrl = computed(() => user.value?.avatar_url || defaultAvatarUrl) 
 
   
   function mockSignOut() {
@@ -72,7 +72,7 @@
                 >
               </div>
               <h6 class="mb-0">
-                {{userName}}
+                {{username}}
               </h6>
               <a
                 href="#"

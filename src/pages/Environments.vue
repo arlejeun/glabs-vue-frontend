@@ -7,11 +7,7 @@
     <!-- =======================
   Content START -->
     <section class="pt-3">
-      <div class="container">
-        <div class="row">
-
-        </div>
-      </div>
+      <EnviromentOrganization></EnviromentOrganization>
     </section>
     <!-- =======================
   Content END -->

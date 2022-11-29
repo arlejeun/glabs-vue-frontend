@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { abilitiesPlugin } from '@casl/vue'
 import ability from '@/plugins/casl/ability'
+import gtag from "vue-gtag-next";
 
 //import ElementPlus from 'element-plus'
 //import '@/assets/scss/vendor/bootstrap/scss/bootstrap.scss'
@@ -30,8 +31,6 @@ library.add(fas)
 
 const app = createApp(App)
 //app.use(ElementPlus)
-app.use(createPinia())
-app.use(router)
 
 app.component('fa', FontAwesomeIcon)
 app.component('MazPhoneNumberInput', MazPhoneNumberInput)
@@ -39,5 +38,20 @@ app.component('MazPhoneNumberInput', MazPhoneNumberInput)
 app.use(abilitiesPlugin, ability, {
     useGlobalProperties: true,
   })
+
+app.use(createPinia())
+
+app.use(router)
+/***
+ * Google Vue Tags for GA4
+ */
+
+ app.use(gtag, {
+  isEnabled: true,
+  useDebugger: false,
+  disableScriptLoader: false,
+  property: { id: "G-YR2MYN6ZRJ"}
+});
+
 
 app.mount('#app')

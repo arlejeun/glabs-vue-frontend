@@ -2,19 +2,13 @@
 
 import { useUserStore } from '@/stores/user'
 import router from '@/router'
-import defaultAvatarUrl from '@/assets/images/avatar/01.jpg'
-import type { Primitive } from 'type-fest';
 
-const userStore = useUserStore()
-// const userName = computed(() => `${userStore?.user?.first_name} ${userStore?.user?.last_name}`)
-
-const {user, status, token} = storeToRefs(userStore)
-const {fetchUser, logout} = userStore
-
-const avatarUrl = computed(() => user.value?.avatar_url || defaultAvatarUrl)
-
-const isLoggedIn = computed(() => status.value == 'LoggedIn')
-const myUsername = computed(() => `${user.value?.first_name} ${user.value?.last_name}`)
+const store = useUserStore()
+const  { user, status, avatarUrl, username, userEmail, isLoggedIn, isAdmin } = storeToRefs(store)
+const {fetchUser, logout} = store
+// const avatarUrl = computed(() => user.value?.avatar_url || defaultAvatarUrl)
+// const isLoggedIn = computed(() => status.value == 'LoggedIn')
+//const username = computed(() => `${user.value?.first_name} ${user.value?.last_name}`)
 
 const { width } = useWindowSize()
 const isMobile = computed(() => width.value < 1200)
@@ -83,6 +77,7 @@ function mockSignOut() {
           <ul
             class="navbar-nav navbar-nav-scroll"
             :class="{ 'bg-secondary': isMobile }"
+            v-show="isLoggedIn"
           >
             <!-- Nav item Listing -->
             <li class="nav-item dropdown">
@@ -99,15 +94,15 @@ function mockSignOut() {
                 class="nav-link text-white fw-bolder"
                 to="/environments"
               >
-                Demos
+                Environments
               </router-link>
             </li>
             <li class="nav-item dropdown">
               <router-link
                 class="nav-link text-white fw-bolder"
-                to="/environments"
+                to="/demos"
               >
-                Verticals
+                Demos
               </router-link>
             </li>
             <li class="nav-item dropdown">
@@ -245,9 +240,9 @@ function mockSignOut() {
                     <a
                       class="h6 mt-2 mt-sm-0"
                       href="#"
-                    >{{ myUsername }}</a>
+                    >{{ username }}</a>
                     <p class="small m-0">
-                      {{myUser.email}}
+                      {{user.email}}
                     </p>
                   </div>
                 </div>

@@ -4,7 +4,7 @@ import type { FormInstance, FormRules, ElProgress } from 'element-plus'
 import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
-const { user } = storeToRefs(userStore)
+const { user, isStatusActive } = storeToRefs(userStore)
 
 const createdDate = computed(() => {
   return user.value?.date_created ?
@@ -16,9 +16,9 @@ const isEmailVerified = computed(() => {
   return !!user.value.email
 })
 
-const isStatusActive = computed(() => {
-  return user.value.status == 'Active'
-})
+// const isStatusActive = computed(() => {
+//   return user.value.status == 'Active'
+// })
 
 const isAlreadyLoggedIn = computed(() => {
   return loginDate.value != 'N/A'

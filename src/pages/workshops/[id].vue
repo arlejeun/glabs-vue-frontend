@@ -2,7 +2,12 @@
 import { useAxios } from '@vueuse/integrations/useAxios'
 import { useWorkshopStore } from '@/stores/workshop'
 import type { IWorkshop } from '@/interfaces';
+import { useTitle } from '@vueuse/core'
+
 const route = useRoute()
+const title = useTitle()
+title.value = `${route.params?.id} | Workshop` as string
+
 
 const wStore = useWorkshopStore()
 const workshops = wStore.getAllWorkshops
@@ -97,4 +102,6 @@ function workshopDefaultName(workshop: IWorkshop) {
 <route lang="yaml">
 meta:
   layout: BasicTopNavigationLayout
+  title: Workshop Detail
+  requiresAuth: true
 </route>

@@ -36,5 +36,7 @@
 <route lang="yaml">
   meta:
     layout: BasicTopNavigationLayout
+    title: Organizations Info
+    requiresAuth: true
   </route>
   

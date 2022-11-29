@@ -38,6 +38,5 @@
 <route lang="yaml">
 meta:
   layout: blank
-  action: read
-  subject: Auth
+  title: Not Authorized
 </route>
