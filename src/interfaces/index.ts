@@ -31,6 +31,7 @@ export interface IWorkshop {
 
 
 export interface IDriveUser {
+    id?: number,
     first_name: string,
     last_name: string,
     customer: IDriveCustomer,
@@ -38,13 +39,13 @@ export interface IDriveUser {
     email: string,
     avatar_url: string,
     date_created: string,
+    country_id: number,
     date_updated: string,
     date_approved: string,
     date_lastLogin: string,
     date_expired: string,
     groups: ITag[]
-    [x: string]: string | IDriveCustomer | ITag[] | IDriveCustomerOrg[],
-
+    [x: string]: string | IDriveCustomer | ITag[] | IDriveCustomerOrg[] | number | undefined
   }
 
 export interface IDriveCustomer {
@@ -81,4 +82,11 @@ export interface IDriveCustomerOrgSettings {
 
 export interface IGenesysCloudRegion {
   [x: string]: string
+}
+
+export interface IDriveCountry {
+  id: number,
+  name: string,
+  dial_code: string,
+  code: string
 }

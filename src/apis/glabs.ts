@@ -5,8 +5,13 @@ console.log('JIRA MIDDLEWARE API URL : ' + import.meta.env.VITE_JIRA_MIDDLEWARE_
 
 const JIRA_TOKEN = import.meta.env.VITE_JIRA_TOKEN
 
+const GLABS_STORAGE = useStorage('glabs', {
+  token: ''
+})
 
-const gdemo_access_token = ref('Bearer myToken')
+const GLABS_TOKEN = ref(GLABS_STORAGE.value.token)
+
+
 const jira_access_token = ref(JIRA_TOKEN)
 
 
@@ -15,10 +20,10 @@ const JIRA_MIDDLEWARE_API_URL = import.meta.env.VITE_JIRA_MIDDLEWARE_API_URL || 
 
 const GLabsApiClient = axios.create({
     baseURL: GDEMO_BASE_URL,
-    timeout: 1000,
+    timeout: 10 * 1000,
     headers: {
       'Accept': 'application/json',
-      'Authorization': gdemo_access_token.value
+      'Authorization': 'Bearer ' + GLABS_TOKEN.value
     }
   });
 
@@ -32,4 +37,4 @@ const GLabsApiClient = axios.create({
   });
 
 
-export { GLabsApiClient, JiraMiddlewareApiClient }
+export { GLabsApiClient, GLABS_STORAGE, GLABS_TOKEN, JiraMiddlewareApiClient }

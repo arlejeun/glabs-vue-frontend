@@ -2,7 +2,9 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { abilitiesPlugin } from '@casl/vue'
 import ability from '@/plugins/casl/ability'
-import gtag from "vue-gtag-next";
+import gtag from 'vue-gtag-next'
+import Notifications from '@kyvg/vue3-notification'
+
 
 //import ElementPlus from 'element-plus'
 //import '@/assets/scss/vendor/bootstrap/scss/bootstrap.scss'
@@ -38,6 +40,8 @@ app.component('MazPhoneNumberInput', MazPhoneNumberInput)
 app.use(abilitiesPlugin, ability, {
     useGlobalProperties: true,
   })
+
+app.use(Notifications)
 
 app.use(createPinia())
 
