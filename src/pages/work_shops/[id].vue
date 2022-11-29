@@ -69,11 +69,22 @@ wStore.loadWorkshop(route.params.id)
 
               <el-aside width="300px">
                 <h5 class="mb-2">Default colors</h5>
-                <el-menu default-active="2" class="el-menu--vertical" @open="handleOpen" @close="handleClose">
+                <ul>
+                  <li v-for="(item, index) in wStore.getWorkshopMenu">
+                    {{item.name}}
+                    <ul>
+                      <li v-for="(subitem, subindex) in item.menus" >{{subitem.name}}
+                      </li>
+                    </ul>
+
+                  </li>
+                </ul>
+
+                <!--el-menu default-active="2" class="el-menu--vertical" @open="handleOpen" @close="handleClose">
                   <el-menu-item v-for="(item, index) in wStore.getWorkshopMenu" >{{item.name}}
-                    <span v-for="(subitem, subindex) in item.menus[0]" >{{subitem.name}}</span>
+                    <span v-for="(subitem, subindex) in item.menus" >{{subitem.name}}</span>
                   </el-menu-item>
-                </el-menu>
+                </el-menu -->
               </el-aside>
 
               <el-main>

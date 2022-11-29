@@ -21,7 +21,7 @@ function buildMenu(submenu: IWorkshopMenuItem[]): any {
     menu.name = item.name
     menu.menus = []
     if (item.menus && item.menus.length > 0) {
-      menu.menus.push(buildMenu(item.menus))
+      menu.menus = { ...buildMenu(item.menus) }
     }
     result.push({ ...menu })
   })
