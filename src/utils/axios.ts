@@ -1,29 +1,19 @@
-import axios from 'axios';
-import type { AxiosResponse, AxiosRequestConfig } from 'axios';
+import { useNotification } from "@kyvg/vue3-notification";
 
-const service = axios.create();
 
-// Request interceptors
-service.interceptors.request.use(
-    (config: AxiosRequestConfig) => {
-        // do something
-        return config;
-    },
-    (error: any) => {
-        Promise.reject(error);
-    },
-);
+const handleAxiosError = (error: any, message: string) => {
+  let result = {...error};
+  let serverResp = result?.response?.data;
+  if (typeof(serverResp)=='object' && serverResp?.message?.length > 0) {
+    return `${message}. ${result?.message} - ${serverResp.message}. Please reach out to Global Technical Sales`
+  }
+  else {
+    result.description = `Error: ${message}`
+    return result.description;
+  }
+}
 
-// Response interceptors
-service.interceptors.response.use(
-    async (response: AxiosResponse) => {
-        // do something
-        return response.data;
-    },
-    (error: any) => {
-        // do something
-        return Promise.reject(error);
-    },
-);
 
-export default service;
+
+
+export { handleAxiosError }

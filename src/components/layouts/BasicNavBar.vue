@@ -242,7 +242,7 @@ function mockSignOut() {
                       href="#"
                     >{{ username }}</a>
                     <p class="small m-0">
-                      {{user.email}}
+                      {{userEmail}}
                     </p>
                   </div>
                 </div>
