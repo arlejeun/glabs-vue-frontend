@@ -28,4 +28,5 @@ coverage
 *.sw?
 *.dccache
 
-public/workshops/
+public/ws/
+
