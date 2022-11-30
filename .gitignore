@@ -30,3 +30,5 @@ coverage
 
 public/ws/
 
+*.pem
+
