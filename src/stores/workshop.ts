@@ -42,6 +42,7 @@ const buildTree = (ws: IWorkshopMenuItem[], index?: number[]): ITree[] => {
   var result = [] as ITree[]
   var branch = {} as ITree
   var i = 0
+
   ws.forEach((item: IWorkshopMenuItem) => {
     branch.index = [...index || []]
     branch.label = item.name

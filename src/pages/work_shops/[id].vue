@@ -57,7 +57,7 @@ var treeData: ITree[] = computed(() => wStore.getWorkshopTree || [])
                   </el-input>
                 </el-header>
                 <div class="ws-side-body">
-                  <el-tree :data="treeData" node-key="id" accordion @current-change="treeChange"
+                  <el-tree :data="treeData" accordion @current-change="treeChange"
                     :props="{ class: customNodeClass }" />
                 </div>
               </el-aside>
@@ -68,9 +68,7 @@ var treeData: ITree[] = computed(() => wStore.getWorkshopTree || [])
                 </el-header>
                 <!--el-carousel height="800px" :autoplay="false" trigger="click">
                   <el-carousel-item v-for="item in wStore.getWorkshopPage" :key="item"-->
-                    <transition name="fade">
                     <vue-markdown :source="wStore.getWorkshopPage" />
-                    </transition>
                   <!--/el-carousel-item>
                 </el-carousel-->
               </el-main>
@@ -113,16 +111,6 @@ var treeData: ITree[] = computed(() => wStore.getWorkshopTree || [])
 </template>
 
 <style lang="scss">
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
 .workshop {
   height: "100%";
   width: "100%";
@@ -165,8 +153,14 @@ var treeData: ITree[] = computed(() => wStore.getWorkshopTree || [])
   font-size: 18px;
   color: #ff6428;;
 }
-.tree > .el-tree-node__content {
+.el-tree-node.is-current>.el-tree-node__content {
+  color: #ff6428;
+}
+.tree>.el-tree-node__content {
   color: #aaa;
+}.tree>.el-tree-node__content:hover {
+  background-color: #ccf;
+  color: #555;
 }
 .el-tree-node__label {
   font-size: 20px;
