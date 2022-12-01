@@ -1,5 +1,9 @@
 import { URL, fileURLToPath } from "node:url";
 import { defineConfig, loadEnv } from "vite";
+
+import type { UserConfig} from "vite"
+import type { ServerOptions as ServerOptions } from 'node:https';
+
 import Vue from "@vitejs/plugin-vue";
 import Pages from "vite-plugin-pages";
 import Layouts from "vite-plugin-vue-layouts";
@@ -11,34 +15,28 @@ import DefineOptions from "unplugin-vue-define-options/vite";
 import fs from "fs";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode }): UserConfig => {
 
   const env = loadEnv(mode, process.cwd(),'')
-  console.log('Server ' + env.HTTPS_SERVER + ' expression ' + env.HTTPS_SERVER == 'true')
-  let httpsConfig = false as any
+  let httpsConfig = false as boolean | ServerOptions
+  const serverDevHost = env.SERVER_HOST || 'localhost' as string | boolean
+  const serverDevPort = Number(env.SERVER_PORT) || 5173 as number
+  const serverHost = env.SERVER_HOST || 'localhost' as string | boolean
+  const serverPort = Number(env.SERVER_PORT) || 5173 as number
 
-  if (env.HTTPS_SERVER == 'true') {
-    console.log('valid 1')
+  if (env.SERVER_HTTPS == 'true') {
     httpsConfig = {
       key: fs.readFileSync('./.cert/localhost-key.pem'),
       cert: fs.readFileSync('./.cert/localhost.pem')
     }
   }
 
-  if (!(env.HTTPS_SERVER == 'true')) {
-    console.log('valid 2')
-    httpsConfig = false
-  }
-  
-  // const serverConfig = env.HTTPS_SERVER == 'true' ? {
-  //   key: fs.readFileSync('./.cert/localhost-key.pem'),
-  //   cert: fs.readFileSync('./.cert/localhost.pem')
-  // } : false;
-
-  //console.log('Server Config' + JSON.stringify(serverConfig) + ' ' + typeof serverConfig)
+  console.log(serverHost + ' - ' + serverPort)
 
   return {
     server: {
+      host: serverDevHost,
+      port: serverDevPort,
       https: httpsConfig
     },
     css: {
@@ -96,6 +94,6 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       chunkSizeWarningLimit: 5000,
-    },
+    }
   };
 });

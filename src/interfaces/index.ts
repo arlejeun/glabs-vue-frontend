@@ -52,6 +52,12 @@ export interface IDriveCustomer {
     [x: string]: string | IDriveIdentifier[],
     identifiers: IDriveIdentifier[]
   }
+
+  export interface IDriveCustomerForm extends IDriveCustomer {
+    emails: IDriveIdentifier[],
+    phones: IDriveIdentifier[],
+    messengers: IDriveIdentifier[]
+  }
 export interface IDriveCustomerOrg {
     id: number,
     is_owned_by_gts:boolean,
@@ -61,6 +67,7 @@ export interface IDriveCustomerOrg {
   }
 
 export interface IDriveIdentifier {
+    id?: number,
     name: string,
     type: string,
     value: string

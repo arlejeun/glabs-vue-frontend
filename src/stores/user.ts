@@ -5,6 +5,7 @@ import type {
   IDriveUser,
   IDriveCustomer,
   IDriveCustomerOrg,
+IDriveIdentifier,
 } from "@/interfaces";
 import defaultAvatarUrl from '@/assets/images/avatar/01.jpg'
 import { GLabsApiClient, GLABS_STORAGE, GLABS_TOKEN} from '@/apis/glabs'
@@ -48,7 +49,6 @@ export const useUserStore = defineStore("identity", () => {
   async function fetchUser() {
     
     const { execute } = useAxios(GLabsApiClient)
-
     const data = {email: 'arnaud.lejeune@genesys.com'}
     const auth = await execute(`/auth/login`, {data, method: 'POST'}, )
     
@@ -106,27 +106,40 @@ export const useUserStore = defineStore("identity", () => {
         duration: -1,
         type: 'error'
       });
+    } else {
+      notify({
+        title: 'Profile Record',
+        text: 'Your user profile was updated successfully',
+        duration: 2000,
+        type: 'success'
+      });
     }
   }
   
   async function updateCustomerProfile(cust: IDriveCustomer) {
-    customer.value = cust;
     const { execute } = useAxios(GLabsApiClient)
-    const data = {foo: 'bar'}
-    const result = await execute(`/customer/${cust.id}`, {data, method: 'PATCH'}, )
+    const data = {...cust}
+    const result = await execute(`/customers/${cust.id}`, {data: data, method: 'PATCH'}, )
     if (result.isFinished.value && !result.error.value) {
       console.log(result.data.value)
     }
     if (result.error.value) {
-      const { notify}  = useNotification()
       notify({
-        title: "Customer Record Error",
+        title: 'Customer Record Error',
         text: `${handleAxiosError(result.error.value, 'Impossible to update the customer record at the moment')}`,
         duration: -1,
         type: 'error'
       });
+    } else {
+      notify({
+        title: 'Customer Record',
+        text: 'Your customer record was updated successfully',
+        duration: 2000,
+        type: 'success'
+      });
     }
   }
+
 
   async function logout() {
     //call msal library
@@ -154,7 +167,7 @@ export const useUserStore = defineStore("identity", () => {
     updateUserProfile,
     updateCustomerProfile,
     fetchUser,
-    logout,
+    logout
   }
 
   // async updatePersonalProfile(user: IDriveUser)
