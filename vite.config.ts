@@ -31,8 +31,6 @@ export default defineConfig(({ mode }): UserConfig => {
     }
   }
 
-  console.log(serverHost + ' - ' + serverPort)
-
   return {
     server: {
       host: serverDevHost,

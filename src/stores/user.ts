@@ -25,12 +25,15 @@ export const useUserStore = defineStore("identity", () => {
   const customer = ref({} as IDriveCustomer);
   const orgs = ref([] as IDriveCustomerOrg[]);
 
-
   // computed properties vue composition of store
   const getCustomerProfile = computed(() => {
     return user.value.customer as IDriveCustomer;
   });
+  
+  // msal authentication
+
   const isLoggedIn = computed(() => status.value == "LoggedIn");
+  
   const username = computed(() =>
     user.value?.first_name
       ? `${user.value?.first_name} ${user.value?.last_name}`

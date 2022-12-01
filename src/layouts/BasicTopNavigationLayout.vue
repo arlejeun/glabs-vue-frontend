@@ -1,5 +1,33 @@
 <script setup lang="ts">
 import BasicFooter from '@/components/layouts/BasicFooter.vue';
+import { useUserStore } from '@/stores/user'
+import { useMsalAuthentication } from '@/composables/useMsalAuthentication'
+import { InteractionType } from '@azure/msal-browser'
+import { watch } from 'vue'
+import { callMsGraph } from "../utils/MsGraphApiCall";
+import { loginRequest } from '@/plugins/msal/msalConfig'
+
+// const userStore = useUserStore()
+// const { user, status } = storeToRefs(userStore)
+
+// const { result, acquireToken } = useMsalAuthentication(InteractionType.Redirect, loginRequest);
+
+// const data = ref(null);
+
+// async function updateData() {
+//     if (result.value?.idToken) {
+//         const apiResult = await callMsGraph(result.value.idToken).catch(() => acquireToken());
+//         data.value = apiResult;
+//     		status.value = 'LoggedIn'
+//     }
+// }
+
+// updateData();
+
+// watch(result, () => {
+//     // Fetch new data from the API each time the result changes (i.e. a new access token was acquired)
+//     updateData();
+// });
 
 </script>
 
