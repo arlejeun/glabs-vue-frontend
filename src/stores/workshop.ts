@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia'
 import type { IWorkshop } from "@/interfaces"
 import axios from "axios"
-import type { AnyClass } from '@casl/ability/dist/types/types'
-import type { IWorkshopMenuItem } from '@/interfaces/workshop'
+import type { IWorkshopMenuItem, ITree } from '@/interfaces/workshop'
 
 const WORKSHOPS_BASE = '/ws/'
 
@@ -29,10 +28,37 @@ function buildMenu(submenu: IWorkshopMenuItem[]): any {
     }
     result.push({ ...menu })
   })
-  console.log(result)
+  //  console.log(result)
   return result
 }
 
+const buildTree = (ws: IWorkshopMenuItem[], index?: number[]): ITree[] => {
+
+  if (typeof ws?.forEach !== 'function') {
+    return []
+  }
+
+  index = index || []
+  var result = [] as ITree[]
+  var branch = {} as ITree
+  var i = 0
+  ws.forEach((item: IWorkshopMenuItem) => {
+    branch.index = [...index || []]
+    branch.label = item.name
+    branch.id = item.weight
+    branch.index.push(i)
+    if (item.menus && item.menus.length > 0) {
+      branch.children = [...buildTree(item.menus, branch.index)]
+    }
+    result.push({ ...branch })
+    delete branch.children
+    i++
+  })
+
+  //  console.log('Tree: ', result)
+  return result
+
+}
 export const useWorkshopStore = defineStore({
   id: 'workshop',
   state: () => ({
@@ -45,22 +71,42 @@ export const useWorkshopStore = defineStore({
     getAllWorkshops(): IWorkshop[] {
       return this.workshops
     },
+    getWorkshopPages(): IWorkshopMenuItem[] {
+
+      var pages = [] as IWorkshopMenuItem[]
+      pages = this.workshop[0]?.menus || []
+      for (let i = 0; this.page_index.length - 2; i++) {
+        pages = [...pages[i]?.menus || []]
+      }
+      pages.forEach(page =>
+        page.body = page.body?.replaceAll('/images/', WORKSHOPS_BASE + this.workshopName + '/static/images/')
+      )
+      return pages
+    },
+
+    getWorkshop(): IWorkshopMenuItem[] {
+      return this.workshop
+    },
     getWorkshopUrl(): string {
       return WORKSHOPS_BASE + this.workshopName + '/'
     },
     getWorkshopMenu(): any {
       return buildMenu(this.workshop)
     },
+    getWorkshopTree(): any {
+      return buildTree(this.workshop[0]?.menus || [])
+    },
     getWorkshopPage(): string {
+
       if (this.workshop.length === 0) {
         return ''
       }
-      var content = [...this.workshop] as IWorkshopMenuItem[]
+      var content = [...this.workshop[0]?.menus || []] as IWorkshopMenuItem[]
       var page = ''
       this.page_index.forEach(index => {
         if (content.length > index) {
           page = content[index].body || ''
-          content = content[index].pages || []
+          content = content[index].menus || []
         }
       })
       page = page.replaceAll('/images/', WORKSHOPS_BASE + this.workshopName + '/static/images/')
@@ -104,5 +150,9 @@ export const useWorkshopStore = defineStore({
     removeWorkshop(index: number) {
       this.workshops.splice(index, 1)
     },
+
+    setTreeIndex(ind: number[]) {
+      this.page_index = [...ind]
+    }
   },
 })

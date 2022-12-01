@@ -1,47 +1,41 @@
 <script setup lang="ts">
-import { useAxios } from '@vueuse/integrations/useAxios'
 import { useWorkshopStore } from '@/stores/workshop'
 import type { IWorkshop } from '@/interfaces'
 import VueMarkdown from 'vue-markdown-render'
 import { useRoute } from 'vue-router'
 import { useDateFormat, useNow } from '@vueuse/core'
 import { computed, ref } from 'vue'
+import type Node from 'element-plus/es/components/tree/src/model/node'
+import type { ITree, IWorkshopMenuItem } from '@/interfaces/workshop'
+
+
 
 const route = useRoute()
 
 const wStore = useWorkshopStore()
-const workshops = wStore.getAllWorkshops
-const formatter = 'YYYY-MM-DD HH:mm:ss:SSS'
-const formatted = useDateFormat(useNow(), formatter)
-
-const md = '# header'
-
-//const workshopUrl = `https://workshop.genesys.com/workshops-gdemo/workshop-${route.params.id}/`
-const workshopUrl = `https://workshop.genesys.com/workshops-gdemo/workshop-cxAsCodeDevlab/`
-//const workshopUrl = `/ws/gride-demo/public/index.html`
-
-const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
-const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
-function workshopDefaultName(workshop: IWorkshop) {
-  if (workshop.name && workshop.name.length > 0) {
-    return workshop.name;
-  } else {
-    const idname = workshop.title.replace(/\s/g, "-");
-    return idname;
-  }
-}
 
 const searchValue = ref('')
 const wsName = computed(() => wStore.getWorkshopMenu.length > 0 && wStore.getWorkshopMenu[0].name || '')
 const wsMenu = computed(()=>wStore.getWorkshopMenu.length > 0 && wStore.getWorkshopMenu[0].menus) 
 wStore.loadWorkshop(route.params.id)
 
-//https://workshop.genesys.com/workshops-gdemo/workshop-cxAsCodeDevlab/ . --> ok
-// https://workshop.genesys.com/workshops-gdemo/workshop-Automation-with-CX-as-Code/ --> ko
+const customNodeClass = (data: ITree, node: Node) => {
+  if (data.isTop) {
+    return 'tree-is-top'
+  }
+  else {
+    return 'tree'
+  } 
+  return null
+}
+
+const treeChange = (node: ITree) => {
+  var treeIndex = node?.index || []
+  wStore.setTreeIndex(treeIndex)
+} 
+
+var treeData: ITree[] = computed(() => wStore.getWorkshopTree || []) 
+
 </script>
 
 <template>
@@ -63,30 +57,22 @@ wStore.loadWorkshop(route.params.id)
                   </el-input>
                 </el-header>
                 <div class="ws-side-body">
-                  <ul>
-                    <li v-for="(item, index) in wsMenu">
-                      {{item.name}}
-                      <ul>
-                        <li v-for="(subitem, subindex) in item.pages" >{{subitem.name}}
-                        </li>
-                      </ul>
-
-                    </li>
-                  </ul>
+                  <el-tree :data="treeData" node-key="id" accordion @current-change="treeChange"
+                    :props="{ class: customNodeClass }" />
                 </div>
-
-                <!--el-menu default-active="2" class="el-menu--vertical" @open="handleOpen" @close="handleClose">
-                  <el-menu-item v-for="(item, index) in wStore.getWorkshopMenu" >{{item.name}}
-                    <span v-for="(subitem, subindex) in item.menus" >{{subitem.name}}</span>
-                  </el-menu-item>
-                </el-menu -->
               </el-aside>
 
               <el-main>
                 <el-header class="ws-header">
                   <h3 class="fs-3 ws-header">{{ wsName }}</h3>
                 </el-header>
-                <vue-markdown :source="wStore.getWorkshopPage" />
+                <!--el-carousel height="800px" :autoplay="false" trigger="click">
+                  <el-carousel-item v-for="item in wStore.getWorkshopPage" :key="item"-->
+                    <transition name="fade">
+                    <vue-markdown :source="wStore.getWorkshopPage" />
+                    </transition>
+                  <!--/el-carousel-item>
+                </el-carousel-->
               </el-main>
 
             </el-container>
@@ -124,14 +110,19 @@ wStore.loadWorkshop(route.params.id)
 
   </div>
 
-<!-- <p>Loading: {{ isLoading.toString() }}</p>
-  <p>Finished: {{ isFinished.toString() }}</p>
-  <p>Error: {{ error?.toString() }}</p> -->
-
-
 </template>
 
 <style lang="scss">
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 .workshop {
   height: "100%";
   width: "100%";
@@ -143,7 +134,6 @@ wStore.loadWorkshop(route.params.id)
 }
 .ws-side {
   color: #ccc;
-  //  color: #ff6428;
   background-color: #23395D;
 }
 .ws-side-body {
@@ -162,6 +152,33 @@ wStore.loadWorkshop(route.params.id)
 
 .ws-body {
   padding-top: 0px;
+  padding-bottom: 0px;
+  min-height: 1000px;
+}
+
+// ----------
+.el-tree {
+  margin-left: 15px;
+  background-color: inherit;
+}
+.tree-is-top > .el-tree-node__content {
+  font-size: 18px;
+  color: #ff6428;;
+}
+.tree > .el-tree-node__content {
+  color: #aaa;
+}
+.el-tree-node__label {
+  font-size: 20px;
+}
+.is-current > .el-tree-node__content {
+//  color: #333;
+}
+.el-tree-node {
+  padding-bottom: 5px;
+}
+.tree-is-top>.el-tree-node__children>div {
+  //width: 25%;
 }
 </style>
 

@@ -62,13 +62,18 @@ export class AppService {
         const res = fm(data);
         if (file.indexOf('/_index.md') >= 0) {
           menu.name = res.attributes?.title
+          menu.weight = res.attributes?.weight
+          menu.path = file
+          menu.body = res.body
         }
-        menu.pages.push({
-          name: res.attributes?.title,
-          weight: res.attributes?.weight,
-          path: file,
-          body: res.body
-        });
+        else {
+          menu.menus.push({
+            name: res.attributes?.title,
+            weight: res.attributes?.weight,
+            path: file,
+            body: res.body
+          });
+        }
       }
     });
 
