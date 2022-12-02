@@ -29,6 +29,9 @@ const customNodeClass = (data: ITree, node: Node) => {
   return null
 }
 
+
+const mdProps = {html: true} 
+
 const treeChange = (node: ITree) => {
   var treeIndex = node?.index || []
   wStore.setTreeIndex(treeIndex)
@@ -68,7 +71,7 @@ var treeData: ITree[] = computed(() => wStore.getWorkshopTree || [])
                 </el-header>
                 <!--el-carousel height="800px" :autoplay="false" trigger="click">
                   <el-carousel-item v-for="item in wStore.getWorkshopPage" :key="item"-->
-                    <vue-markdown :source="wStore.getWorkshopPage" />
+                    <vue-markdown :options="mdProps" :source="wStore.getWorkshopPage" />
                   <!--/el-carousel-item>
                 </el-carousel-->
               </el-main>

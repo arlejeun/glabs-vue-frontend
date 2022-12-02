@@ -110,7 +110,9 @@ export const useWorkshopStore = defineStore({
           content = content[index].menus || []
         }
       })
-      page = page.replaceAll('/images/', WORKSHOPS_BASE + this.workshopName + '/static/images/')
+      https://storage.googleapis.com/gdemo-workshops-test/gride-demo/images/
+      //      page = page.replaceAll('/images/', WORKSHOPS_BASE + this.workshopName + '/static/images/')
+      page = page.replaceAll('/images/', `https://storage.googleapis.com/gdemo-workshops-test/${this.workshopName}/images/`)
       return page
     },
 
