@@ -13,7 +13,6 @@
 name: Build and Deploy to GKE Manual
 
 on: [workflow_dispatch]
-  
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
@@ -21,8 +20,8 @@ env:
   GKE_CLUSTER: techacceleration-cluster-01    # TODO: update to cluster name
   GKE_ZONE: us-west1-a   # TODO: update to cluster zone
   DEPLOYMENT_NAME: gke-test # TODO: update to deployment name
-  REPOSITORY: cloudtotable # TODO: update to Artifact Registry docker repository
-  IMAGE: cloudtotable-web
+  REPOSITORY: drive # TODO: update to Artifact Registry docker repository
+  IMAGE: drive-web
 
 jobs:
   setup-build-publish-deploy:
@@ -61,7 +60,7 @@ jobs:
       run: |-
         docker build \
           --tag "$GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:development" \
-          --file ./website/Dockerfile \
+          --file ./Dockerfile \
           .
 
     # Publish
@@ -72,20 +71,20 @@ jobs:
     # Namespace
     - name: Namespace
       run: |-
-        if ! kubectl get namespaces cloudtotable; then
-          echo "Namespace cloudtotable does not exist. Creating it.."
-          kubectl create namespace cloudtotable
+        if ! kubectl get namespaces drive; then
+          echo "Namespace drive does not exist. Creating it.."
+          kubectl create namespace drive
         else
-          echo "Namespace cloudtotable already exists. Will use it."
+          echo "Namespace drive already exists. Will use it."
         fi
       
     # Create Pull Secret
     - name: Secret
       run: |-
-        if ! kubectl get secret pullsecret -n cloudtotable; then
+        if ! kubectl get secret pullsecret -n drive; then
           echo "Creating Kubernetes Secret for the Pullsecret"
           echo ${{ secrets.GAR_USER }} >> "./key.json"
-          kubectl create secret docker-registry pullsecret -n cloudtotable --docker-server=$GAR_LOCATION-docker.pkg.dev --docker-username=_json_key --docker-password="$(cat ./key.json)" --docker-email=gtsadmin@genesys.com
+          kubectl create secret docker-registry pullsecret -n drive --docker-server=$GAR_LOCATION-docker.pkg.dev --docker-username=_json_key --docker-password="$(cat ./key.json)" --docker-email=gtsadmin@genesys.com
         else
           echo "Pullsecret already exists. Will use it."
         fi
@@ -93,5 +92,5 @@ jobs:
     # Deploy the Docker image to the GKE cluster
     - name: Deploy
       run: |-
-        kubectl apply -f ./ctt-k8s.yml
+        kubectl apply -f ./drive-k8s.yml
     
