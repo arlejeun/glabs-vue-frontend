@@ -57,7 +57,7 @@ jobs:
         cluster_name: ${{ env.GKE_CLUSTER }}
         location: ${{ env.GAR_LOCATION }}
 
-    # Build the Docker image
+    # Build the Docker image 
     - name: Build
       run: |-
         docker build \
