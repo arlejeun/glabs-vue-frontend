@@ -85,7 +85,7 @@ jobs:
       run: |-
         if ! kubectl get secret pullsecret -n drive; then
           echo "Copying Kubernetes Secret for the Pullsecret"
-          kubectl get secret pullsecret --namespace=default -o yaml | sed 's/namespace: .*/namespace: drive/'
+          kubectl get secret pullsecret --namespace=default -o yaml | sed 's/namespace: .*/namespace: drive/' | kubectl apply -n drive -f -
         else
           echo "Pullsecret already exists. Will use it."
         fi
