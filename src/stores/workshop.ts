@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import type { IWorkshop } from "@/interfaces"
 import axios from "axios"
+import sanitizeHtml from "sanitize-html"
 import type { IWorkshopMenuItem, ITree } from '@/interfaces/workshop'
 
 const WORKSHOPS_BASE = '/ws/'
@@ -113,6 +114,12 @@ export const useWorkshopStore = defineStore({
       https://storage.googleapis.com/gdemo-workshops-test/gride-demo/images/
       //      page = page.replaceAll('/images/', WORKSHOPS_BASE + this.workshopName + '/static/images/')
       page = page.replaceAll('/images/', `https://storage.googleapis.com/gdemo-workshops-test/${this.workshopName}/images/`)
+
+      // TODO add html sanitizer
+      page = sanitizeHtml(page, {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+        allowedIframeHostnames: ['www.youtube.com']
+      });
       return page
     },
 
