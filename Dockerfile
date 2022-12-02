@@ -31,6 +31,14 @@ FROM httpd:2.4.53-alpine
 
 COPY --from=builder /usr/src/app/dist/. /usr/local/apache2/htdocs/
 
+RUN sed -i \
+        -e 's/^#\(Include .*httpd-ssl.conf\)/\1/' \
+        -e 's/^#\(LoadModule .*mod_ssl.so\)/\1/' \
+        -e 's/^#\(LoadModule .*mod_socache_shmcb.so\)/\1/' \
+        conf/httpd.conf
+
+COPY ./my-httpd-ssl.conf /usr/local/apache2/conf/extra/httpd-ssl.conf
+
 # If you are building your code for production
 # RUN npm ci --only=production
 COPY ./my-httpd.conf /usr/local/apache2/conf/httpd.conf
