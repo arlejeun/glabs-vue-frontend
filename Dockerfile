@@ -31,6 +31,9 @@ FROM httpd:2.4.53-alpine
 
 COPY --from=builder /usr/src/app/dist/. /usr/local/apache2/htdocs/
 
+
+COPY ./my-httpd-ssl.conf /usr/local/apache2/conf/extra/httpd-ssl.conf
+
 # If you are building your code for production
 # RUN npm ci --only=production
 COPY ./my-httpd.conf /usr/local/apache2/conf/httpd.conf
