@@ -80,13 +80,12 @@ jobs:
           echo "Namespace drive already exists. Will use it."
         fi
       
-    # Create Pull Secret
+    # Check/Copy Pull Secret
     - name: Secret
       run: |-
         if ! kubectl get secret pullsecret -n drive; then
-          echo "Creating Kubernetes Secret for the Pullsecret"
-          echo ${{ secrets.GAR_USER }} >> "./key.json"
-          kubectl create secret docker-registry pullsecret -n drive --docker-server=$GAR_LOCATION-docker.pkg.dev --docker-username=_json_key --docker-password="$(cat ./key.json)" --docker-email=gtsadmin@genesys.com
+          echo "CCopying Kubernetes Secret for the Pullsecret"
+          kubectl get secret gdemo-ssl --namespace=default -o yaml | sed 's/namespace: .*/namespace: drive/'
         else
           echo "Pullsecret already exists. Will use it."
         fi
