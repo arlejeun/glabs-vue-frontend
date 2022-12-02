@@ -1,60 +1,99 @@
-import { URL, fileURLToPath } from 'node:url'
+import { URL, fileURLToPath } from "node:url";
+import { defineConfig, loadEnv } from "vite";
 
-import { defineConfig } from 'vite'
-import Vue from '@vitejs/plugin-vue'
-import Pages from 'vite-plugin-pages'
-import Layouts from 'vite-plugin-vue-layouts'
-import Components from 'unplugin-vue-components/vite'
-import AutoImport from 'unplugin-auto-import/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-import Markdown from 'vite-plugin-vue-markdown'
-import DefineOptions from 'unplugin-vue-define-options/vite'
+import type { UserConfig} from "vite"
+import type { ServerOptions as ServerOptions } from 'node:https';
+
+import Vue from "@vitejs/plugin-vue";
+import Pages from "vite-plugin-pages";
+import Layouts from "vite-plugin-vue-layouts";
+import Components from "unplugin-vue-components/vite";
+import AutoImport from "unplugin-auto-import/vite";
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
+import Markdown from "vite-plugin-vue-markdown";
+import DefineOptions from "unplugin-vue-define-options/vite";
+import fs from "fs";
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  css: {
-    preprocessorOptions: {
-      scss: { 
-         // example : additionalData: `@import "./src/design/styles/variables";`
-         // dont need include file extend .scss
-          //additionalData: `@import "src/assets/scss/style"`
-      }
+export default defineConfig(({ mode }): UserConfig => {
+
+  const env = loadEnv(mode, process.cwd(),'')
+  let httpsConfig = false as boolean | ServerOptions
+  const serverDevHost = env.SERVER_HOST || 'localhost' as string | boolean
+  const serverDevPort = Number(env.SERVER_PORT) || 5173 as number
+  const serverHost = env.SERVER_HOST || 'localhost' as string | boolean
+  const serverPort = Number(env.SERVER_PORT) || 5173 as number
+
+  if (env.SERVER_HTTPS == 'true') {
+    httpsConfig = {
+      key: fs.readFileSync('./.cert/localhost-key.pem'),
+      cert: fs.readFileSync('./.cert/localhost.pem')
+    }
+  }
+
+  console.log(serverHost + ' - ' + serverPort)
+
+  return {
+    server: {
+      host: serverDevHost,
+      port: serverDevPort,
+      https: httpsConfig
     },
-  },
-  plugins: [
-    Vue(),
-    Pages({ extensions: ['vue', 'md'] }),
-    Layouts(),
-    AutoImport({
-      imports: ['vue', 'vue-router', '@vueuse/head', '@vueuse/core', 'pinia'],
-      resolvers: [ElementPlusResolver()],
-      vueTemplate: true,
-      dirs: [
-        'src/composables',
-        'src/store',
-      ],
-      dts: 'src/auto-imports.d.ts',
-    }),
-    Components({
-      extensions: ['vue', 'md'],
-      dirs: ['src/components'],
-      resolvers: [ElementPlusResolver()],
-      include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
-      dts: 'src/components.d.ts',
-    }),
-    Markdown({
-      wrapperClasses: 'prose prose-sm m-auto text-left',
-      headEnabled: true,
-    }),
-    DefineOptions(),
-  ],
-  define: { 'process.env': {} },
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    css: {
+      preprocessorOptions: {
+        scss: {
+          //additionalData: `@use "@/assets/scss/element/index.scss" as *;`,
+          // example : additionalData: `@import "./src/design/styles/variables";`
+          // dont need include file extend .scss
+          // additionalData: `@import "src/assets/scss/element/index.scss";`
+        },
+        dirs: ["src/assets/scss/element"],
+      },
     },
-  },
-  build: {
-    chunkSizeWarningLimit: 5000,
-  },
-})
+    plugins: [
+      Vue(),
+      Pages({
+        extendRoute(route, parent) {
+          return route;
+          // if (route.path === '/' || route.name == 'not-authorized') {
+          //  return route
+          // }
+          // return {
+          //   ...route,
+          //   meta: { requiresAuth: true, title: route.name },
+          // }
+        },
+        extensions: ["vue", "md"],
+      }),
+      Layouts(),
+      AutoImport({
+        imports: ["vue", "vue-router", "@vueuse/head", "@vueuse/core", "pinia"],
+        resolvers: [ElementPlusResolver()],
+        vueTemplate: true,
+        dirs: ["src/composables", "src/store"],
+        dts: "src/auto-imports.d.ts",
+      }),
+      Components({
+        extensions: ["vue", "md"],
+        dirs: ["src/components"],
+        resolvers: [ElementPlusResolver()],
+        include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
+        dts: "src/components.d.ts",
+      }),
+      Markdown({
+        wrapperClasses: "prose prose-sm m-auto text-left",
+        headEnabled: true,
+      }),
+      DefineOptions(),
+    ],
+    define: { "process.env": {} },
+    resolve: {
+      alias: {
+        "@": fileURLToPath(new URL("./src", import.meta.url)),
+      },
+    },
+    build: {
+      chunkSizeWarningLimit: 5000,
+    }
+  };
+});

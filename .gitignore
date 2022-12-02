@@ -26,4 +26,9 @@ coverage
 *.njsproj
 *.sln
 *.sw?
-.dccache
+*.dccache
+
+public/ws/
+
+*.pem
+*.env*

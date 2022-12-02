@@ -1,0 +1,20 @@
+// Should you need to overwrite any of our SCSS code or need to add any custom code, We highly recommend that you add your code into this file, so whenever theme update is available and you update the theme, You will not lose your hard work :)
+
+/*User CSS*/
+.navbar.navbar {
+    height: 70px;
+}
+
+::selection {
+    background: var(--el-color-primary-light-8);
+}
+
+/* Banner Image */
+.hero-image {
+    // background-image: url('/img/workshops/Genesys-Banner-Red.png');
+    background-image: url('/img/workshop/Genesys-Banner-Red.png');
+    background-size: cover;
+    height: auto;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}

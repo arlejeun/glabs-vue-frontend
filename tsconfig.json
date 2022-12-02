@@ -12,6 +12,8 @@
     }
   ],
   "compilerOptions": {
+    "noImplicitAny": false,
+    "allowJs": true,
     "composite": true,
     "baseUrl": ".",
     "paths": {
@@ -22,12 +24,6 @@
       "vite-plugin-vue-layouts/client",
       "vite-plugin-pages/client",
       "element-plus/global"
-    ],
-    "include": [
-      "vite.config.*",
-      "env.d.ts",
-      "src/**/*",
-      "src/**/*.vue"
     ]
   }
 }
