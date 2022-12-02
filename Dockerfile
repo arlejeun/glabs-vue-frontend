@@ -33,3 +33,4 @@ COPY --from=builder /usr/src/app/dist/. /usr/local/apache2/htdocs/
 
 # If you are building your code for production
 # RUN npm ci --only=production
+COPY ./my-httpd.conf /usr/local/apache2/conf/httpd.conf
