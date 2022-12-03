@@ -3,6 +3,8 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { AxiosResponse } from 'axios';
 import { stringify } from 'querystring';
+import { Storage } from '@google-cloud/storage';
+import StorageConfig from './storage-config'
 
 const shell = require('shelljs');
 const fs = require('fs');
@@ -10,6 +12,15 @@ const fm = require('front-matter');
 
 const WORKSHOPS_PATH = "../../public/ws/"
 const REPO_OWNER = "genesys-samples/"
+
+console.log(StorageConfig)
+
+// The ID of your GCS bucket
+// The path to your file to upload
+const filePath = 'upload.txt';
+
+// The new ID for your GCS file
+const destFileName = 'gride-demo/test/README.md';
 
 interface IMenu {
   name: string,
@@ -23,10 +34,42 @@ interface IMenu {
 @Injectable()
 export class AppService {
 
-  constructor(private readonly httpService: HttpService) { }
+  private storage: Storage
+  private bucket: string
+  private bucketName = StorageConfig.mediaBucket
+  private wokrshopName: string
+
+  constructor(private readonly httpService: HttpService) {
+    this.storage = new Storage({
+      projectId: StorageConfig.projectId,
+      credentials: {
+        client_email: StorageConfig.client_email,
+        private_key: StorageConfig.private_key,
+      },
+    });
+
+    this.bucket = StorageConfig.mediaBucket;
+  }
 
   getHello(): string {
     return 'Useage:   /update/workshop-repo-name';
+  }
+
+  getGcp(): string {
+
+    this.uploadFile('', '').catch(console.error);
+
+    return 'OK'
+  }
+
+  private async uploadFile(file: string, dest: string) {
+
+    const options = {
+      destination: dest
+    };
+
+    await this.storage.bucket(this.bucketName).upload(file, options);
+    console.log(`${file} uploaded to ${this.bucketName}`);
   }
 
   private async download(workshop: string, file: string) {
@@ -45,7 +88,7 @@ export class AppService {
     console.log('Saved!')
   }
 
-  private walk = function (dir: string) {
+  private metadataCollection = function (dir: string) {
     var menu = { name: '', menus: [], pages: [] } as IMenu
 
     var list = fs.readdirSync(dir);
@@ -55,7 +98,7 @@ export class AppService {
       file = dir + '/' + file;
       var stat = fs.statSync(file);
       if (stat && stat.isDirectory()) {
-        menu.menus.push(self.walk(file).menus);
+        menu.menus.push(self.metadataCollection(file).menus);
       }
       else {
         const data = fs.readFileSync(file, { encoding: 'utf8', flag: 'r' });
@@ -80,6 +123,28 @@ export class AppService {
     return { menus: menu };
   }
 
+  private mediaUpload = function (dir: string) {
+
+    shell.pushd(dir)
+    var list = fs.readdirSync(dir);
+    var self = this;
+    var path =
+
+      list.forEach(async function (file) {
+        file = dir + '/' + file;
+        var stat = fs.statSync(file);
+        if (stat && stat.isDirectory()) {
+          self.mediaUpload(file)
+        }
+        else {
+          console.log(__dirname)
+          console.log(file)
+          await self.uploadFile(file, self.wokrshopName + '/images' + file.substr(1))
+        }
+      });
+    shell.popd()
+
+  }
 
   async getWorkshop(workshop: string): Promise<string> {
 
@@ -119,7 +184,7 @@ export class AppService {
 
       shell.pushd(wsPath + '/content');
       try {
-        const manifes = JSON.stringify({ content: this.walk('.').menus }, null, 4);
+        const manifes = JSON.stringify({ content: this.metadataCollection('.').menus }, null, 4);
         //console.log('RESULT: ', manifest)
         fs.writeFileSync('manifest.json', manifes);
       }
@@ -127,6 +192,59 @@ export class AppService {
         console.log('Manifest file error: \n', e)
       }
       shell.popd();
+      return
+
+    });
+
+    donePromise.then(() => {
+      console.log(workshop + ' deployment completed!')
+    });
+
+    return 'Request accepted'
+  }
+
+  async getGcpWorkshop(workshop: string): Promise<string> {
+
+    this.wokrshopName = workshop
+    const donePromise = new Promise(async () => {
+
+
+      shell.mkdir('temp');
+      shell.pushd('temp');
+      //await this.download(REPO_OWNER + workshop, 'repo.zip');
+      //shell.exec(`unzip -o -qq repo.zip `);
+      //shell.rm('repo.zip')
+
+      shell.mv('genesys-samples*/*', '.')
+      shell.rm('-r', 'genesys-samples*')
+
+      shell.pushd('content');
+      try {
+        const manifest = JSON.stringify({ content: this.metadataCollection('.').menus }, null, 4);
+        // TODO Save to the DB
+        fs.writeFileSync('manifest.json', manifest);
+      }
+      catch (e) {
+        console.log('Manifest file error: \n', e)
+      }
+      shell.popd();
+      shell.pushd('static');
+
+      this.storage.bucket(this.bucketName).deleteFiles({
+        prefix: this.wokrshopName + '/'
+      }, function (err) {
+        if (!err) {
+          console.log('Old workshop files are deleted in cloud')
+        }
+        else {
+          console.error('Old Workshop files are not deleted!', err)
+        }
+      });
+
+      this.mediaUpload('images')
+
+      shell.popd();
+      //  shell.rm('-r', 'temp')
       return
 
     });

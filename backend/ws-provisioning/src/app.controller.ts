@@ -14,4 +14,14 @@ export class AppController {
   getWorkshop(@Param('workshop') workshop: string): Promise<string> {
     return this.appService.getWorkshop(workshop);
   }
+
+  @Get('gcp-update/:workshop')
+  getGcpWorkshop(@Param('workshop') workshop: string): Promise<string> {
+    return this.appService.getGcpWorkshop(workshop);
+  }
+
+  @Get('gcp')
+  getGcp(): string {
+    return this.appService.getGcp();
+  }
 }
