@@ -73,17 +73,17 @@ export class AppService {
 
     try {
       self.count++
-      this.storage.bucket(this.bucketName).upload(file, options, () => {
+      await this.storage.bucket(this.bucketName).upload(file, options, (err) => {
         self.count--
-        console.log(`${file} uploaded to ${self.bucketName}`);
+        !err && console.log(`${file} uploaded to ${self.bucketName}`)
       });
     }
     catch (e) {
       try {
         self.count++
-        this.storage.bucket(this.bucketName).upload(file, options, () => {
+        await this.storage.bucket(this.bucketName).upload(file, options, (err) => {
           self.count--
-          console.log(`${file} uploaded to ${self.bucketName}`);
+          !err && console.log(`${file} uploaded to ${self.bucketName}`)
         });
       }
       catch (er) {
