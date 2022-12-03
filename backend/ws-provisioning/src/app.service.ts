@@ -39,6 +39,7 @@ export class AppService {
   private bucketName = StorageConfig.mediaBucket
   private wokrshopName: string
   private currentDir = __dirname.substr(0, __dirname.lastIndexOf('/'))
+  private count = 0
 
   constructor(private readonly httpService: HttpService) {
     this.storage = new Storage({
@@ -65,12 +66,32 @@ export class AppService {
 
   private async uploadFile(file: string, dest: string) {
 
+    var self = this
     const options = {
       destination: dest
     };
 
-    await this.storage.bucket(this.bucketName).upload(file, options);
-    console.log(`${file} uploaded to ${this.bucketName}`);
+    try {
+      self.count++
+      this.storage.bucket(this.bucketName).upload(file, options, () => {
+        self.count--
+        console.log(`${file} uploaded to ${self.bucketName}`);
+      });
+    }
+    catch (e) {
+      try {
+        self.count++
+        this.storage.bucket(this.bucketName).upload(file, options, () => {
+          self.count--
+          console.log(`${file} uploaded to ${self.bucketName}`);
+        });
+      }
+      catch (er) {
+        console.log('Cannot upload: ', file, '\n', er)
+      }
+    }
+
+    return
   }
 
   private async download(workshop: string, file: string) {
@@ -136,18 +157,7 @@ export class AppService {
         self.mediaUpload(file)
       }
       else {
-        console.log(file)
-        try {
-          await self.uploadFile(self.currentDir + '/temp/static/' + file, self.wokrshopName + file.substr(1))
-        }
-        catch (e) {
-          try {
-            await self.uploadFile(self.currentDir + '/temp/static/' + file, self.wokrshopName + file.substr(1))
-          }
-          catch (er) {
-            console.log('Cannot upload: ', file)
-          }
-        }
+        self.uploadFile(self.currentDir + '/temp/static/' + file, self.wokrshopName + '/' + file)
       }
     });
 
@@ -216,11 +226,12 @@ export class AppService {
     const donePromise = new Promise(async () => {
 
 
+      shell.rm('-r', 'temp')
       shell.mkdir('temp');
       shell.pushd('temp');
-      //await this.download(REPO_OWNER + workshop, 'repo.zip');
-      //shell.exec(`unzip -o -qq repo.zip `);
-      //shell.rm('repo.zip')
+      await this.download(REPO_OWNER + workshop, 'repo.zip');
+      await shell.exec(`unzip -o -qq repo.zip `);
+      shell.rm('repo.zip')
 
       shell.mv('genesys-samples*/*', '.')
       shell.rm('-r', 'genesys-samples*')
@@ -237,7 +248,7 @@ export class AppService {
       shell.popd();
       shell.pushd('static');
 
-      this.storage.bucket(this.bucketName).deleteFiles({
+      await this.storage.bucket(this.bucketName).deleteFiles({
         prefix: this.wokrshopName + '/'
       }, function (err) {
         if (!err) {
@@ -248,10 +259,14 @@ export class AppService {
         }
       });
 
+      this.count = 0
+      await this.uploadFile(this.currentDir + '/temp/content/manifest.json', this.wokrshopName + '/manifest.json')
       this.mediaUpload('images')
 
       shell.popd();
-      //  shell.rm('-r', 'temp')
+      shell.popd();
+      this.removeTemp('temp', this)
+
       return
 
     });
@@ -261,6 +276,15 @@ export class AppService {
     });
 
     return 'Request accepted'
+  }
+
+  private removeTemp(folder, self) {
+    if (this.count > 0) {
+      setTimeout(() => { self.removeTemp(folder, self) }, 1000)
+    }
+    else {
+      shell.rm('-r', folder)
+    }
   }
 
 }
