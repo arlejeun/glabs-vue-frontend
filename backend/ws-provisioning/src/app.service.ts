@@ -38,6 +38,7 @@ export class AppService {
   private bucket: string
   private bucketName = StorageConfig.mediaBucket
   private wokrshopName: string
+  private currentDir = __dirname.substr(0, __dirname.lastIndexOf('/'))
 
   constructor(private readonly httpService: HttpService) {
     this.storage = new Storage({
@@ -125,24 +126,30 @@ export class AppService {
 
   private mediaUpload = function (dir: string) {
 
-    shell.pushd(dir)
     var list = fs.readdirSync(dir);
     var self = this;
-    var path =
 
-      list.forEach(async function (file) {
-        file = dir + '/' + file;
-        var stat = fs.statSync(file);
-        if (stat && stat.isDirectory()) {
-          self.mediaUpload(file)
+    list.forEach(async function (file) {
+      file = dir + '/' + file;
+      var stat = fs.statSync(file);
+      if (stat && stat.isDirectory()) {
+        self.mediaUpload(file)
+      }
+      else {
+        console.log(file)
+        try {
+          await self.uploadFile(self.currentDir + '/temp/static/' + file, self.wokrshopName + file.substr(1))
         }
-        else {
-          console.log(__dirname)
-          console.log(file)
-          await self.uploadFile(file, self.wokrshopName + '/images' + file.substr(1))
+        catch (e) {
+          try {
+            await self.uploadFile(self.currentDir + '/temp/static/' + file, self.wokrshopName + file.substr(1))
+          }
+          catch (er) {
+            console.log('Cannot upload: ', file)
+          }
         }
-      });
-    shell.popd()
+      }
+    });
 
   }
 
