@@ -108,9 +108,9 @@ function mockSignOut() {
             <li class="nav-item dropdown">
               <router-link
                 class="nav-link text-white fw-bolder"
-                to="/environments"
+                to="/analytics"
               >
-                Integration
+                Analytics
               </router-link>
             </li>
             <li class="nav-item dropdown">
