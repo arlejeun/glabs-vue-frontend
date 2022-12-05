@@ -81,7 +81,8 @@ export const useWorkshopStore = defineStore({
         pages = [...pages[i]?.menus || []]
       }
       pages.forEach(page =>
-        page.body = page.body?.replaceAll('/images/', WORKSHOPS_BASE + this.workshopName + '/static/images/')
+        page.body = page.body?.replaceAll('/images/', `https://storage.googleapis.com/genesys-drive-test/${this.workshopName}/images/`)
+        //        page.body = page.body?.replaceAll('/images/', WORKSHOPS_BASE + this.workshopName + '/static/images/')
       )
       return pages
     },
