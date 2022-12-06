@@ -4,7 +4,7 @@ import axios from "axios"
 import sanitizeHtml from "sanitize-html"
 import type { IWorkshopMenuItem, ITree } from '@/interfaces/workshop'
 
-const WORKSHOPS_BASE = '/ws/'
+const WORKSHOPS_BASE = 'https://storage.googleapis.com/genesys-drive-test/'
 
 function buildMenu(submenu: IWorkshopMenuItem[]): any {
   if (typeof submenu.forEach !== 'function') {
@@ -81,7 +81,7 @@ export const useWorkshopStore = defineStore({
         pages = [...pages[i]?.menus || []]
       }
       pages.forEach(page =>
-        page.body = page.body?.replaceAll('/images/', `https://storage.googleapis.com/genesys-drive-test/${this.workshopName}/images/`)
+        page.body = page.body?.replaceAll('/images/', `${WORKSHOPS_BASE}${this.workshopName}/images/`)
         //        page.body = page.body?.replaceAll('/images/', WORKSHOPS_BASE + this.workshopName + '/static/images/')
       )
       return pages
@@ -143,7 +143,8 @@ export const useWorkshopStore = defineStore({
 
       // getting manifest
       try {
-        const res = await axios.get(this.getWorkshopUrl + 'content/manifest.json');
+        const res = await axios.get('/ws/' + this.workshopName + '/content/manifest.json');  //(this.getWorkshopUrl + 'manifest.json');
+        console.log(res)
         this.workshop = [res.data.content];
       } catch (error) {
         console.log('Loading manifest error: ', error);
