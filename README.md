@@ -33,7 +33,6 @@ npm install
 npm run dev
 ```
 
-test
 ### Type-Check, Compile and Minify for Production
 
 ```sh
