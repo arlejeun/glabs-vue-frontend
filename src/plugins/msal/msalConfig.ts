@@ -13,8 +13,8 @@ auth: {
     clientId: '9bb9430a-d8f2-4ce1-b1b5-5025e333958a',
     authority: 'https://glabsdev.b2clogin.com/glabsdev.onmicrosoft.com/B2C_1_GLabs_SignUpSignIn',
     knownAuthorities: ['glabsdev.b2clogin.com'],
-    redirectUri: 'http://localhost:5173/auth', // Must be registered as a SPA redirectURI on your app registration
-    postLogoutRedirectUri: 'http://localhost:5173' // Must be registered as a SPA redirectURI on your app registration
+    redirectUri: 'http://localhost:5173/auth/', // Must be registered as a SPA redirectURI on your app registration
+    postLogoutRedirectUri: 'http://localhost:5173/' // Must be registered as a SPA redirectURI on your app registration
   },
   cache: {
     cacheLocation: 'localStorage'

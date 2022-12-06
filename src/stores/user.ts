@@ -4,8 +4,7 @@ import { defineStore } from "pinia";
 import type {
   IDriveUser,
   IDriveCustomer,
-  IDriveCustomerOrg,
-IDriveIdentifier,
+  IDriveCustomerOrg
 } from "@/interfaces";
 import defaultAvatarUrl from '@/assets/images/avatar/01.jpg'
 import { GLabsApiClient, GLABS_STORAGE, GLABS_TOKEN} from '@/apis/glabs'
@@ -52,18 +51,20 @@ export const useUserStore = defineStore("identity", () => {
   async function fetchUser() {
     
     const { execute } = useAxios(GLabsApiClient)
-    const data = {email: 'arnaud.lejeune@genesys.com'}
-    const auth = await execute(`/auth/login`, {data, method: 'POST'}, )
+    // const data = {email: 'arnaud.lejeune@genesys.com'}
+    // const auth = await execute(`/auth/login`, {data, method: 'POST'}, )
     
-    if (auth.isFinished.value && !auth.error.value) {
+    // if (auth.isFinished.value && !auth.error.value) {
     
-      GLABS_STORAGE.value = {token: auth.data.value?.accessToken}
-      GLABS_TOKEN.value = auth.data.value?.accessToken
+      // GLABS_STORAGE.value = {token: auth.data.value?.accessToken}
+      // GLABS_TOKEN.value = auth.data.value?.accessToken
       //GLabToken.value.token = auth.data.value?.accessToken
       //localStorage.setItem('glabs', JSON.stringify({token: auth.data.value?.accessToken}) )
 
+      //const result = await execute('/users/me', {headers: { "Accept": "application/json","Authorization": "Bearer " + token}})
+
       const result = await execute('/users/me')
-    
+
       if (result.isFinished.value && !result.error.value) {
         user.value = result.data.value as IDriveUser
         status.value = "LoggedIn"
@@ -81,7 +82,7 @@ export const useUserStore = defineStore("identity", () => {
         
       }
 
-    }
+    //}
 
     
       // const res = await fetch(

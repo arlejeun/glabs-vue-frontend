@@ -1,5 +1,6 @@
 import { graphConfig } from '@/plugins/msal/msalConfig'
 
+
 export async function callMsGraph(accessToken: string) {
     const headers = new Headers();
     const bearer = `Bearer ${accessToken}`;

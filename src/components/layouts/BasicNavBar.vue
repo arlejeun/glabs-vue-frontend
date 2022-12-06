@@ -8,9 +8,9 @@ import { loginRequest } from '@/plugins/msal/msalConfig'
 const { instance } = useMsal();
 
 const store = useUserStore()
-const  { avatarUrl, username, userEmail, isLoggedIn } = storeToRefs(store)
+const  { avatarUrl, username, userEmail } = storeToRefs(store)
 const isAuthenticated = useIsAuthenticated();
-const {fetchUser, logout} = store
+const {logout} = store
 
 const { width } = useWindowSize()
 const isMobile = computed(() => width.value < 1200)

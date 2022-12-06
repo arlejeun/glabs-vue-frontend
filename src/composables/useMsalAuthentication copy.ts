@@ -21,6 +21,21 @@ export function useMsalAuthentication(interactionType: InteractionType, request:
             localInProgress.value = true;
             const tokenRequest = requestOverride || request;
 
+            if (inProgress.value === InteractionStatus.Startup || inProgress.value === InteractionStatus.HandleRedirect) {
+                try {
+                    const response = await instance.handleRedirectPromise()
+                    if (response) {
+                        result.value = response;
+                        error.value = null;
+                        return;
+                    }
+                } catch (e) {
+                    result.value = null;
+                    error.value = e as AuthError;
+                    return;
+                };
+            }
+
             try {
                 const response = await instance.acquireTokenSilent(tokenRequest);
                 result.value = response;
@@ -30,16 +45,24 @@ export function useMsalAuthentication(interactionType: InteractionType, request:
                     return;
                 }
 
-            //    if (interactionType === InteractionType.Redirect) {
-            //         await instance.loginRedirect(tokenRequest).catch((e) => {
-            //             error.value = e;
-            //             result.value = null;
-            //         });
-            //     }
+               if (interactionType === InteractionType.Redirect) {
+                    await instance.loginRedirect(tokenRequest).catch((e) => {
+                        error.value = e;
+                        result.value = null;
+                    });
+                }
             };
             localInProgress.value = false;
         }
     }
+
+    const stopWatcher = watch(inProgress, () => {
+        if (!result && !error) {
+            acquireToken();
+        } else {
+            //stopWatcher();
+        }
+    });
 
     acquireToken();
     

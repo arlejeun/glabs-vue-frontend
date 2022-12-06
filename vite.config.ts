@@ -37,6 +37,11 @@ export default defineConfig(({ mode }): UserConfig => {
       port: serverDevPort,
       https: httpsConfig
     },
+    preview: {
+      host: serverDevHost,
+      port: serverDevPort,
+      https: httpsConfig
+    },
     css: {
       preprocessorOptions: {
         scss: {
