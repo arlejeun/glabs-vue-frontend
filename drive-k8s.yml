@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: drive
-          image: us-west1-docker.pkg.dev/techacceleration-platform-dev/drive/drive-web:development
+          image: us-west1-docker.pkg.dev/techacc-platform-dev/drive/drive-web:development
           imagePullPolicy: Always
           volumeMounts:
           - mountPath: "/mnt/certs/"
