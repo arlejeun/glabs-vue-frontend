@@ -136,7 +136,7 @@ export const useUserStore = defineStore("identity", () => {
   async function updateCustomerProfile(cust: IDriveCustomer) {
     const { execute } = useAxios(GLabsApiClient)
     const data = generateCustomerPayload(cust)
-
+    customer.value = {...cust}
     const result = await execute(`/customers/${cust.id}`, {data: data, method: 'PATCH'}, )
     customerUpdateInProgress.value = false
     if (result.isFinished.value && !result.error.value) {

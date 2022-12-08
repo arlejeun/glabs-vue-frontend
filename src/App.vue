@@ -1,12 +1,15 @@
 <script setup lang="ts">
-  // import { useState } from "vue-gtag-next";
-  // const { isEnabled } = useState();
-  // const enableTracking = () => {
-  //   //isEnabled.value = true;
-  // };
-  // onMounted(() => {
-  //   enableTracking()
-  // })
+
+import { useSocketStore } from '@/stores/socket'
+import socketioService from './services/socketio.service';
+
+
+const { notifyUser } = useSocketStore()
+socketioService.setupSocketConnection(notifyUser)
+
+onBeforeUnmount(() => {
+  socketioService.disconnect()
+})
 
 </script>
 

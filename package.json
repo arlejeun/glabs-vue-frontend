@@ -32,7 +32,8 @@
     "@vueuse/router":"9.6.0",
     "vue-gtag-next":"^1.14.0",
     "@kyvg/vue3-notification":"^2.7.0",
-    "@azure/msal-browser": "^2.32.0"
+    "@azure/msal-browser": "^2.32.0",
+    "socket.io-client": "4.5.4"
   },
   "devDependencies": {
     "@antfu/eslint-config-vue": "~0.29.3",

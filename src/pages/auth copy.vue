@@ -9,6 +9,7 @@ import { loginRequest } from '@/plugins/msal/msalConfig'
 
 const userStore = useUserStore()
 const { user, status } = storeToRefs(userStore)
+const { fetchUser } = userStore
 
 const isAuthenticated = useIsAuthenticated();
 const {instance, accounts, inProgress} = useMsal();
@@ -18,19 +19,21 @@ const { result, acquireToken } = useMsalAuthentication(InteractionType.Redirect,
 const data = ref(null);
 
 async function updateData() {
-    if (result.value?.idToken) {
-        const apiResult = await callMsGraph(result.value.idToken)
-        data.value = apiResult;
-		    status.value = 'LoggedIn'
-        GLABS_TOKEN.value = result.value?.idToken
-        GLABS_STORAGE.value = {token: result.value?.idToken}
+    
+  if (result.value?.idToken) {
+      GLABS_TOKEN.value = result.value?.idToken
+      GLABS_STORAGE.value = {token: result.value?.idToken}
+      fetchUser()
+
+      //const apiResult = await callMsGraph(result.value.idToken)
+      //data.value = apiResult;
+		  status.value = 'LoggedIn'
         //fetchUser()
-        user.value = apiResult
-        
-      }
+      //user.value = apiResult
+    }
 }
 
-updateData();
+//updateData();
 
 watch(result, () => {
     // Fetch new data from the API each time the result changes (i.e. a new access token was acquired)
@@ -43,8 +46,6 @@ watch(result, () => {
 <template>
   <div class="workshops">
     <div class="main-div">
-
-    <pre>{{GLABS_STORAGE}}</pre>
 
 		<!-- <pre>{{isAuthenticated}}</pre>
 		<pre>{{accounts}}</pre>

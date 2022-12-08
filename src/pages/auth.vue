@@ -1,50 +1,31 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
-import { useMsalAuthentication } from '@/composables/useMsalAuthentication'
-import { InteractionType } from '@azure/msal-browser'
-import { watch } from 'vue'
-import { GLabsApiClient, GLABS_STORAGE, GLABS_TOKEN} from '@/apis/glabs'
-import { callMsGraph } from "../utils/MsGraphApiCall";
-import { loginRequest } from '@/plugins/msal/msalConfig'
+import { useNotification } from '@kyvg/vue3-notification';
+import wsClientService from '@/services/socketio.service'
 
-const userStore = useUserStore()
-const { user, status } = storeToRefs(userStore)
-const { fetchUser } = userStore
+const { notify}  = useNotification()
 
-const isAuthenticated = useIsAuthenticated();
-const {instance, accounts, inProgress} = useMsal();
+// const displayNotification = ((event: any) => {
+//   console.log(event);
+//   notify({
+//         title: 'Server Update',
+//         text: event,
+//         duration: -1,
+//         type: 'info'
+//       });
+// })
 
-const { result, acquireToken } = useMsalAuthentication(InteractionType.Redirect, loginRequest);
 
-const data = ref(null);
+// const { socket } = useSocketIO()
 
-async function updateData() {
-    
-  if (result.value?.idToken) {
-      GLABS_TOKEN.value = result.value?.idToken
-      GLABS_STORAGE.value = {token: result.value?.idToken}
-      fetchUser()
+// wsClientService.socket.on('connected', displayNotification)
 
-      //const apiResult = await callMsGraph(result.value.idToken)
-      //data.value = apiResult;
-		  status.value = 'LoggedIn'
-        //fetchUser()
-      //user.value = apiResult
-    }
-}
-
-//updateData();
-
-watch(result, () => {
-    // Fetch new data from the API each time the result changes (i.e. a new access token was acquired)
-  updateData();
-
-});
+// wsClientService?.socket.on('msgToClient', displayNotification)
 
 </script>
 
 <template>
-  <div class="workshops">
+  <div class="websockets">
     <div class="main-div">
 
 		<!-- <pre>{{isAuthenticated}}</pre>
