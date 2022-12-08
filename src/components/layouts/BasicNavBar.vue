@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
 import { useUserStore } from '@/stores/user'
-import router from '@/router'
 import { useMsal } from '@/composables/useMsal'
 import { loginRequest } from '@/plugins/msal/msalConfig'
 

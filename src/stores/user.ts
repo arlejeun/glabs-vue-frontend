@@ -4,7 +4,9 @@ import { defineStore } from "pinia";
 import type {
   IDriveUser,
   IDriveCustomer,
-  IDriveCustomerOrg
+  IDriveCustomerOrg,
+  IDriveCustomerDTO,
+  IDriveIdentifierDTO
 } from "@/interfaces";
 import defaultAvatarUrl from '@/assets/images/avatar/01.jpg'
 import { GLabsApiClient, GLABS_STORAGE, GLABS_TOKEN} from '@/apis/glabs'
@@ -12,6 +14,13 @@ import { GLabsApiClient, GLABS_STORAGE, GLABS_TOKEN} from '@/apis/glabs'
 import { useAxios } from "@vueuse/integrations/useAxios";
 import { useNotification } from "@kyvg/vue3-notification";
 import { handleAxiosError } from '@/utils/axios'
+
+function generateCustomerPayload(customer: IDriveCustomer) {
+  const identifiersCreate =  {create: customer.identifiers}
+  const {identifiers, ...cust} = customer;
+  let temp: IDriveCustomerDTO = {...cust, identifiers: identifiersCreate}
+  return {...temp}
+}
 
 export const useUserStore = defineStore("identity", () => {
 
@@ -22,6 +31,9 @@ export const useUserStore = defineStore("identity", () => {
   const status = ref("LoggedOut");
   const token = ref("");
   const customer = ref({} as IDriveCustomer);
+  const customerUpdateInProgress = ref(false);
+  const userUpdateInProgress = ref(false);
+  const orgsUpdateInProgress = ref(false)
   const orgs = ref([] as IDriveCustomerOrg[]);
 
   // computed properties vue composition of store
@@ -99,7 +111,8 @@ export const useUserStore = defineStore("identity", () => {
     const { execute } = useAxios(GLabsApiClient)
     const data = user.value
     const {customer, orgs, groups, ...userProperty} = user.value;
-    const result = await execute(`/users/${user.value.id}`, {method: 'PATCH', data: userProperty}, )
+    //const result = await execute(`/users/${user.value.id}`, {method: 'PATCH', data: userProperty}, )
+    const result = await execute(`/users/me`, {method: 'PATCH', data: userProperty}, )
     if (result.isFinished.value && !result.error.value) {
       console.log(result.data.value)
     }
@@ -122,8 +135,10 @@ export const useUserStore = defineStore("identity", () => {
   
   async function updateCustomerProfile(cust: IDriveCustomer) {
     const { execute } = useAxios(GLabsApiClient)
-    const data = {...cust}
+    const data = generateCustomerPayload(cust)
+
     const result = await execute(`/customers/${cust.id}`, {data: data, method: 'PATCH'}, )
+    customerUpdateInProgress.value = false
     if (result.isFinished.value && !result.error.value) {
       console.log(result.data.value)
     }
@@ -168,6 +183,9 @@ export const useUserStore = defineStore("identity", () => {
     getCustomerProfile,
     isStatusActive,
     getUserData,
+    customerUpdateInProgress,
+    userUpdateInProgress,
+    orgsUpdateInProgress,
     updateUserProfile,
     updateCustomerProfile,
     fetchUser,

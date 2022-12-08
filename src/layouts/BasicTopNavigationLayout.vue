@@ -3,7 +3,6 @@ import BasicFooter from '@/components/layouts/BasicFooter.vue';
 import { useUserStore } from '@/stores/user'
 import { BrowserAuthError, InteractionRequiredAuthError, InteractionStatus, InteractionType } from '@azure/msal-browser'
 import { watch } from 'vue'
-import { callMsGraph } from "../utils/MsGraphApiCall";
 import { loginRequest } from '@/plugins/msal/msalConfig'
 import { GLabsApiClient, GLABS_STORAGE, GLABS_TOKEN } from '@/apis/glabs'
 import type { IDriveUser } from '@/interfaces';
@@ -17,7 +16,6 @@ const { user, status } = storeToRefs(userStore)
 const { fetchUser } = userStore
 
 const isAuthenticated = useIsAuthenticated()
-const { result, acquireToken } = useMsalAuthentication(InteractionType.Redirect, loginRequest);
 const { instance, accounts, inProgress } = useMsal();
 
 
@@ -100,16 +98,15 @@ const stopWatcher = watch(inProgress, () => {
 
 <template>
   <div class="main-layout">
-    <pre>Authenticated MSAL: {{ isAuthenticated }} | In Progress: {{ inProgress }}</pre>
-    <!-- <pre>Accounts MSAL: {{ accounts }}</pre> -->
-    <pre>User Profile: {{ user.email }}</pre>
-
     <!-- <pre>Accounts Instance: {{instance}}</pre> -->
     <el-container class="pt-0">
       <BasicNavBar />
       <el-main class="main-content">
         <RouterView />
       </el-main>
+      <pre>Authenticated MSAL: {{ isAuthenticated }} | In Progress: {{ inProgress }}</pre>
+      <!-- <pre>Accounts MSAL: {{ accounts }}</pre> -->
+      <pre>User Profile: {{ user }}</pre>
       <el-footer class="footer">
         <BasicFooter />
       </el-footer>
