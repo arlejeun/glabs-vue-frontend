@@ -39,11 +39,19 @@ npm run dev
 npm run build
 ```
 
+### Deploy build
+
+```sh
+npm run preview
+```
+
 ### Run Unit Tests with [Vitest](https://vitest.dev/)
 
 ```sh
 npm run test:unit
 ```
+
+
 
 ### Lint with [ESLint](https://eslint.org/)
 
