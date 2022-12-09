@@ -1,12 +1,73 @@
 import { defineStore } from 'pinia'
-import type { IWorkshop } from "@/interfaces";
+import type { IWorkshop } from "@/interfaces"
+import axios from "axios"
+import sanitizeHtml from "sanitize-html"
+import type { IWorkshopMenuItem, ITree } from '@/interfaces/workshop'
 
 const WORKSHOPS_BASE = 'https://storage.googleapis.com/genesys-drive-test/'
 
+function buildMenu(submenu: IWorkshopMenuItem[]): any {
+  if (typeof submenu.forEach !== 'function') {
+    return []
+  }
+
+  var result = []
+  var menu = {
+    name: '',
+    menus: [] as IWorkshopMenuItem[],
+    pages: [] as IWorkshopMenuItem[]
+  }
+
+  submenu.forEach((item: IWorkshopMenuItem) => {
+    menu.name = item.name
+    menu.menus = []
+    if (item.menus && item.menus.length > 0) {
+      menu.menus = { ...buildMenu(item.menus) }
+    }
+    if (item.pages && item.pages.length > 0) {
+      menu.pages = { ...buildMenu(item.pages) }
+    }
+    result.push({ ...menu })
+  })
+  //  console.log(result)
+  return result
+}
+
+const buildTree = (ws: IWorkshopMenuItem[], index?: number[]): ITree[] => {
+
+  if (typeof ws?.forEach !== 'function') {
+    return []
+  }
+
+  index = index || []
+  var result = [] as ITree[]
+  var branch = {} as ITree
+  var i = 0
+
+  ws.forEach((item: IWorkshopMenuItem) => {
+    branch.index = [...index || []]
+    branch.label = item.name
+    branch.id = item.weight
+    branch.index.push(i)
+    if (item.menus && item.menus.length > 0) {
+      branch.children = [...buildTree(item.menus, branch.index)]
+    }
+    result.push({ ...branch })
+    delete branch.children
+    i++
+  })
+
+  //  console.log('Tree: ', result)
+  return result
+
+}
 export const useWorkshopStore = defineStore({
   id: 'workshop',
   state: () => ({
-    workshops: [] as IWorkshop[]
+    workshops: [] as IWorkshop[],
+    workshopName: '',
+    workshop: [] as IWorkshopMenuItem[],
+    page_index: [0, 0] as number[], // acces to ws page: menus[1].menus[2] -> page_index is [1,2]
   }),
   getters: {
     getAllWorkshops(): IWorkshop[] {
@@ -93,13 +154,17 @@ export const useWorkshopStore = defineStore({
     addWorkshop(todo: IWorkshop) {
       this.workshops.push(todo)
     },
-    
+
     setWorkshops(workshops: IWorkshop[]) {
-      this.workshops = {...workshops}
+      this.workshops = { ...workshops }
     },
 
     removeWorkshop(index: number) {
       this.workshops.splice(index, 1)
     },
+
+    setTreeIndex(ind: number[]) {
+      this.page_index = [...ind]
+    }
   },
 })

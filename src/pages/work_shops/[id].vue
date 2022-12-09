@@ -1,45 +1,44 @@
 <script setup lang="ts">
-import { useWorkshopStore } from "@/stores/workshop";
-import type { IWorkshop } from "@/interfaces";
-import VueMarkdown from "vue-markdown-render";
-import { useRoute } from "vue-router";
-import { useDateFormat, useNow } from "@vueuse/core";
-import { computed, ref } from "vue";
-import type Node from "element-plus/es/components/tree/src/model/node";
-import type { ITree, IWorkshopMenuItem } from "@/interfaces/workshop";
+import { useWorkshopStore } from '@/stores/workshop'
+import type { IWorkshop } from '@/interfaces'
+import VueMarkdown from 'vue-markdown-render'
+import { useRoute } from 'vue-router'
+import { useDateFormat, useNow } from '@vueuse/core'
+import { computed, ref } from 'vue'
+import type Node from 'element-plus/es/components/tree/src/model/node'
+import type { ITree, IWorkshopMenuItem } from '@/interfaces/workshop'
 
-//
-const route = useRoute();
 
-const wStore = useWorkshopStore();
 
-const searchValue = ref("");
-const wsName = computed(
-  () =>
-    (wStore.getWorkshopMenu.length > 0 && wStore.getWorkshopMenu[0].name) || ""
-);
-const wsMenu = computed(
-  () => wStore.getWorkshopMenu.length > 0 && wStore.getWorkshopMenu[0].menus
-);
-wStore.loadWorkshop(route.params.id);
+const route = useRoute()
+
+const wStore = useWorkshopStore()
+
+const searchValue = ref('')
+const wsName = computed(() => wStore.getWorkshopMenu.length > 0 && wStore.getWorkshopMenu[0].name || '')
+const wsMenu = computed(()=>wStore.getWorkshopMenu.length > 0 && wStore.getWorkshopMenu[0].menus) 
+wStore.loadWorkshop(route.params.id)
 
 const customNodeClass = (data: ITree, node: Node) => {
   if (data.isTop) {
-    return "tree-is-top";
-  } else {
-    return "tree";
+    return 'tree-is-top'
   }
-  return null;
-};
+  else {
+    return 'tree'
+  } 
+  return null
+}
 
-const mdProps = { html: true };
+
+const mdProps = {html: true} 
 
 const treeChange = (node: ITree) => {
-  var treeIndex = node?.index || [];
-  wStore.setTreeIndex(treeIndex);
-};
+  var treeIndex = node?.index || []
+  wStore.setTreeIndex(treeIndex)
+} 
 
-var treeData: ITree[] = computed(() => wStore.getWorkshopTree || []);
+var treeData: ITree[] = computed(() => wStore.getWorkshopTree || []) 
+
 </script>
 
 <template>
@@ -47,64 +46,58 @@ var treeData: ITree[] = computed(() => wStore.getWorkshopTree || []);
     <!-- {{$route.params.id}} -->
 
     <div>
-      <div class="row">
-        <div class="col-12 col-md-8 pr-0 workshop">
-          <div class="left-side common-layout">
-            <el-container class="ws-body">
-              <el-container class="ws-body">
-                <el-aside width="300px" class="ws-side">
-                  <el-header class="ws-side-header ws-search">
-                    <el-input
-                      v-model="searchValue"
-                      placeholder="Search..."
-                      clearable
-                    >
-                    </el-input>
-                  </el-header>
-                  <div class="ws-side-body">
-                    <el-tree
-                      :data="treeData"
-                      accordion
-                      @current-change="treeChange"
-                      :props="{ class: customNodeClass }"
-                    />
-                  </div>
-                </el-aside>
+    <div class="row">
+      <div class="col-12 col-md-8 pr-0 workshop">
+        <div class="left-side common-layout">
+          <el-container class="ws-body">
 
-                <el-main>
-                  <el-header class="ws-header">
-                    <h3 class="fs-3 ws-header">{{ wsName }}</h3>
-                  </el-header>
-                  <!--el-carousel height="800px" :autoplay="false" trigger="click">
+            <el-container class="ws-body">
+
+              <el-aside width="300px" class="ws-side">
+                <el-header class="ws-side-header ws-search">
+                  <el-input v-model="searchValue" 
+                    placeholder="Search..." clearable>
+                  </el-input>
+                </el-header>
+                <div class="ws-side-body">
+                  <el-tree :data="treeData" accordion @current-change="treeChange"
+                    :props="{ class: customNodeClass }" />
+                </div>
+              </el-aside>
+
+              <el-main>
+                <el-header class="ws-header">
+                  <h3 class="fs-3 ws-header">{{ wsName }}</h3>
+                </el-header>
+                <!--el-carousel height="800px" :autoplay="false" trigger="click">
                   <el-carousel-item v-for="item in wStore.getWorkshopPage" :key="item"-->
-                  <vue-markdown
-                    :options="mdProps"
-                    :source="wStore.getWorkshopPage"
-                  />
+                    <vue-markdown :options="mdProps" :source="wStore.getWorkshopPage" />
                   <!--/el-carousel-item>
                 </el-carousel-->
-                </el-main>
-              </el-container>
-            </el-container>
-          </div>
-        </div>
+              </el-main>
 
-        <div class="col-12 col-md-4 px-0">
-          <div class="right-side">
-            <div class="workshop-layout">
-              <div class="container-fluid my-5">
-                <div class="row mt-5">
-                  <div class="col-12">
-                    <div
-                      class="text-3xl font-semibold text-gray-9000 pb-2 mr-2"
-                    >
-                      <div class="row">
-                        <div class="col">
-                          <h1 class="mb-4 p-1 text-left">Environments</h1>
-                        </div>
-                        <div class="col-auto"></div>
+            </el-container>
+
+          </el-container>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 px-0">
+        <div class="right-side">
+          <div class="workshop-layout">
+            <div class="container-fluid my-5">
+              <div class="row mt-5">
+                <div class="col-12">
+                  <div class="text-3xl font-semibold text-gray-9000 pb-2 mr-2">
+                    <div class="row">
+                      <div class="col">
+                        <h1 class="mb-4 p-1 text-left">Environments</h1>
+                      </div>
+                      <div class="col-auto">
                       </div>
                     </div>
+
+                  
                   </div>
                 </div>
               </div>
@@ -114,6 +107,10 @@ var treeData: ITree[] = computed(() => wStore.getWorkshopTree || []);
       </div>
     </div>
   </div>
+
+
+  </div>
+
 </template>
 
 <style lang="scss">
@@ -128,7 +125,7 @@ var treeData: ITree[] = computed(() => wStore.getWorkshopTree || []);
 }
 .ws-side {
   color: #ccc;
-  background-color: #23395d;
+  background-color: #23395D;
 }
 .ws-side-body {
   padding-top: 5ex;
@@ -141,7 +138,7 @@ var treeData: ITree[] = computed(() => wStore.getWorkshopTree || []);
 }
 .ws-search {
   padding-top: 50px;
-  color: #23395d;
+  color: #23395D
 }
 
 .ws-body {
@@ -157,15 +154,14 @@ var treeData: ITree[] = computed(() => wStore.getWorkshopTree || []);
 }
 .tree-is-top > .el-tree-node__content {
   font-size: 18px;
+  color: #ff6428;;
+}
+.el-tree-node.is-current>.el-tree-node__content {
   color: #ff6428;
 }
-.el-tree-node.is-current > .el-tree-node__content {
-  color: #ff6428;
-}
-.tree > .el-tree-node__content {
+.tree>.el-tree-node__content {
   color: #aaa;
-}
-.tree > .el-tree-node__content:hover {
+}.tree>.el-tree-node__content:hover {
   background-color: #ccf;
   color: #555;
 }
@@ -173,12 +169,12 @@ var treeData: ITree[] = computed(() => wStore.getWorkshopTree || []);
   font-size: 20px;
 }
 .is-current > .el-tree-node__content {
-  //  color: #333;
+//  color: #333;
 }
 .el-tree-node {
   padding-bottom: 5px;
 }
-.tree-is-top > .el-tree-node__children > div {
+.tree-is-top>.el-tree-node__children>div {
   //width: 25%;
 }
 </style>
