@@ -114,7 +114,7 @@ export const useWorkshopStore = defineStore({
       })
       https://storage.googleapis.com/gdemo-workshops-test/gride-demo/images/
       //      page = page.replaceAll('/images/', WORKSHOPS_BASE + this.workshopName + '/static/images/')
-      page = page.replaceAll('/images/', `https://storage.googleapis.com/gdemo-workshops-test/${this.workshopName}/images/`)
+      page = page.replaceAll('/images/', `${WORKSHOPS_BASE}${this.workshopName}/images/`)
 
       // TODO add html sanitizer
       page = sanitizeHtml(page, {
