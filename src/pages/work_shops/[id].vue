@@ -4,11 +4,11 @@ import type { IWorkshop } from "@/interfaces";
 import VueMarkdown from "vue-markdown-render";
 import { useRoute } from "vue-router";
 import { useDateFormat, useNow } from "@vueuse/core";
+import type { ComputedRef } from "vue";
 import { computed, ref } from "vue";
 import type Node from "element-plus/es/components/tree/src/model/node";
 import type { ITree, IWorkshopMenuItem } from "@/interfaces/workshop";
 
-//
 const route = useRoute();
 
 const wStore = useWorkshopStore();
@@ -21,7 +21,7 @@ const wsName = computed(
 const wsMenu = computed(
   () => wStore.getWorkshopMenu.length > 0 && wStore.getWorkshopMenu[0].menus
 );
-wStore.loadWorkshop(route.params.id);
+wStore.loadWorkshop(route.params.id.toString());
 
 const customNodeClass = (data: ITree, node: Node) => {
   if (data.isTop) {
@@ -39,7 +39,9 @@ const treeChange = (node: ITree) => {
   wStore.setTreeIndex(treeIndex);
 };
 
-var treeData: ITree[] = computed(() => wStore.getWorkshopTree || []);
+const treeData: ComputedRef<ITree[]> = computed(
+  () => wStore.getWorkshopTree || []
+);
 </script>
 
 <template>
