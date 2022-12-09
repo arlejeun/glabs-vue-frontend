@@ -30,6 +30,7 @@
     "@vueuse/core": "~9.4.0",
     "@vueuse/integrations": "^9.5.0",
     "@vueuse/router":"9.6.0",
+    "sanitize-html": "^2.7.3",
     "vue-gtag-next":"^1.14.0",
     "@kyvg/vue3-notification":"^2.7.0",
     "@azure/msal-browser": "^2.32.0",
@@ -38,6 +39,7 @@
   "devDependencies": {
     "@antfu/eslint-config-vue": "~0.29.3",
     "@rushstack/eslint-patch": "^1.1.4",
+    "@types/sanitize-html": "^2.6.2",
     "@types/jsdom": "^20.0.0",
     "@types/node": "^16.11.68",
     "@vitejs/plugin-vue": "^3.1.2",
