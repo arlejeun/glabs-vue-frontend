@@ -112,7 +112,6 @@ export const useWorkshopStore = defineStore({
           content = content[index].menus || []
         }
       })
-      https://storage.googleapis.com/gdemo-workshops-test/gride-demo/images/
       //      page = page.replaceAll('/images/', WORKSHOPS_BASE + this.workshopName + '/static/images/')
       page = page.replaceAll('/images/', `https://storage.googleapis.com/gdemo-workshops-test/${this.workshopName}/images/`)
 
@@ -136,14 +135,10 @@ export const useWorkshopStore = defineStore({
       let file = document.createElement('link');
       file.rel = 'stylesheet'
 
-      // ### Style loading is disabled so far
-      //file.href = this.getWorkshopUrl + 'static/css/theme-mine.css'
-      //document.head.appendChild(file) 
-      // ###
-
       // getting manifest
       try {
-        const res = await axios.get('/ws/' + this.workshopName + '/content/manifest.json');  //(this.getWorkshopUrl + 'manifest.json');
+        //        const res = await axios.get('/ws/' + this.workshopName + '/content/manifest.json');  //(this.getWorkshopUrl + 'manifest.json');
+        const res = await axios.get(this.getWorkshopUrl + 'manifest.json');
         console.log(res)
         this.workshop = [res.data.content];
       } catch (error) {
