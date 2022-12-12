@@ -16,8 +16,7 @@ const formatted = useDateFormat(useNow(), formatter)
 
 
 //const workshopUrl = `https://workshop.genesys.com/workshops-gdemo/workshop-${route.params.id}/`
-const workshopUrl = `https://workshop.genesys.com/workshops-gdemo/workshop-gride-demo/`
-//const workshopUrl = `/ws/gride-demo/public/index.html`
+const workshopUrl = `https://workshop.genesys.com/workshops-gdemo/workshop-cxAsCodeDevlab/`
 
 function workshopDefaultName(workshop: IWorkshop) {
   if (workshop.name && workshop.name.length > 0) {

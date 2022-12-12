@@ -11,7 +11,7 @@ import { useNotification } from "@kyvg/vue3-notification";
 
 export const useCountryStore = defineStore("country", () => {
   // state properties vue composition of store
-  const countries = ref([] as IDriveCountry[]);
+  const countries = ref([] as IDriveCountry[]); 
   const selectedCountry = ref({} as IDriveCountry)
   
   // computed properties vue composition of store

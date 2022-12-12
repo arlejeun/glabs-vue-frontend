@@ -208,7 +208,7 @@ const updateCountryUser = () => {
         <div class="col">
 
           <!-- Personal info START -->
-          <div class="card border">
+          <div class="card mb-4 border">
             <!-- Card header -->
             <div class="card-header border-bottom">
               <h4 class="card-header-title">Personal Information</h4>

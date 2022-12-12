@@ -53,6 +53,11 @@ export interface IDriveCustomer {
     identifiers: IDriveIdentifier[]
   }
 
+export interface IDriveCustomerDTO {
+    [x: string]: string | IDriveIdentifierDTO,
+    identifiers: IDriveIdentifierDTO
+  }
+
   export interface IDriveCustomerForm extends IDriveCustomer {
     emails: IDriveIdentifier[],
     phones: IDriveIdentifier[],
@@ -72,6 +77,12 @@ export interface IDriveIdentifier {
     type: string,
     value: string
   }
+
+export interface IDriveIdentifierDTO {
+    create?: IDriveIdentifier[]
+  }
+
+
 
 export interface IDriveCustomerOrgSettings {
   [x: string]: string | undefined

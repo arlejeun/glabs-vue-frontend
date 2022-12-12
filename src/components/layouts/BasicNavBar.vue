@@ -1,30 +1,32 @@
 <script setup lang="ts">
 
 import { useUserStore } from '@/stores/user'
-import router from '@/router'
+import { useMsal } from '@/composables/useMsal'
+import { loginRequest } from '@/plugins/msal/msalConfig'
+
+const { instance } = useMsal();
 
 const store = useUserStore()
-const  { user, status, avatarUrl, username, userEmail, isLoggedIn, isAdmin } = storeToRefs(store)
-const {fetchUser, logout} = store
-// const avatarUrl = computed(() => user.value?.avatar_url || defaultAvatarUrl)
-// const isLoggedIn = computed(() => status.value == 'LoggedIn')
-//const username = computed(() => `${user.value?.first_name} ${user.value?.last_name}`)
+const  { avatarUrl, username, userEmail } = storeToRefs(store)
+const isAuthenticated = useIsAuthenticated();
+const {logout} = store
 
 const { width } = useWindowSize()
 const isMobile = computed(() => width.value < 1200)
 const isDark = useDark({valueDark: 'dark-mode', valueLight: 'light-mode'})
 const toggleDark = useToggle(isDark)
 
-const showProfileMenu = ref(false)
-const showNotificationsMenu = ref(false)
+
 
 function mockSignIn() {
-  fetchUser()
+  instance.loginRedirect(loginRequest);
+  //fetchUser()
 }
 
 function mockSignOut() {
   logout()
-  router.push('/')
+  //router.push('/')
+  instance.logoutRedirect();
 }
 
 </script>
@@ -77,7 +79,7 @@ function mockSignOut() {
           <ul
             class="navbar-nav navbar-nav-scroll"
             :class="{ 'bg-secondary': isMobile }"
-            v-show="isLoggedIn"
+            v-show="isAuthenticated"
           >
             <!-- Nav item Listing -->
             <li class="nav-item dropdown">
@@ -108,9 +110,9 @@ function mockSignOut() {
             <li class="nav-item dropdown">
               <router-link
                 class="nav-link text-white fw-bolder"
-                to="/analytics"
+                to="/auth"
               >
-                Analytics
+                Auth
               </router-link>
             </li>
             <li class="nav-item dropdown">
@@ -126,7 +128,7 @@ function mockSignOut() {
         <!-- Main navbar END -->
 
         <!-- Profile and Notification START -->
-        <ul v-if="isLoggedIn" class="nav flex-row align-items-center list-unstyled ms-xl-auto">
+        <ul v-if="isAuthenticated" class="nav flex-row align-items-center list-unstyled ms-xl-auto">
           <!-- Notification dropdown START -->
           <li class="nav-item ms-0 ms-md-3 dropdown">
             <!-- Notification button -->
@@ -279,8 +281,6 @@ function mockSignOut() {
               </li>
               <li>
                 <a class="dropdown-item" @click.stop.prevent="mockSignOut"><i class="bi bi-power fa-fw me-2" />Sign Out</a>
-                  
-                
               </li>
               <li>
                 <hr class="dropdown-divider">
@@ -314,7 +314,7 @@ function mockSignOut() {
         </ul>
         <!-- Profile and Notification START -->
 
-        <ul v-if="!isLoggedIn" class="nav flex-row align-items-center list-unstyled ms-xl-auto">
+        <ul v-if="!isAuthenticated" class="nav flex-row align-items-center list-unstyled ms-xl-auto">
 
           
           <li @click.stop.prevent="mockSignIn" class="nav-item"> <a class="nav-link text-white fw-bolder"><i class="bi bi-box-arrow-in-right me-2"></i>Sign In</a></li>

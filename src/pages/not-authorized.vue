@@ -37,6 +37,6 @@
 
 <route lang="yaml">
 meta:
-  layout: blank
+  layout: BasicTopNavigationLayout
   title: Not Authorized
 </route>

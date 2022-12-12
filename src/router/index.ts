@@ -3,12 +3,13 @@ import { setupLayouts } from 'virtual:generated-layouts'
 import generatedRoutes from 'virtual:generated-pages'
 import { useUserStore } from '@/stores/user'
 import { trackRouter } from "vue-gtag-next";
+import { registerGuard } from "./Guard";
 
 const routes = setupLayouts(generatedRoutes)
 
 const router = createRouter({
-  history: createWebHistory(),
-  //history: createWebHistory(import.meta.env.BASE_URL),
+  //history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     // {
     //   path: '/',
@@ -19,18 +20,21 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to, _, next) => {
-  const userStore = useUserStore()
-  const { isLoggedIn, isAdmin} = storeToRefs(userStore)
-  document.title = to.meta?.title as string|| to.name as string || 'Unknown'
- if (to.meta.requiresAuth && !isLoggedIn.value) {
-//  if ( !isLoggedIn.value) {
-   return next({ name: 'not-authorized', query: { redirect: to.fullPath }})
-   //return next()
-  } else {
-    return next()
-  }
-})
+// router.beforeEach((to, _, next) => {
+//   const userStore = useUserStore()
+//   //const isAuthenticated = useIsAuthenticated()
+//   const { isLoggedIn, isAdmin} = storeToRefs(userStore)
+//   document.title = to.meta?.title as string|| to.name as string || 'Unknown'
+//  if (to.meta.requiresAuth && !isLoggedIn.value) {
+// //  if ( !isLoggedIn.value) {
+//    return next({ name: 'not-authorized', query: { redirect: to.fullPath }})
+//    //return next()
+//   } else {
+//     return next()
+//   }
+// })
+
+registerGuard(router);
 
 trackRouter(router, {
   template(to, from) {
