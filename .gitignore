@@ -32,5 +32,3 @@ public/ws/
 
 *.pem
 *.env*
-
-backend/ws-provisioning/temp/

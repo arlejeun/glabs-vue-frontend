@@ -7,7 +7,7 @@ import { Delete } from '@element-plus/icons-vue'
 
 
 const userStore = useUserStore()
-const { customer } = storeToRefs(userStore)
+const { customer, customerUpdateInProgress } = storeToRefs(userStore)
 //const customer = ref(user.value?.customer?.[0] as IDriveCustomer)
 
 const { width } = useWindowSize()
@@ -77,9 +77,11 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       console.log('submit!')
+      customerUpdateInProgress.value = true
       const data = customerForm.value
       const { emails, phones, messengers, ...customerProperties } = data;
       userStore.updateCustomerProfile(customerProperties)
+      customerUpdateInProgress.value = true
     } else {
       console.log('error submit!', fields)
     }
@@ -353,7 +355,7 @@ const removeIdentifier = ((identifier: IDriveIdentifier, idx: number) => {
 
 
 
-            <el-form-item>
+            <el-form-item v-show="!customerUpdateInProgress">
               <el-button type="primary" @click.prevent="submitForm(customerFormRef)">Save</el-button>
               <el-button @click="resetForm(customerFormRef)">Reset</el-button>
             </el-form-item>

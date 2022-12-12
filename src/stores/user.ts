@@ -5,7 +5,8 @@ import type {
   IDriveUser,
   IDriveCustomer,
   IDriveCustomerOrg,
-IDriveIdentifier,
+  IDriveCustomerDTO,
+  IDriveIdentifierDTO
 } from "@/interfaces";
 import defaultAvatarUrl from '@/assets/images/avatar/01.jpg'
 import { GLabsApiClient, GLABS_STORAGE, GLABS_TOKEN} from '@/apis/glabs'
@@ -13,6 +14,13 @@ import { GLabsApiClient, GLABS_STORAGE, GLABS_TOKEN} from '@/apis/glabs'
 import { useAxios } from "@vueuse/integrations/useAxios";
 import { useNotification } from "@kyvg/vue3-notification";
 import { handleAxiosError } from '@/utils/axios'
+
+function generateCustomerPayload(customer: IDriveCustomer) {
+  const identifiersCreate =  {create: customer.identifiers}
+  const {identifiers, ...cust} = customer;
+  let temp: IDriveCustomerDTO = {...cust, identifiers: identifiersCreate}
+  return {...temp}
+}
 
 export const useUserStore = defineStore("identity", () => {
 
@@ -23,14 +31,20 @@ export const useUserStore = defineStore("identity", () => {
   const status = ref("LoggedOut");
   const token = ref("");
   const customer = ref({} as IDriveCustomer);
+  const customerUpdateInProgress = ref(false);
+  const userUpdateInProgress = ref(false);
+  const orgsUpdateInProgress = ref(false)
   const orgs = ref([] as IDriveCustomerOrg[]);
-
 
   // computed properties vue composition of store
   const getCustomerProfile = computed(() => {
     return user.value.customer as IDriveCustomer;
   });
+  
+  // msal authentication
+
   const isLoggedIn = computed(() => status.value == "LoggedIn");
+  
   const username = computed(() =>
     user.value?.first_name
       ? `${user.value?.first_name} ${user.value?.last_name}`
@@ -49,18 +63,20 @@ export const useUserStore = defineStore("identity", () => {
   async function fetchUser() {
     
     const { execute } = useAxios(GLabsApiClient)
-    const data = {email: 'arnaud.lejeune@genesys.com'}
-    const auth = await execute(`/auth/login`, {data, method: 'POST'}, )
+    // const data = {email: 'arnaud.lejeune@genesys.com'}
+    // const auth = await execute(`/auth/login`, {data, method: 'POST'}, )
     
-    if (auth.isFinished.value && !auth.error.value) {
+    // if (auth.isFinished.value && !auth.error.value) {
     
-      GLABS_STORAGE.value = {token: auth.data.value?.accessToken}
-      GLABS_TOKEN.value = auth.data.value?.accessToken
+      // GLABS_STORAGE.value = {token: auth.data.value?.accessToken}
+      // GLABS_TOKEN.value = auth.data.value?.accessToken
       //GLabToken.value.token = auth.data.value?.accessToken
       //localStorage.setItem('glabs', JSON.stringify({token: auth.data.value?.accessToken}) )
 
+      //const result = await execute('/users/me', {headers: { "Accept": "application/json","Authorization": "Bearer " + token}})
+
       const result = await execute('/users/me')
-    
+
       if (result.isFinished.value && !result.error.value) {
         user.value = result.data.value as IDriveUser
         status.value = "LoggedIn"
@@ -78,7 +94,7 @@ export const useUserStore = defineStore("identity", () => {
         
       }
 
-    }
+    //}
 
     
       // const res = await fetch(
@@ -95,7 +111,8 @@ export const useUserStore = defineStore("identity", () => {
     const { execute } = useAxios(GLabsApiClient)
     const data = user.value
     const {customer, orgs, groups, ...userProperty} = user.value;
-    const result = await execute(`/users/${user.value.id}`, {method: 'PATCH', data: userProperty}, )
+    //const result = await execute(`/users/${user.value.id}`, {method: 'PATCH', data: userProperty}, )
+    const result = await execute(`/users/me`, {method: 'PATCH', data: userProperty}, )
     if (result.isFinished.value && !result.error.value) {
       console.log(result.data.value)
     }
@@ -118,8 +135,10 @@ export const useUserStore = defineStore("identity", () => {
   
   async function updateCustomerProfile(cust: IDriveCustomer) {
     const { execute } = useAxios(GLabsApiClient)
-    const data = {...cust}
+    const data = generateCustomerPayload(cust)
+    customer.value = {...cust}
     const result = await execute(`/customers/${cust.id}`, {data: data, method: 'PATCH'}, )
+    customerUpdateInProgress.value = false
     if (result.isFinished.value && !result.error.value) {
       console.log(result.data.value)
     }
@@ -164,6 +183,9 @@ export const useUserStore = defineStore("identity", () => {
     getCustomerProfile,
     isStatusActive,
     getUserData,
+    customerUpdateInProgress,
+    userUpdateInProgress,
+    orgsUpdateInProgress,
     updateUserProfile,
     updateCustomerProfile,
     fetchUser,

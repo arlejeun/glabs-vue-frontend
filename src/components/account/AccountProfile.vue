@@ -46,7 +46,7 @@ const profileScoreProgress = computed(() => {
 
     <div class="vstack gap-4">
       <!-- Verified message -->
-      <div class="bg-light rounded p-3">
+      <div class="bg-light rounded p-3" v-show="(profileScoreProgress>0)">
         <!-- Progress bar -->
         <div class="overflow-hidden">
           <h6 class="text-primary">Complete Your Profile</h6>
