@@ -80,14 +80,25 @@ jobs:
           echo "Namespace drive already exists. Will use it."
         fi
       
-    # Check/Copy Pull Secret
+    # Create Pull Secret
     - name: Secret
       run: |-
         if ! kubectl get secret pullsecret -n drive; then
-          echo "Copying Kubernetes Secret for the Pullsecret"
-          kubectl get secret pullsecret --namespace=default -o yaml | sed 's/namespace: .*/namespace: drive/' | kubectl apply -n drive -f -
+          echo "Creating Kubernetes Secret for the Pullsecret"
+          echo ${{ secrets.GAR_USER }} >> "./key.json"
+          kubectl create secret docker-registry pullsecret -n drive --docker-server=$GAR_LOCATION-docker.pkg.dev --docker-username=_json_key --docker-password="$(cat ./key.json)" --docker-email=gtsadmin@genesys.com
         else
           echo "Pullsecret already exists. Will use it."
+        fi
+
+    # Create Certificate Secret
+    - name: Cert
+      run: |-
+        if ! kubectl get secret wildcard-demo-genesys-com-2022 -n drive; then
+          echo "Creating Kubernetes Secret for the TLS Certificate"
+          kubectl get secret wildcard-demo-genesys-com-2022 --namespace=default -o yaml | sed 's/namespace: .*/namespace: drive/' | kubectl apply -f -
+        else
+          echo "Certificate Secret already exists. Will use it."
         fi
  
     # Deploy the Docker image to the GKE cluster
