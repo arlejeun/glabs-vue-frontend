@@ -11,7 +11,7 @@ function buildMenu(submenu: IWorkshopMenuItem[]): any {
     return []
   }
 
-  var result = []
+  var result: { name: string; menus: IWorkshopMenuItem[]; pages: IWorkshopMenuItem[] }[] = []
   var menu = {
     name: '',
     menus: [] as IWorkshopMenuItem[],
