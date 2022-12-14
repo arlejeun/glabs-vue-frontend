@@ -104,23 +104,23 @@ function mockSignOut() {
                 class="nav-link text-white fw-bolder"
                 to="/demos"
               >
-                Demos
+                My Space
               </router-link>
             </li>
-            <li class="nav-item dropdown">
+            <!-- <li class="nav-item dropdown">
               <router-link
                 class="nav-link text-white fw-bolder"
                 to="/auth"
               >
                 Auth
               </router-link>
-            </li>
+            </li> -->
             <li class="nav-item dropdown">
               <router-link
                 class="nav-link text-white fw-bolder"
                 to="/environments"
               >
-                AppFoundry
+                Administration
               </router-link>
             </li>
           </ul>
@@ -266,9 +266,17 @@ function mockSignOut() {
               <li>
                 <router-link
                   class="dropdown-item"
-                  to="/account/settings"
+                  to="/account/customer"
                 >
-                  <i class="bi bi-gear fa-fw me-2" />Settings
+                  <i class="bi bi-gear fa-fw me-2" />Customer Record
+                </router-link>
+              </li>
+              <li>
+                <router-link
+                  class="dropdown-item"
+                  to="/account/organizations"
+                >
+                  <i class="bi bi-boxes fa-fw me-2" />Organizations
                 </router-link>
               </li>
               <li>

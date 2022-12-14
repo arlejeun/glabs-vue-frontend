@@ -13,7 +13,7 @@ const { customer, customerUpdateInProgress } = storeToRefs(userStore)
 const { width } = useWindowSize()
 const isMobile = computed(() => width.value < 750)
 const dialogWidth = computed(() => isMobile.value ? '90%' : '30%')
-const formSize = ref('large')
+const formSize = ref('')
 const customerFormRef = ref<FormInstance>()
 
 const emailDialogFormVisible = ref(false)
@@ -353,12 +353,14 @@ const removeIdentifier = ((identifier: IDriveIdentifier, idx: number) => {
 
             <el-divider></el-divider>
 
-
-
-            <el-form-item v-show="!customerUpdateInProgress">
-              <el-button type="primary" @click.prevent="submitForm(customerFormRef)">Save</el-button>
+            <div class="pt-2 d-sm-flex justify-content-end">
+              <el-form-item v-show="!customerUpdateInProgress">
+              <el-button type="primary" @click.prevent="submitForm(customerFormRef)">Save changes</el-button>
               <el-button @click="resetForm(customerFormRef)">Reset</el-button>
             </el-form-item>
+            </div>
+
+            
           </el-form>
 
         </div>

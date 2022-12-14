@@ -19,14 +19,15 @@ const isAuthenticated = useIsAuthenticated()
 const { instance, accounts, inProgress } = useMsal();
 
 
+
+
 const state = reactive({
-  resolved: false,
-  data: {} as IDriveUser
+  resolved: false
 });
 
 async function getProfileData() {
 
-  const response = await instance.acquireTokenSilent({...loginRequest }).catch(async (e) => {
+  const response = await instance.acquireTokenSilent({ ...loginRequest }).catch(async (e) => {
     if (e instanceof InteractionRequiredAuthError) {
       await instance.acquireTokenRedirect(loginRequest);
     }
@@ -35,14 +36,13 @@ async function getProfileData() {
   });
   if (inProgress.value === InteractionStatus.None) {
     GLABS_TOKEN.value = response?.idToken
-    GLABS_STORAGE.value = {token: `${response?.idToken}` }
+    GLABS_STORAGE.value = { token: `${response?.idToken}` }
     fetchUser()
     // const graphData = await callMsGraph(response?.idToken);
     //state.data = graphData;
     state.resolved = true;
     stopWatcher();
   }
-
 
   //  if (result.value?.idToken) {
   //      const apiResult = await callMsGraph(result.value.idToken).catch(() => acquireToken());
@@ -62,14 +62,34 @@ async function getProfileData() {
   // }
 }
 
+//Refresh token every 30min
+const { start } = useTimeoutFn(renewSilentToken, 1000*60*30)
 
-onMounted(() => {
-  if (isAuthenticated.value) {  
+
+async function renewSilentToken() {
+
+  const response = await instance.acquireTokenSilent({ ...loginRequest }).catch(async (e) => {
+    if (e instanceof InteractionRequiredAuthError) {
+      await instance.acquireTokenRedirect(loginRequest);
+    }
+    console.log(e)
+  });
+  if (inProgress.value === InteractionStatus.None) {
+    GLABS_TOKEN.value = response?.idToken
+    GLABS_STORAGE.value = { token: `${response?.idToken}` }
+    start()
+  }
+}
+
+
+
+onBeforeMount(() => {
+  start()
+  // stopWatcher();
+  if (isAuthenticated.value) {
     getProfileData();
   }
 })
-
-// updateData();
 
 const stopWatcher = watch(inProgress, () => {
   if (!state.resolved) {
@@ -77,15 +97,6 @@ const stopWatcher = watch(inProgress, () => {
       console.log('Authenticated user')
       getProfileData();
     }
-    // else {
-    //   notify({
-    //     title: "Authentication Required",
-    //     text: `Please sign in first with your identity provider of choice`,
-    //     duration: 2000,
-    //     type: 'error'
-    //   });
-
-    // }
   }
 });
 

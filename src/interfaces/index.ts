@@ -30,24 +30,39 @@ export interface IWorkshop {
 }
 
 
-export interface IDriveUser {
-    id?: number,
-    first_name: string,
-    last_name: string,
-    customer: IDriveCustomer,
+export interface IDriveBaseUser {
+  id?: number,
+  first_name: string,
+  last_name: string,
+  customer: IDriveCustomer,
+  email: string,
+  phone_number: string,
+  avatar_url: string,
+  date_created: string,
+  country_id: number,
+  date_updated: string,
+  date_approved: string,
+  date_lastLogin: string,
+  date_expired: string,
+  groups: ITag[],
+  [x: string]: string | IDriveCustomer | ITag[] | number | undefined | IDriveCustomerOrg[] | IDriveUserSettings | IDriveUserSettingsDTO
+}
+export interface IDriveUser extends IDriveBaseUser {
     orgs: IDriveCustomerOrg[],
-    email: string,
-    avatar_url: string,
-    date_created: string,
-    country_id: number,
-    date_updated: string,
-    date_approved: string,
-    date_lastLogin: string,
-    date_expired: string,
-    groups: ITag[]
-    [x: string]: string | IDriveCustomer | ITag[] | IDriveCustomerOrg[] | number | undefined
+    settings: IDriveUserSettings,
   }
 
+  export interface IDriveUserDTO extends IDriveBaseUser {
+    orgs: IDriveCustomerOrg[],
+    settings: IDriveUserSettingsDTO,
+  }
+
+export interface IDriveUserSettings {
+    [x: string]: string,
+  }
+export interface IDriveUserSettingsDTO {
+  create?: IDriveUserSettings
+  }
 export interface IDriveCustomer {
     [x: string]: string | IDriveIdentifier[],
     identifiers: IDriveIdentifier[]
