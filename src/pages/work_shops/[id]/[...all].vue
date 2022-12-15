@@ -4,10 +4,10 @@ import type { IWorkshop } from "@/interfaces";
 import VueMarkdown from "vue-markdown-render";
 import { useRoute } from "vue-router";
 import { useDateFormat, useNow } from "@vueuse/core";
-import type { ComputedRef } from "vue";
-import { computed, ref } from "vue";
-import type Node from "element-plus/es/components/tree/src/model/node";
+import type { ComputedRef, VNode } from "vue";
+import { onMounted, computed, ref, getCurrentInstance } from "vue";
 import type { ITree, IWorkshopMenuItem } from "@/interfaces/workshop";
+import router from '@/router'
 
 const route = useRoute();
 
@@ -23,21 +23,38 @@ const wsMenu = computed(
 );
 wStore.loadWorkshop(route.params.id.toString());
 
-const customNodeClass = (data: ITree, node: Node) => {
-  if (data.isTop) {
-    return "tree-is-top";
-  } else {
-    return "tree";
-  }
-  return null;
-};
+var startIndex = [] as number[]
+route.params.all.toString().split('/').forEach(el=>startIndex.push(parseInt(el)))
+wStore.setTreeIndex(startIndex);
 
 const mdProps = { html: true };
 
+const tree = ref()
+
+onMounted(() => {    
+  setTimeout(()=>{
+    let srcTree = wStore.getWorkshopTree
+    let content = srcTree || [] as ITree[]
+    let key = 0 
+    startIndex.forEach(index => {
+        if (content.length > index) {
+          key = content[index].id 
+          content = content[index].children || []
+        }
+      })
+
+    tree.value!.setCurrentKey(key, true); }, 500);  
+});
+
 const treeChange = (node: ITree) => {
   var treeIndex = node?.index || [];
+  var path = ''
+  treeIndex.forEach(idx=>path += idx + '/')
   wStore.setTreeIndex(treeIndex);
+  router.push(`/work_shops/gride-demo/${path}`)
 };
+
+const defaultExpanded = ref(startIndex);
 
 const treeData: ComputedRef<ITree[]> = computed(
   () => wStore.getWorkshopTree || []
@@ -65,10 +82,12 @@ const treeData: ComputedRef<ITree[]> = computed(
                   </el-header>
                   <div class="ws-side-body">
                     <el-tree
-                      :data="treeData"
+                      ref="tree"
+                      node-key="id"
                       accordion
+                      :default-expanded-keys="startIndex"
+                      :data="treeData"
                       @current-change="treeChange"
-                      :props="{ class: customNodeClass }"
                     />
                   </div>
                 </el-aside>

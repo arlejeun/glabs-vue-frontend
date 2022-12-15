@@ -33,6 +33,7 @@ function buildMenu(submenu: IWorkshopMenuItem[]): any {
   return result
 }
 
+var treeIndex = 0
 const buildTree = (ws: IWorkshopMenuItem[], index?: number[]): ITree[] => {
 
   if (typeof ws?.forEach !== 'function') {
@@ -47,7 +48,8 @@ const buildTree = (ws: IWorkshopMenuItem[], index?: number[]): ITree[] => {
   ws.forEach((item: IWorkshopMenuItem) => {
     branch.index = [...index || []]
     branch.label = item.name
-    branch.id = item.weight
+    branch.id = treeIndex
+    treeIndex++
     branch.index.push(i)
     if (item.menus && item.menus.length > 0) {
       branch.children = [...buildTree(item.menus, branch.index)]
@@ -65,6 +67,7 @@ export const useWorkshopStore = defineStore({
   id: 'workshop',
   state: () => ({
     workshops: [] as IWorkshop[],
+    workshopTree: [] as ITree[],
     workshopName: '',
     workshop: [] as IWorkshopMenuItem[],
     page_index: [0, 0] as number[], // acces to ws page: menus[1].menus[2] -> page_index is [1,2]
@@ -97,7 +100,7 @@ export const useWorkshopStore = defineStore({
       return buildMenu(this.workshop)
     },
     getWorkshopTree(): any {
-      return buildTree(this.workshop[0]?.menus || [])
+      return this.workshopTree
     },
     getWorkshopPage(): string {
 
@@ -139,10 +142,13 @@ export const useWorkshopStore = defineStore({
       try {
         //        const res = await axios.get('/ws/' + this.workshopName + '/content/manifest.json');  //(this.getWorkshopUrl + 'manifest.json');
         const res = await axios.get(this.getWorkshopUrl + 'manifest.json');
-        console.log(res)
+        //console.log(res)
         this.workshop = [res.data.content];
+        treeIndex = 0
+        this.workshopTree = buildTree(this.workshop[0]?.menus || [])
+
       } catch (error) {
-        console.log('Loading manifest error: ', error);
+        console.error('Loading manifest error: ', error);
       }
 
     },
