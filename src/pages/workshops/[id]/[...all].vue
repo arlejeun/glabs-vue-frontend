@@ -8,7 +8,7 @@ import type { ComputedRef, VNode } from "vue";
 import { onMounted, computed, ref, getCurrentInstance } from "vue";
 import type { ITree, IWorkshopMenuItem } from "@/interfaces/workshop";
 import router from '@/router'
-
+ 
 const route = useRoute();
 
 const wStore = useWorkshopStore();

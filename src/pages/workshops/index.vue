@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useAxios } from '@vueuse/integrations/useAxios'
 import { useWorkshopStore } from '@/stores/workshop'
+import { computed, watch } from 'vue'
+import { useDateFormat, useNow } from '@vueuse/core'
 
 
 const wStore = useWorkshopStore()
@@ -163,7 +165,7 @@ Title and Tabs START -->
 									<input type="checkbox" class="btn-check" id="btn-check-10">
 									<label class="btn btn-white btn-primary-soft-check" for="btn-check-10">2<i class="bi bi-star-fill"></i></label>
 								</li>
-								<!-- 3 -->
+								<!-- 3 --> 
 								<li class="list-inline-item">
 									<input type="checkbox" class="btn-check" id="btn-check-11">
 									<label class="btn btn-white btn-primary-soft-check" for="btn-check-11">3<i class="bi bi-star-fill"></i></label>
@@ -384,6 +386,4 @@ Hotel grid END -->
 <route lang="yaml">
 meta:
   layout: BasicTopNavigationLayout
-  title: Workshops
-  requiresAuth: true
 </route>
