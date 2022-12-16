@@ -7,10 +7,10 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    2: typeof import('./components/account/AccountProfileForm copy 2.vue')['default']
     AccountDelete: typeof import('./components/account/AccountDelete.vue')['default']
     AccountFeedback: typeof import('./components/account/AccountFeedback.vue')['default']
     AccountOrganizations: typeof import('./components/account/AccountOrganizations.vue')['default']
+    'AccountOrganizations copy': typeof import('./components/account/AccountOrganizations copy.vue')['default']
     AccountOrganizationSettingsForm: typeof import('./components/organizations/AccountOrganizationSettingsForm.vue')['default']
     AccountOrganizationSummary: typeof import('./components/organizations/AccountOrganizationSummary.vue')['default']
     AccountProfile: typeof import('./components/account/AccountProfile.vue')['default']
@@ -22,8 +22,8 @@ declare module '@vue/runtime-core' {
     AccountTesting: typeof import('./components/account/AccountTesting.vue')['default']
     BasicFooter: typeof import('./components/layouts/BasicFooter.vue')['default']
     BasicNavBar: typeof import('./components/layouts/BasicNavBar.vue')['default']
-    copy: typeof import('./components/account/AccountProfileForm copy.vue')['default']
     CustomerRecord: typeof import('./components/account/CustomerRecord.vue')['default']
+    ElAlert: typeof import('element-plus/es')['ElAlert']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
@@ -65,6 +65,9 @@ declare module '@vue/runtime-core' {
     IconEcosystem: typeof import('./components/icons/IconEcosystem.vue')['default']
     IconSupport: typeof import('./components/icons/IconSupport.vue')['default']
     IconTooling: typeof import('./components/icons/IconTooling.vue')['default']
+    RegistrationCustomerForm: typeof import('./components/account/RegistrationCustomerForm.vue')['default']
+    RegistrationProfileForm: typeof import('./components/account/RegistrationProfileForm.vue')['default']
+    RegistrationValidation: typeof import('./components/account/RegistrationValidation.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SidebarAccount: typeof import('./components/layouts/SidebarAccount.vue')['default']

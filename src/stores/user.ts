@@ -5,9 +5,9 @@ import type {
   IDriveUser,
   IDriveCustomer,
   IDriveCustomerOrg,
-  IDriveCustomerDTO,
-  IDriveIdentifierDTO,
-IDriveUserSettings
+IDriveUserSettings,
+IDriveBaseUser,
+IDriveUserRegistration
 } from "@/interfaces";
 import defaultAvatarUrl from '@/assets/images/avatar/01.jpg'
 import { GLabsApiClient, GLABS_STORAGE, GLABS_TOKEN} from '@/apis/glabs'
@@ -16,24 +16,24 @@ import { useAxios } from "@vueuse/integrations/useAxios";
 import { useNotification } from "@kyvg/vue3-notification";
 import { handleAxiosError } from '@/utils/axios'
 
-import { useMsalAuthentication } from '@/composables/useMsalAuthentication'
-import { InteractionType } from "@azure/msal-browser";
-import { loginRequest } from "@/plugins/msal/msalConfig";
+import { generateCustomerPayload } from '@/utils/axios'
 
-function generateCustomerPayload(customer: IDriveCustomer) {
-  const identifiersCreate =  {create: customer.identifiers}
-  const {identifiers, ...cust} = customer;
-  let temp: IDriveCustomerDTO = {...cust, identifiers: identifiersCreate}
-  return {...temp}
-}
+// function generateCustomerPayload(customer: IDriveCustomer) {
+//   const identifiersCreate =  {create: customer.identifiers}
+//   const {identifiers, ...cust} = customer;
+//   let temp: IDriveCustomerDTO = {...cust, identifiers: identifiersCreate}
+//   return {...temp}
+// }
 
 export const useUserStore = defineStore("identity", () => {
   const router = useRouter();
   const { notify}  = useNotification()
 
   // state properties vue composition of store
+  const registrationUser = ref({} as IDriveUserRegistration);
   const user = ref({} as IDriveUser);
   const status = ref("LoggedOut");
+  const registrationStep = ref(-1)
   const token = ref("");
   const customer = ref({} as IDriveCustomer);
   const settings = ref({} as IDriveUserSettings);
@@ -94,14 +94,29 @@ export const useUserStore = defineStore("identity", () => {
       }
       if (result.error.value) {
 
-        if (result.error.value?.response?.data?.message == 'User not found or not active') {
-          router.replace('/account/registration')
+        if (result.error.value?.response?.data?.message == 'User not found') {
+          router.replace('/registration')
+          status.value = "Registration"
+          registrationStep.value = 0
           notify({
-          title: "Identification Error",
+          title: "Registration",
           text: `${handleAxiosError(result.error.value, 'No active profile was found with your email account. You can register with this account if you have not done the request before.')}`,
           duration: -1,
           type: 'info'
         });}
+
+
+        else if (result.error.value?.response?.data?.message == "User not active - status=NeedsApproval") {
+          router.replace('/registration/activate')
+          registrationStep.value = 2
+          status.value = "NeedsApproval"
+          notify({
+          title: "Account Validation",
+          text: `${handleAxiosError(result.error.value, 'Your account is under review from Genesys Teams.')}`,
+          duration: -1,
+          type: 'info'
+        });}
+
 
         else {
           notify({
@@ -154,6 +169,39 @@ export const useUserStore = defineStore("identity", () => {
         type: 'success'
       });
     }
+  }
+
+
+  async function createUserProfile(userDTO: IDriveUserRegistration) {
+    const { execute } = useAxios(GLabsApiClient)
+    
+    //const result = await execute(`/users/${user.value.id}`, {method: 'PATCH', data: userProperty}, )
+    const result = await execute(`/users/register`, {method: 'POST', data: userDTO}, )
+    if (result.isFinished.value && !result.error.value) {
+      console.log(result.data.value)
+      registrationStep.value = 2
+      status.value = 'Registration - Waiting for Approval'
+    }
+    if (result.error.value) {
+  
+      notify({
+        title: "Account Registration",
+        text: `${handleAxiosError(result.error.value, 'Impossible to create the user profile at the moment')}`,
+        duration: -1,
+        type: 'error'
+      });
+    } else {
+      notify({
+        title: 'Account Registration',
+        text: 'Your user profile was created successfully',
+        duration: 2000,
+        type: 'success'
+      });
+    }
+  }
+
+  function setUserRegistration(userDTO: IDriveUserRegistration) {
+    registrationUser.value = userDTO
   }
 
   async function removeUserProfile() {
@@ -235,6 +283,10 @@ export const useUserStore = defineStore("identity", () => {
     customerUpdateInProgress,
     userUpdateInProgress,
     orgsUpdateInProgress,
+    registrationStep,
+    registrationUser,
+    setUserRegistration,
+    createUserProfile,
     updateUserProfile,
     removeUserProfile,
     updateCustomerProfile,

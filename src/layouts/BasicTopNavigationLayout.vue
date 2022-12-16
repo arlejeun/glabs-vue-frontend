@@ -38,28 +38,9 @@ async function getProfileData() {
     GLABS_TOKEN.value = response?.idToken
     GLABS_STORAGE.value = { token: `${response?.idToken}` }
     fetchUser()
-    // const graphData = await callMsGraph(response?.idToken);
-    //state.data = graphData;
     state.resolved = true;
     stopWatcher();
   }
-
-  //  if (result.value?.idToken) {
-  //      const apiResult = await callMsGraph(result.value.idToken).catch(() => acquireToken());
-  //      data.value = apiResult;
-  //  		status.value = 'LoggedIn'
-  //  }
-
-  // if (isAuthenticated.value && result.value?.idToken && user.value?.id) {
-  //   GLABS_TOKEN.value = result.value?.idToken
-  //   GLABS_STORAGE.value = { token: result.value?.idToken }
-  //   fetchUser()
-  //   //const apiResult = await callMsGraph(result.value.idToken)
-  //   //data.value = apiResult;
-  //   status.value = 'LoggedIn'
-  //   //fetchUser()
-  //   //user.value = apiResult
-  // }
 }
 
 //Refresh token every 30min
@@ -82,12 +63,12 @@ async function renewSilentToken() {
 }
 
 
-
 onBeforeMount(() => {
-  start()
-  // stopWatcher();
+  
   if (isAuthenticated.value) {
+    start()
     getProfileData();
+    
   }
 })
 
@@ -96,14 +77,12 @@ const stopWatcher = watch(inProgress, () => {
     if (isAuthenticated.value) {
       console.log('Authenticated user')
       getProfileData();
+      start()
     }
   }
 });
 
-// watch(result, () => {
-//   // Fetch new data from the API each time the result changes (i.e. a new access token was acquired)
-//   getProfileData();
-// });
+
 
 </script>
 

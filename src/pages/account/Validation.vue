@@ -1,12 +1,9 @@
 <script lang="ts" setup>
 import type { IDriveBaseUser, IDriveUser } from '@/interfaces';
 
-import { Edit, Picture, UploadFilled } from '@element-plus/icons-vue'
 import { GLABS_TOKEN } from '@/apis/glabs'
 import { useMsal } from "@/composables/useMsal";
-import type Token from 'markdown-it/lib/token';
 import type { AccountInfo } from '@azure/msal-common';
-// import jwt_decode from 'jwt-decode';
 
 const decodeToken4User = (msalAccount: AccountInfo[]) => {
   let userTemp = {} as IDriveBaseUser
@@ -18,13 +15,10 @@ const decodeToken4User = (msalAccount: AccountInfo[]) => {
 }
 const { accounts } = useMsal();
 const registrationUser = ref({} as IDriveBaseUser)
+const activeStep = ref(0)
 
 onMounted(() => {
-  // console.log(GLABS_TOKEN.value)
-  // console.log('On mounted : ' + JSON.stringify(accounts.value))
-  // const decoded = jwt_decode(GLABS_TOKEN.value)
-  // console.log(decoded);
-
+ 
 })
 
 watchEffect(() => {
@@ -52,7 +46,7 @@ watchEffect(() => {
         </div>
 
         <div class="row">
-          <AccountProfile />
+          Validation Layout
         </div>
         <!-- <SidebarAccount /> -->
       </div>
