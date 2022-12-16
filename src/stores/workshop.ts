@@ -3,6 +3,8 @@ import type { IWorkshop } from "@/interfaces"
 import axios from "axios"
 import sanitizeHtml from "sanitize-html"
 import type { IWorkshopMenuItem, ITree } from '@/interfaces/workshop'
+import { useAxios } from '@vueuse/integrations/useAxios'
+import { GLabsApiClient } from '@/apis/glabs'
 
 const WORKSHOPS_BASE = 'https://storage.googleapis.com/genesys-drive-test/'
 
@@ -131,17 +133,19 @@ export const useWorkshopStore = defineStore({
     },
   },
   actions: {
-    async loadWorkshop(workshopName: string) {
-      this.workshopName = workshopName
-
-      // styles- should be scoped somehow
-      let file = document.createElement('link');
-      file.rel = 'stylesheet'
-
+    async loadWorkshop(id: string) {
       // getting manifest
       try {
+
+        const { execute } = useAxios(GLabsApiClient)
+        const result = await execute(`/workshops/${id}`)
+
+        console.warn('RESULTS WS', result)
+
+        this.workshopName = workshopName
+
         //        const res = await axios.get('/ws/' + this.workshopName + '/content/manifest.json');  //(this.getWorkshopUrl + 'manifest.json');
-        const res = await axios.get(this.getWorkshopUrl + 'manifest.json');
+        //  const res = await axios.get(this.getWorkshopUrl + 'manifest.json');
         //console.log(res)
         this.workshop = [res.data.content];
         treeIndex = 0
