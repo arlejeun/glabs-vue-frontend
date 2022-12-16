@@ -32,6 +32,7 @@ const GLabsApiClient = axios.create({
       'Authorization': 'Bearer ' + GLABS_TOKEN.value
     }
     config.headers = {...headers}
+    // console.log(config)
     return config
   })
 
