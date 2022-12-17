@@ -61,7 +61,6 @@ const buildTree = (ws: IWorkshopMenuItem[], index?: number[]): ITree[] => {
     i++
   })
 
-  //  console.log('Tree: ', result)
   return result
 
 }
@@ -87,7 +86,6 @@ export const useWorkshopStore = defineStore({
       }
       pages.forEach(page =>
         page.body = page.body?.replaceAll('/images/', `${WORKSHOPS_BASE}${this.workshopName}/images/`)
-        //        page.body = page.body?.replaceAll('/images/', WORKSHOPS_BASE + this.workshopName + '/static/images/')
       )
       return pages
     },
@@ -117,10 +115,8 @@ export const useWorkshopStore = defineStore({
           content = content[index].menus || []
         }
       })
-      //      page = page.replaceAll('/images/', WORKSHOPS_BASE + this.workshopName + '/static/images/')
-      page = page.replaceAll('/images/', `https://storage.googleapis.com/gdemo-workshops-test/${this.workshopName}/images/`)
+      page = page.replaceAll('/images/', `${WORKSHOPS_BASE}${this.workshopName}/images/`)
 
-      // TODO add html sanitizer
       page = sanitizeHtml(page, {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
         allowedIframeHostnames: ['www.youtube.com']
@@ -140,19 +136,21 @@ export const useWorkshopStore = defineStore({
         const { execute } = useAxios(GLabsApiClient)
         const result = await execute(`/workshops/${id}`)
 
-        console.warn('RESULTS WS', result)
+        const resData = result.data.value
+        this.workshopName = resData.name
 
-        this.workshopName = workshopName
+        let mnf = resData.manifest
+        mnf = mnf.replaceAll('\\"', '\\$')
+        mnf = mnf.replaceAll('\"', '"')
+        mnf = mnf.replaceAll('\\$', '\\"')
 
-        //        const res = await axios.get('/ws/' + this.workshopName + '/content/manifest.json');  //(this.getWorkshopUrl + 'manifest.json');
-        //  const res = await axios.get(this.getWorkshopUrl + 'manifest.json');
-        //console.log(res)
-        this.workshop = [res.data.content];
+        this.workshop = [JSON.parse(mnf).content] || []
+
         treeIndex = 0
         this.workshopTree = buildTree(this.workshop[0]?.menus || [])
 
       } catch (error) {
-        console.error('Loading manifest error: ', error);
+        console.error(`Workshop #${id} - manifest cannot be loaded and parsed!\n`, error)
       }
 
     },
