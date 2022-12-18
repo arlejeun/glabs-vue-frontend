@@ -3,6 +3,8 @@ import type { IWorkshop } from "@/interfaces"
 import axios from "axios"
 import sanitizeHtml from "sanitize-html"
 import type { IWorkshopMenuItem, ITree } from '@/interfaces/workshop'
+import { useAxios } from '@vueuse/integrations/useAxios'
+import { GLabsApiClient } from '@/apis/glabs'
 
 const WORKSHOPS_BASE = 'https://storage.googleapis.com/genesys-drive-test/'
 
@@ -59,7 +61,6 @@ const buildTree = (ws: IWorkshopMenuItem[], index?: number[]): ITree[] => {
     i++
   })
 
-  //  console.log('Tree: ', result)
   return result
 
 }
@@ -85,7 +86,6 @@ export const useWorkshopStore = defineStore({
       }
       pages.forEach(page =>
         page.body = page.body?.replaceAll('/images/', `${WORKSHOPS_BASE}${this.workshopName}/images/`)
-        //        page.body = page.body?.replaceAll('/images/', WORKSHOPS_BASE + this.workshopName + '/static/images/')
       )
       return pages
     },
@@ -115,10 +115,8 @@ export const useWorkshopStore = defineStore({
           content = content[index].menus || []
         }
       })
-      //      page = page.replaceAll('/images/', WORKSHOPS_BASE + this.workshopName + '/static/images/')
-      page = page.replaceAll('/images/', `https://storage.googleapis.com/gdemo-workshops-test/${this.workshopName}/images/`)
+      page = page.replaceAll('/images/', `${WORKSHOPS_BASE}${this.workshopName}/images/`)
 
-      // TODO add html sanitizer
       page = sanitizeHtml(page, {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
         allowedIframeHostnames: ['www.youtube.com']
@@ -131,24 +129,28 @@ export const useWorkshopStore = defineStore({
     },
   },
   actions: {
-    async loadWorkshop(workshopName: string) {
-      this.workshopName = workshopName
-
-      // styles- should be scoped somehow
-      let file = document.createElement('link');
-      file.rel = 'stylesheet'
-
+    async loadWorkshop(id: string) {
       // getting manifest
       try {
-        //        const res = await axios.get('/ws/' + this.workshopName + '/content/manifest.json');  //(this.getWorkshopUrl + 'manifest.json');
-        const res = await axios.get(this.getWorkshopUrl + 'manifest.json');
-        //console.log(res)
-        this.workshop = [res.data.content];
+
+        const { execute } = useAxios(GLabsApiClient)
+        const result = await execute(`/workshops/${id}`)
+
+        const resData = result.data.value
+        this.workshopName = resData.name
+
+        let mnf = resData.manifest
+        mnf = mnf.replaceAll('\\"', '\\$')
+        mnf = mnf.replaceAll('\"', '"')
+        mnf = mnf.replaceAll('\\$', '\\"')
+
+        this.workshop = [JSON.parse(mnf).content] || []
+
         treeIndex = 0
         this.workshopTree = buildTree(this.workshop[0]?.menus || [])
 
       } catch (error) {
-        console.error('Loading manifest error: ', error);
+        console.error(`Workshop #${id} - manifest cannot be loaded and parsed!\n`, error)
       }
 
     },

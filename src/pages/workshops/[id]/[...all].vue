@@ -21,7 +21,9 @@ const wsName = computed(
 const wsMenu = computed(
   () => wStore.getWorkshopMenu.length > 0 && wStore.getWorkshopMenu[0].menus
 );
-wStore.loadWorkshop(route.params.id.toString());
+
+const wsId = route.params.id.toString()
+wStore.loadWorkshop(wsId);
 
 var startIndex = [] as number[]
 route.params.all.toString().split('/').forEach(el=>startIndex.push(parseInt(el)))
@@ -51,7 +53,7 @@ const treeChange = (node: ITree) => {
   var path = ''
   treeIndex.forEach(idx=>path += idx + '/')
   wStore.setTreeIndex(treeIndex);
-  router.push(`/work_shops/gride-demo/${path}`)
+  router.push(`/workshops/${wsId}/${path}`)
 };
 
 const defaultExpanded = ref(startIndex);
