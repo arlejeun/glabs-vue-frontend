@@ -5,17 +5,12 @@ import { useUserStore } from '@/stores/user'
 import { useCountryStore } from '@/stores/country'
 import type { IDriveUser, IDriveUserDTO } from '@/interfaces';
 
-
-// const userForm = ref({} as IDriveUserDTO)
-
-// watchEffect(() => {
-//   userForm.value = { ...user.value }
-// }
-// )
+const props = defineProps(['account'])
+const myUser = ref(props.account)
 
 const userStore = useUserStore()
-const { user, settings } = storeToRefs(userStore)
-const { updateUserProfile } = userStore
+const { status, registrationStep } = storeToRefs(userStore)
+const { setUserRegistration } = userStore
 
 const countryStore = useCountryStore()
 const { countries } = storeToRefs(countryStore)
@@ -24,26 +19,8 @@ const { fetchCountries, selectCountry } = countryStore
 //Initialize countries only at the beginning
 if (countries.value?.length == 0) fetchCountries()
 
-const statusOptions = [
-  { value: '', label: 'Unknown' },
-  { value: 0, label: 'NeedsApproval' },
-  { value: 10, label: 'Awaiting Confirmation' },
-  { value: 30, label: 'Rejected' },
-  { value: 40, label: 'Disabled' },
-  { value: 50, label: 'Active' }
-]
-
-const typeOptions = [
-  { value: 1, label: 'Unknown' },
-  { value: 2, label: 'Internal' },
-  { value: 3, label: 'Partner' },
-  { value: 4, label: 'Customer' },
-  { value: 5, label: 'Prospect' },
-]
-const formSize = ref('')
-const personalFormRef = ref<FormInstance>()
-const settingsFormRef = ref<FormInstance>()
-const personalRules = reactive<FormRules>({
+const registrationFormRef = ref<FormInstance>()
+const registrationRules = reactive<FormRules>({
   first_name: [
     { required: true, message: 'Please input first name', trigger: 'blur' },
     { min: 2, max: 30, message: 'Length should be 2 to 30', trigger: 'blur' },
@@ -90,9 +67,14 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {
-      //userStore.updatePersonalProfile(user)
-      updateCountryUser()
-      updateUserProfile()
+      myUser.value.country = {connect: {"id": myUser.value.country_id}}
+      myUser.value.settings = {create: {"id_provider": myUser.value.idp}}
+      const {country_id, idp, ...userForm} = myUser.value
+      setUserRegistration(userForm)
+     // createUserProfile(userForm)
+     
+      registrationStep.value = 1
+      status.value = 'Registration - Customer'
       console.log('submit!')
     } else {
       console.log('error submit!', fields)
@@ -106,8 +88,8 @@ const resetForm = (formEl: FormInstance | undefined) => {
 }
 
 const updateCountryUser = () => {
-  console.log(user.value?.country_id);
-  selectCountry(user.value?.country_id)
+  console.log(myUser.value?.country_id);
+  selectCountry(myUser.value?.country_id)
 
 }
 
@@ -131,37 +113,37 @@ const updateCountryUser = () => {
 
           <h5 class="pb-3">Contact Information</h5>
 
-          <el-form ref="personalFormRef" :model="user" :rules="personalRules" label-width="120px" label-position="top"
-            class="demo-ruleForm" :size="formSize" status-icon>
+          <el-form ref="registrationFormRef" :model="myUser" :rules="registrationRules" label-width="120px"
+            label-position="top" class="demo-ruleForm" size="" status-icon>
             <el-row :gutter="20">
-              <el-col :span="12">
+              <el-col :xs="24" :span="12">
                 <el-form-item label="First Name" prop="first_name">
-                  <el-input v-model="user.first_name" />
+                  <el-input v-model="myUser.first_name" />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :span="12">
                 <el-form-item label="Last Name" prop="last_name">
-                  <el-input v-model="user.last_name" />
+                  <el-input v-model="myUser.last_name" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
-              <el-col :span="12">
+              <el-col :xs="24" :span="12">
                 <el-form-item label="Job Function" prop="job">
-                  <el-input v-model="user.job_function" />
+                  <el-input v-model="myUser.job_function" />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :span="12">
                 <el-form-item label="Company" prop="company">
-                  <el-input v-model="user.company" />
+                  <el-input v-model="myUser.company" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="20">
 
-              <el-col :span="12">
+              <el-col :xs="24" :span="12">
                 <el-form-item label="Country" prop="country_id">
-                  <el-select v-model="user.country_id" filterable placeholder="Select Country">
+                  <el-select v-model="myUser.country_id" filterable placeholder="Select Country">
                     <el-option v-for="item in countries" :key="item.id" :label="item.name" :value="item.id" />
                   </el-select>
                   <!-- <el-input v-model="user.country" /> -->
@@ -170,63 +152,27 @@ const updateCountryUser = () => {
             </el-row>
 
             <el-row :gutter="20">
-              <el-col :span="12">
+              <el-col :xs="24" :span="12">
                 <el-form-item label="Email" prop="email">
-                  <el-input v-model="user.email" />
+                  <el-input v-model="myUser.email" disabled />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :xs="24" :span="12">
                 <el-form-item label="Phone Number" prop="phone_number">
-                  <el-input v-model="user.phone_number" />
+                  <el-input v-model="myUser.phone_number" />
                 </el-form-item>
               </el-col>
             </el-row>
 
             <div class="pt-2 d-sm-flex justify-content-end">
-            <el-form-item>
-              <el-button type="primary" @click="submitForm(personalFormRef)">Save changes</el-button>
-              <el-button @click="resetForm(personalFormRef)">Reset</el-button>
-            </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="submitForm(registrationFormRef)">Next</el-button>
+                <!-- <el-button @click="resetForm(registrationFormRef)">Reset</el-button> -->
+              </el-form-item>
             </div>
 
           </el-form>
 
-          <!-- Form END -->
-
-          <el-divider></el-divider>
-
-          <h5 class="pb-3">Account Settings</h5>
-
-          <el-form ref="settingsFormRef" :model="settings" size="" label-position="left" class="demo-ruleForm">
-
-          <el-row :gutter="20">
-            <el-col :span="24">
-              <el-form-item label-width="80%"
-                label="I would like to receive notifications from the Techniical Acceleration team">
-                <el-switch v-model="settings.notifications" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="20">
-            <el-col :span="24">
-              <el-form-item label-width="80%" label="Notifications channels">
-                <el-checkbox-group v-model="settings.notifications_channels">
-                  <el-checkbox label="Email" name="type" />
-                  <el-checkbox label="Slack" name="type" />
-                </el-checkbox-group>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <div class="pt-2 d-sm-flex justify-content-end">
-            <el-form-item>
-              <el-button type="primary" @click="submitForm(settingsFormRef)">Save changes</el-button>
-              <el-button @click="resetForm(settingsFormRef)">Reset</el-button>
-            </el-form-item>
-          </div>
-
-        </el-form>
 
         </div>
 
