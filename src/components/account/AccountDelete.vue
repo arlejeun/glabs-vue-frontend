@@ -31,7 +31,10 @@ const deleteProfile = async () => {
 			<div class="form-check my-4">
 				<el-checkbox v-model="deleteTag" label="Yes, I'd like to delete my account" />
 			</div>
-			<el-button type="danger" @click="deleteProfile()">Delete my account</el-button>
+			
+			<div class="pt-2 d-sm-flex justify-content-end">
+				<el-button type="danger" @click="deleteProfile()">Delete my account</el-button>
+			</div>
 
 		</div>
 		<!-- Card body END -->

@@ -1,8 +1,8 @@
-//import { platformClient } from 'purecloud-platform-client-v2'
+import { handleAxiosError } from '@/utils/axios'
+import { notify } from '@kyvg/vue3-notification'
 import platformClient from 'purecloud-platform-client-v2'
-const routingApi = new platformClient.RoutingApi()
 const authorizationApi = new platformClient.AuthorizationApi()
-const notificationsApi = new platformClient.NotificationsApi()
+const organizationApi = new platformClient.OrganizationApi()
 const usersApi = new platformClient.UsersApi();
 const client = platformClient.ApiClient.instance
 
@@ -19,13 +19,48 @@ export default {
   },
 
   async getAuthorizationSubjectsMe() {
-    const data = await authorizationApi.getAuthorizationSubjectsMe()
-    return data
+    try {
+      const data = await authorizationApi.getAuthorizationSubjectsMe()
+      return data  
+    } catch (err) {
+      notify({
+        title: "Get my user permissions",
+        text: `${handleAxiosError(err,"Please try to log in again.")}`,
+        duration: -1,
+        type: "error",
+      });
+    }
+
+    
   },
 
-  async getUsersMe(opts: platformClient.UsersApi.getUsersMeOptions | undefined) {
-    const data = await usersApi.getUsersMe( opts )
-    return data
+  //async getUsersMe(opts: platformClient.UsersApi.getUsersMeOptions | undefined) {
+    async getUsersMe() {
+    try {
+      const data = await usersApi.getUsersMe()
+      return data  
+    } catch (err) {
+      notify({
+        title: "Get my user information",
+        text: `${handleAxiosError(err,"Please try to log in again.")}`,
+        duration: -1,
+        type: "error",
+      });
+    }
+  },
+
+  async getOrganizationsMe() {
+    try {
+      const data = await organizationApi.getOrganizationsMe()
+      return data  
+    } catch (err) {
+      notify({
+        title: "Get Organization detail",
+        text: `${handleAxiosError(err,"Please try to log in again.")}`,
+        duration: -1,
+        type: "error",
+      });
+    }
   },
   // Get the organization's queues.
   // NOTE: For this sample only get the first 100.

@@ -1,6 +1,6 @@
-import type { ICustomerCreate, ICustomerRegistration, ICustomerRegistrationDTO, IDriveCustomer } from "@/interfaces";
+import type { ICustomerRegistration, ICustomerRegistrationDTO, IDriveCustomer } from "@/interfaces";
 
-const handleAxiosError = (error: any, message: string) => {
+const handleAxiosError = (error: any, message: string | undefined) => {
   let result = {...error};
   let serverResp = result?.response?.data;
   if (typeof(serverResp)=='object' && serverResp?.message?.length > 0) {

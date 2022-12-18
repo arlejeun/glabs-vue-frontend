@@ -7,7 +7,7 @@ import { loginRequest } from '@/plugins/msal/msalConfig'
 const { instance } = useMsal();
 
 const store = useUserStore()
-const  { avatarUrl, username, userEmail } = storeToRefs(store)
+const  { avatarUrl, username, userEmail, isRegistering, isActive } = storeToRefs(store)
 const isAuthenticated = useIsAuthenticated();
 const {logout} = store
 
@@ -16,15 +16,15 @@ const isMobile = computed(() => width.value < 1200)
 const isDark = useDark({valueDark: 'dark-mode', valueLight: 'light-mode'})
 const toggleDark = useToggle(isDark)
 
-
+const isRegistrationPending = computed(() => isRegistering && isAuthenticated.value)
 
 function mockSignIn() {
   instance.loginRedirect(loginRequest);
   //fetchUser()
 }
 
-function mockSignOut() {
-  logout()
+async function mockSignOut() {
+  await logout()
   //router.push('/')
   instance.logoutRedirect();
 }
@@ -79,7 +79,7 @@ function mockSignOut() {
           <ul
             class="navbar-nav navbar-nav-scroll"
             :class="{ 'bg-secondary': isMobile }"
-            v-show="isAuthenticated"
+            v-show="isActive"
           >
             <!-- Nav item Listing -->
             <li class="nav-item dropdown">
@@ -128,10 +128,9 @@ function mockSignOut() {
         <!-- Main navbar END -->
 
         <!-- Profile and Notification START -->
-        <ul v-if="isAuthenticated" class="nav flex-row align-items-center list-unstyled ms-xl-auto">
+        <ul v-if="isActive" class="nav flex-row align-items-center list-unstyled ms-xl-auto">
           <!-- Notification dropdown START -->
-          <li class="nav-item ms-0 ms-md-3 dropdown">
-            <!-- Notification button -->
+          <!-- <li class="nav-item ms-0 ms-md-3 dropdown">
             <a
               class="nav-link p-0"
               href="#"
@@ -142,13 +141,10 @@ function mockSignOut() {
             >
               <i class="bi bi-bell fa-fw fs-5 text-white" />
             </a>
-            <!-- Notification dote -->
             <span class="notif-badge animation-blink" />
 
-            <!-- Notification dropdown menu START -->
             <div class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md p-0 shadow-lg">
               <div class="card bg-transparent">
-                <!-- Card header -->
                 <div class="card-header bg-transparent d-flex justify-content-between align-items-center border-bottom">
                   <h6 class="m-0">
                     Notifications <span class="badge bg-danger bg-opacity-10 text-danger ms-2">4
@@ -160,10 +156,8 @@ function mockSignOut() {
                   >Clear all</a>
                 </div>
 
-                <!-- Card body START -->
                 <div class="card-body p-0">
                   <ul class="list-group list-group-flush list-unstyled p-2">
-                    <!-- Notification item -->
                     <li>
                       <a
                         href="#"
@@ -175,7 +169,6 @@ function mockSignOut() {
                         <span>Wednesday</span>
                       </a>
                     </li>
-                    <!-- Notification item -->
                     <li>
                       <a
                         href="#"
@@ -187,9 +180,7 @@ function mockSignOut() {
                     </li>
                   </ul>
                 </div>
-                <!-- Card body END -->
 
-                <!-- Card footer -->
                 <div class="card-footer bg-transparent text-center border-top">
                   <a
                     href="#"
@@ -198,8 +189,7 @@ function mockSignOut() {
                 </div>
               </div>
             </div>
-            <!-- Notification dropdown menu END -->
-          </li>
+          </li> -->
           <!-- Notification dropdown END -->
 
           <!-- Profile dropdown START -->
@@ -243,9 +233,9 @@ function mockSignOut() {
                       class="h6 mt-2 mt-sm-0"
                       href="#"
                     >{{ username }}</a>
-                    <p class="small m-0">
+                    <!-- <p class="small m-0">
                       {{userEmail}}
-                    </p>
+                    </p> -->
                   </div>
                 </div>
               </li>
@@ -323,10 +313,15 @@ function mockSignOut() {
         <!-- Profile and Notification START -->
 
         <ul v-if="!isAuthenticated" class="nav flex-row align-items-center list-unstyled ms-xl-auto">
-
-          
           <li @click.stop.prevent="mockSignIn" class="nav-item"> <a class="nav-link text-white fw-bolder"><i class="bi bi-box-arrow-in-right me-2"></i>Sign In</a></li>
+          <!-- Button -->
+          <!-- <li class="nav-item ms-3 d-none d-sm-block">
+            <a class="btn btn-sm btn-primary-soft mb-0" href="#"><i class="bi bi-lightning-charge"></i> Upgrade now</a>
+          </li> -->
+        </ul>
 
+        <ul v-if="isAuthenticated && !isActive" class="nav flex-row align-items-center list-unstyled ms-xl-auto">
+          <li @click.stop.prevent="mockSignOut" class="nav-item"> <a class="nav-link text-white fw-bolder"><i class="bi bi-box-arrow-in-right me-2"></i>Sign Out</a></li>
           <!-- Button -->
           <!-- <li class="nav-item ms-3 d-none d-sm-block">
             <a class="btn btn-sm btn-primary-soft mb-0" href="#"><i class="bi bi-lightning-charge"></i> Upgrade now</a>

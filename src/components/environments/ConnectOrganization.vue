@@ -146,7 +146,7 @@ function getGenesysCloudLoginUrl(region: string) : string {
 
 function loginWithGenesysCloud () {
   console.log('login URL: ' + gsysCloudToken.value.login_url)
-  location.href = `${gsysCloudToken.value.login_url}/oauth/authorize?client_id=51dbce28-867f-459c-b38d-182fc1d446cc&response_type=token&redirect_uri=${GLABS_APP_URL}/account/organizations`
+  location.href = `${gsysCloudToken.value.login_url}/oauth/authorize?client_id=51dbce28-867f-459c-b38d-182fc1d446cc&response_type=token&redirect_uri=${GLABS_APP_URL}/workshops`
   //location.href = `${gsysCloudToken.value.login_url}/oauth/authorize?client_id=51dbce28-867f-459c-b38d-182fc1d446cc&response_type=token&redirect_uri=${GLABS_APP_URL}/workshops/Genesys-Dialog-Engine-Build-a-Bot`
 }
 
@@ -278,16 +278,6 @@ async function getMyOrg() {
 </div>
 </div>
 
-  
-
-<pre>{{genesysToken}}</pre>
-<pre>{{gsysCloudToken}}</pre>
-<!-- <pre>{{data}}</pre>
-<p>Finished: {{isFinished}}</p>
-<p>Loading: {{isLoading}}</p>
-<p>Error: {{error}}</p> -->
-  <!-- <pre>{{customer}}</pre> -->
-  <!-- Main content END -->
 </template>
 
 <style>
