@@ -2,6 +2,7 @@
 import type { PropType } from 'vue'
 import type { IWorkshop } from '@/interfaces'
 import router from '@/router';
+import { computed } from '@vue/reactivity';
 
 const props = defineProps({
   workshop: {
@@ -11,6 +12,9 @@ const props = defineProps({
 })
 
 function workshopDefaultName(workshop: IWorkshop) {
+
+  return workshop.id + '/0'
+  
   if (workshop.name && workshop.name.length > 0) {
       return workshop.name;
   } else {
@@ -21,10 +25,12 @@ function workshopDefaultName(workshop: IWorkshop) {
 
 
 function goToWorkshop(workshop: IWorkshop) { 
-  router.push(`/workshops/${workshopDefaultName(workshop)}`);
+  if (workshop.id && workshop.manifest) {
+    router.push(`/workshops/${workshopDefaultName(workshop)}`);
+  }
 }
 
-const workThumbnail = computed(() => `https://gdemo.demo.genesys.com/api/gdemo-assets/${props.workshop.image}`)
+const workThumbnail = computed(() => `https://gdemo.demo.genesys.com/api/gdemo-assets/${props.workshop.image_filename}`)
  
 
 //const imageOptions = ref({ src: 'https://place.dog/300/200' })

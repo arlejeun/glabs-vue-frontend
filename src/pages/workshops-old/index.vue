@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { useAxios } from '@vueuse/integrations/useAxios'
 import { useWorkshopStore } from '@/stores/workshop'
-import { computed, watch } from 'vue'
-import { useDateFormat, useNow } from '@vueuse/core'
 
 
 const wStore = useWorkshopStore()
@@ -386,4 +384,6 @@ Hotel grid END -->
 <route lang="yaml">
 meta:
   layout: BasicTopNavigationLayout
+  title: Workshops
+  requiresAuth: true
 </route>

@@ -1,3 +1,5 @@
+import type { ICustomerCreate, ICustomerRegistration, ICustomerRegistrationDTO, IDriveCustomer } from "@/interfaces";
+
 const handleAxiosError = (error: any, message: string) => {
   let result = {...error};
   let serverResp = result?.response?.data;
@@ -11,5 +13,10 @@ const handleAxiosError = (error: any, message: string) => {
 }
 
 
+const generateCustomerPayload = (customer: ICustomerRegistration | IDriveCustomer): ICustomerRegistrationDTO => {
+  const {identifiers, ...cust} = customer;
+  let temp = {...cust, identifiers: { "create": customer.identifiers }}
+  return {...temp}
+}
 
-export { handleAxiosError }
+export { handleAxiosError, generateCustomerPayload }

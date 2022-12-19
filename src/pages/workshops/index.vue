@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { useAxios } from '@vueuse/integrations/useAxios'
 import { useWorkshopStore } from '@/stores/workshop'
+import { computed, watch } from 'vue'
+import { useDateFormat, useNow } from '@vueuse/core'
+import { GLabsApiClient } from '@/apis/glabs'
 
 
 const wStore = useWorkshopStore()
@@ -12,12 +15,13 @@ const config = {
     Accept: 'application/json, text/plain, */*'
   }
 };
-const url = `http://localhost:5173/demo/api/workshops.json`;
+// const url = `http://localhost:5173/demo/api/workshops.json`;
+// const { data, isLoading, isFinished: isWorkshopsLoaded, error } = useAxios(url, config)
 
-const { data, isLoading, isFinished: isWorkshopsLoaded, error } = useAxios(url, config)
+const { data, isLoading, isFinished: isWorkshopsLoaded, error } = useAxios('/workshops', config, GLabsApiClient)
 
 watch(isWorkshopsLoaded, () => {
-  wStore.setWorkshops(data.value?.data);
+  wStore.setWorkshops(data.value);
 })
 
 const availableWorkshops = computed(() => {
@@ -163,7 +167,7 @@ Title and Tabs START -->
 									<input type="checkbox" class="btn-check" id="btn-check-10">
 									<label class="btn btn-white btn-primary-soft-check" for="btn-check-10">2<i class="bi bi-star-fill"></i></label>
 								</li>
-								<!-- 3 -->
+								<!-- 3 --> 
 								<li class="list-inline-item">
 									<input type="checkbox" class="btn-check" id="btn-check-11">
 									<label class="btn btn-white btn-primary-soft-check" for="btn-check-11">3<i class="bi bi-star-fill"></i></label>
@@ -384,6 +388,4 @@ Hotel grid END -->
 <route lang="yaml">
 meta:
   layout: BasicTopNavigationLayout
-  title: Workshops
-  requiresAuth: true
 </route>
