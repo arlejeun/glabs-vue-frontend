@@ -19,50 +19,19 @@ export default {
   },
 
   async getAuthorizationSubjectsMe() {
-    try {
-      const data = await authorizationApi.getAuthorizationSubjectsMe()
-      return data  
-    } catch (err) {
-      notify({
-        title: "Get my user permissions",
-        text: `${handleAxiosError(err,"Please try to log in again.")}`,
-        duration: -1,
-        type: "error",
-      });
-    }
-
-    
+    const data = await authorizationApi.getAuthorizationSubjectsMe()
+    return data  
   },
 
   //async getUsersMe(opts: platformClient.UsersApi.getUsersMeOptions | undefined) {
-    async getUsersMe() {
-    try {
-      const data = await usersApi.getUsersMe()
-      return data  
-    } catch (err) {
-      notify({
-        title: "Get my user information",
-        text: `${handleAxiosError(err,"Please try to log in again.")}`,
-        duration: -1,
-        type: "error",
-      });
-    }
+  async getUsersMe() {
+    const data = await usersApi.getUsersMe()
+    return data  
   },
 
   async getOrganizationsMe() {
-    try {
       const data = await organizationApi.getOrganizationsMe()
-      return data  
-    } catch (err) {
-      notify({
-        title: "Get Organization detail",
-        text: `${handleAxiosError(err,"Please try to log in again.")}`,
-        duration: -1,
-        type: "error",
-      });
-    }
+      return data
   },
-  // Get the organization's queues.
-  // NOTE: For this sample only get the first 100.
   
 }

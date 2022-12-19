@@ -2,29 +2,22 @@
 import type platformClient from 'purecloud-platform-client-v2'
 
 import { Switch } from '@element-plus/icons-vue'
-import { useAxios } from '@vueuse/integrations/useAxios'
 import { useStorage} from '@vueuse/core'
 import { useRouteHash } from '@vueuse/router'
 import { getParameterByName } from '@/utils/string'
-
-import axios from 'axios'
+import { useWorkspaceStore } from '@/stores/workspace'
 import genesysService from '@/services/genesyscloud-service'
 
-const GLABS_APP_URL = import.meta.env.VITE_GLABS_APP_URL
+const workspaceStore = useWorkspaceStore()
+const { genesysUser, genesysOrg, genesysUserPermissions, isTokenActive, genesysUserToken } = storeToRefs(workspaceStore)
+const { getActiveOrg, getActiveUserPermissions, getActiveUser, setupUserToken, resetInfo } = workspaceStore
 
-const gsysToken = useStorage('gsys-token-1', {region:'', access_token: '', login_url: '' })
+const GLABS_APP_URL = import.meta.env.VITE_GLABS_APP_URL
+const GLABS_CLOUD_OAUTH_CLIENT_ID = import.meta.env.VITE_GLABS_CLOUD_OAUTH_CLIENT_ID
 const gsysCloudToken = useStorage('gsys-token', {region:'', access_token: '', login_url: '' })
 const genesysToken = ref(gsysCloudToken.value.access_token)
 const loginUrl = ref(gsysCloudToken.value.login_url)
 const showCloudProfile = ref(false)
-const perms = ref({})
-const me = ref({})
-const org = ref({})
-
-console.log('gsysToken setup :' + JSON.stringify(gsysToken.value))
-const showMe = ref(false)
-const showPermissions = ref(false)
-const showOrg = ref(false)
 
 const regions = [
   {
@@ -89,18 +82,18 @@ const regions = [
   },
 ]
 
-const GenesysCloudApiClient = axios.create({
-    baseURL: '/',
-    timeout: 5000,
-    headers: {
-      'Accept': 'application/json',
-      'Authorization': `Bearer ${genesysToken.value}`
-    }
-  });
-
 const apiUrl = computed(() => { return loginUrl.value.replace('login','api')})
 
 const routeHash = useRouteHash()
+
+const refreshEnvironment = () => {
+  setupUserToken(gsysCloudToken.value.access_token)
+  genesysService.setAccessToken(gsysCloudToken.value.access_token)
+  genesysService.setEnvironment(gsysCloudToken.value.login_url.replace('https://login.',''))
+  getActiveUserPermissions()
+  getActiveUser()
+  getActiveOrg()
+}
 
 // Update the login/api url when region changes
 watch(
@@ -111,29 +104,25 @@ watch(
     genesysService.setEnvironment(gsysCloudToken.value.login_url.replace('https://login.',''))
 })
 
-const {data, isFinished, execute, isLoading, error} = useAxios(GenesysCloudApiClient)
-
 // Update token when route hash change in response to 
 watchEffect(async () => {
-  console.log(routeHash.value)
+  //console.log(routeHash.value)
   if (routeHash.value.includes('access_token')) {
     genesysToken.value = getParameterByName('access_token')
     gsysCloudToken.value.access_token = genesysToken.value
     routeHash.value = ''
-    console.log(`API Url:  ${apiUrl.value}`)
-    showCloudProfile.value = true
+    // setupUserToken(genesysToken.value)
+    // genesysService.setAccessToken(genesysToken.value)
+    // genesysService.setEnvironment(gsysCloudToken.value.login_url.replace('https://login.',''))
+    refreshEnvironment()
   }
-  genesysService.setAccessToken(genesysToken.value)
-  genesysService.setEnvironment(gsysCloudToken.value.login_url.replace('https://login.',''))
+
 })
 
 onMounted(() =>{
-  // genesysService.setAccessToken(gsysCloudToken.value.access_token)
-  // genesysService.setEnvironment(gsysCloudToken.value.login_url.replace('https://login.',''))
-  if (showCloudProfile.value) {
-    getPermissions()
-    getMyUser()
-    getMyOrg()
+   //page reload different page
+   if (gsysCloudToken.value?.access_token != '' && genesysUserToken.value == '') {
+    refreshEnvironment()
   }
 })
 
@@ -146,45 +135,8 @@ function getGenesysCloudLoginUrl(region: string) : string {
 
 function loginWithGenesysCloud () {
   console.log('login URL: ' + gsysCloudToken.value.login_url)
-  location.href = `${gsysCloudToken.value.login_url}/oauth/authorize?client_id=51dbce28-867f-459c-b38d-182fc1d446cc&response_type=token&redirect_uri=${GLABS_APP_URL}/workshops`
+  location.href = `${gsysCloudToken.value.login_url}/oauth/authorize?client_id=${GLABS_CLOUD_OAUTH_CLIENT_ID}&response_type=token&redirect_uri=${GLABS_APP_URL}/workshops`
   //location.href = `${gsysCloudToken.value.login_url}/oauth/authorize?client_id=51dbce28-867f-459c-b38d-182fc1d446cc&response_type=token&redirect_uri=${GLABS_APP_URL}/workshops/Genesys-Dialog-Engine-Build-a-Bot`
-}
-
-async function getPermissions() {
-  try {
-    perms.value = await genesysService.getAuthorizationSubjectsMe()
-    // showPermissions.value = true
-    // showMe.value = false
-    // showOrg.value = false
-    return perms
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-//async function getMyUser(opts: platformClient.UsersApi.getUsersMeOptions | undefined) {
-  async function getMyUser() {
-  try {
-    me.value = await genesysService.getUsersMe()
-    // showMe.value = true
-    // showPermissions.value = false
-    // showOrg.value = false
-    return me
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-async function getMyOrg() {
-  try {
-    org.value = await genesysService.getOrganizationsMe()
-    // showMe.value = false
-    // showPermissions.value = false
-    // showOrg.value = true
-    return me
-  } catch (err) {
-    console.log(err)
-  }
 }
 
 </script>
@@ -193,22 +145,14 @@ async function getMyOrg() {
 
 <div class="">
 
-<!-- Offcanvas menu button -->
-<div class="d-grid mb-0 d-lg-none w-100">
-  <button class="btn btn-primary mb-4" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar"
-    aria-controls="offcanvasSidebar">
-    <i class="fas fa-sliders-h"></i> Menu
-  </button>
-</div>
-
 <div class="vstack gap-4">
 
 
   <!-- Personal info START -->
-  <div class="card border">
+  <div class="card">
     <!-- Card header -->
     <div class="card-header border-bottom">
-      <h4 class="card-header-title text-primary">My Organizations</h4>
+      <h4 class="card-header-title text-primary">Active Organization</h4>
     </div>
 
     <!-- Card body START -->
@@ -231,28 +175,30 @@ async function getMyOrg() {
     </el-row>
 
     </div>
-    <div v-show="showCloudProfile" class="row">
+    <div v-show="isTokenActive" class="row">
       <h6>Genesys Cloud Profile</h6>
     </div>
     
-    <div v-show="showCloudProfile" class="container my-3">
+    <div v-show="isTokenActive" class="container my-3">
       <div class="row">
         <el-tabs tab-position="top" class="demo-tabs">
           <el-tab-pane label="Organization">
-            <pre>{{org}}</pre> 
+            <pre>{{genesysOrg}}</pre> 
           </el-tab-pane>
           <el-tab-pane label="User">
-            <pre>{{me}}</pre>
+            <pre>{{genesysUser}}</pre>
           </el-tab-pane>
           <el-tab-pane label="Permisisons">
-            <pre>{{perms}}</pre> 
+            <pre>{{genesysUserPermissions}}</pre> 
           </el-tab-pane>
         </el-tabs>
       
         <div class="col-4 px-2 m-2">
-          <el-button @click="getPermissions" type="primary">Get Permissions</el-button>
-          <el-button @click="getMyUser" type="primary">Get My User</el-button>
-          <el-button @click="getMyOrg" type="primary">Get My Organization</el-button>
+          <!-- <el-button @click="getActiveUserPermissions" type="primary">Get Permissions</el-button>
+          <el-button @click="getActiveUser" type="primary">Get My User</el-button>
+          <el-button @click="getActiveOrg" type="primary">Get My Organization</el-button> -->
+          <el-button @click="resetInfo" type="primary">Reset</el-button>
+
       </div>
 
       <div class="col-7 px-2">

@@ -4,6 +4,7 @@ import { useWorkshopStore } from '@/stores/workshop'
 import { computed, watch } from 'vue'
 import { useDateFormat, useNow } from '@vueuse/core'
 
+const GLABS_APP_URL = import.meta.env.VITE_GLABS_APP_URL
 
 const wStore = useWorkshopStore()
 const formatter = 'YYYY-MM-DD HH:mm:ss:SSS'
@@ -13,8 +14,8 @@ const config = {
     Authorization: 'Bearer TBD',
     Accept: 'application/json, text/plain, */*'
   }
-};
-const url = `http://localhost:5173/demo/api/workshops.json`;
+}
+const url = `${GLABS_APP_URL}/demo/api/workshops.json`;
 
 const { data, isLoading, isFinished: isWorkshopsLoaded, error } = useAxios(url, config)
 

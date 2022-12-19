@@ -2,6 +2,11 @@
 import { useAxios } from '@vueuse/integrations/useAxios'
 import { useWorkshopStore } from '@/stores/workshop'
 
+const gsysCloudStoredToken = useStorage('gsys-token', {region:'', access_token: '', login_url: '' })
+const token = ref(gsysCloudStoredToken.value.access_token)
+const isActive = computed(()=> token.value != '')
+
+const GLABS_APP_URL = import.meta.env.VITE_GLABS_APP_URL
 
 const wStore = useWorkshopStore()
 const formatter = 'YYYY-MM-DD HH:mm:ss:SSS'
@@ -12,26 +17,27 @@ const config = {
 		Accept: 'application/json, text/plain, */*'
 	}
 };
-const url = `http://localhost:5173/demo/api/workshops.json`;
-
+const { width } = useWindowSize()
+const isMobile = computed(() => width.value < 1200)
+const drawerSize = ref('45%')
+drawerSize.value = isMobile.value ? '85%':'45%'
+const url = `${GLABS_APP_URL}/demo/api/workshops.json`;
+const connectCloudPanel = ref(true)
 const { data, isLoading, isFinished: isWorkshopsLoaded, error } = useAxios(url, config)
 
 watch(isWorkshopsLoaded, () => {
 	wStore.setWorkshops(data.value?.data);
 })
 
+
 const availableWorkshops = computed(() => {
 	return wStore.getAllWorkshops
 })
 
-// Reactivty
-// watch(isFinished, async (newVal) => {
-//   if (newVal) {
-//     console.log(`${formatted.value} - watch: ${JSON.stringify(data.value)}`);
-//   }
-// })
+const connectToCloud = () => {
+	connectCloudPanel.value = true
+}
 
-// console.log(`${formatted.value} - test : ${JSON.stringify(publishedBooksMessage.value)}`);
 
 </script>
 
@@ -44,20 +50,22 @@ const availableWorkshops = computed(() => {
 	<!-- =======================
 Title and Tabs START -->
 	<section class="pt-0 pb-4">
-		<div class="container-fluid position-relative">
+		<div class="container position-relative">
 			<div class="row">
 				<div class="col">
 					<h3 class="fs-3 text-primary mt-4">Workshops</h3>
-					<p class="text-secondary">Genesys Workshops provide detailed instructions and open source code repositories
-				to assist partners and customers in jump-starting your custom integrations with third-party products and
-				complex solutions within Genesys Cloud.</p>
+					<p class="text-secondary">Genesys Workshops provide detailed instructions and open source code
+						repositories
+						to assist partners and customers in jump-starting your custom integrations with third-party
+						products and
+						complex solutions within Genesys Cloud.</p>
 				</div>
-				<div class="col">
-					<ConnectOrganization></ConnectOrganization>
+				<div class="col-auto pt-2">
+					<el-button v-show="!isActive" type="warning" @click.prevent="connectToCloud" text bg>Connect to Genesys</el-button>
+					<el-button v-show="isActive" type="success" @click.prevent="connectToCloud" text bg>Genesys Session</el-button>
 				</div>
-
 			</div>
-			
+
 
 			<!-- Title and button START -->
 			<div class="row">
@@ -128,6 +136,10 @@ Hotel grid START -->
 	</section>
 	<!-- =======================
 Hotel grid END -->
+
+	<el-drawer v-model="connectCloudPanel" title="Active Organization" direction="rtl" :size="drawerSize">
+		<ConnectOrganization></ConnectOrganization>
+	</el-drawer>
 
 	<!-- <pre lang="json">{{ availableWorkshops }}</pre> -->
 </template>

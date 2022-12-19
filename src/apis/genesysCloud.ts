@@ -119,11 +119,6 @@ watchEffect(() => {
   }
 })
 
-// https://login.mypurecloud.com/oauth/authorize
-// ?client_id=51dbce28-867f-459c-b38d-182fc1d446cc
-// &response_type=token
-// &redirect_uri=http://localhost:5173/demos
-
 
 
 function getGenesysCloudLoginUrl(region: string) : string {
@@ -133,9 +128,9 @@ function getGenesysCloudLoginUrl(region: string) : string {
   })[0].url
 }
 
-function loginWithGenesysCloud () {
-  //let url = getGenesysCloudLoginUrl(region.value)
-  // gsysCloudToken.value.login_url = url
-  console.log('login URL: ' + gsysCloudToken.value.login_url)
-  location.href = `${gsysCloudToken.value.login_url}/oauth/authorize?client_id=51dbce28-867f-459c-b38d-182fc1d446cc&response_type=token&redirect_uri=http://localhost:5173/environments`
-}
+// function loginWithGenesysCloud () {
+//   //let url = getGenesysCloudLoginUrl(region.value)
+//   // gsysCloudToken.value.login_url = url
+//   console.log('login URL: ' + gsysCloudToken.value.login_url)
+//   location.href = `${gsysCloudToken.value.login_url}/oauth/authorize?client_id=51dbce28-867f-459c-b38d-182fc1d446cc&response_type=token&redirect_uri=http://localhost:5173/environments`
+// }
