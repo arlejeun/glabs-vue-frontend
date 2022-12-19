@@ -32,23 +32,21 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: jiratoken
-                key: glabs-env-secrets
+                key: glabs-env
           - name: VITE_GLABS_APP_URL
             value: "https://drive.demo.genesys.com"
           - name: VITE_GENESYS_CLOUD_OAUTH_CLIENT_ID
             valueFrom:
               secretKeyRef:
                 name: gcoauth
-                key: glabs-env-secrets
+                key: glabs-env
           - name: VITE_GOOGLE_ANALYTICS_4_MEASUREMENT_ID
             valueFrom:
               secretKeyRef:
                 name: ganalytics
-                key: glabs-env-secrets
-          - name: SWAGGER_ENABLE
+                key: glabs-env
+          - name: SERVER_HTTPS
             value: "true"
-          - name: SEED_LOG_ENABLE_DEBUG
-            value: "false"
       imagePullSecrets:
         - name: pullsecret
       volumes:
