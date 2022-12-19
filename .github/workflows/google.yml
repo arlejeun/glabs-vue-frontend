@@ -23,7 +23,7 @@ env:
   GKE_ZONE: us-west1-a   # TODO: update to cluster zone
   DEPLOYMENT_NAME: gke-test # TODO: update to deployment name
   REPOSITORY: drive # TODO: update to Artifact Registry docker repository
-  IMAGE: drive-web
+  IMAGE: drive-frontend
 
 jobs:
   setup-build-publish-deploy:
@@ -46,6 +46,14 @@ jobs:
       with:
         credentials_json: '${{ secrets.GAR_USER }}'
         token_format: 'access_token'
+
+    - id: 'secrets'
+      uses: 'google-github-actions/get-secretmanager-secrets@v1'
+      with:
+        secrets: |-
+          glabs-jira-token:${{ env.PROJECT_ID }}/glabs-jira-token
+          glabs-gc-oauth-client-id:${{ env.PROJECT_ID }}/glabs-gc-oauth-client-id
+          glabs-google-analytics:${{ env.PROJECT_ID }}/glabs-google-analytics
 
     - name: Docker configuration
       run: |-
@@ -85,7 +93,7 @@ jobs:
       run: |-
         if ! kubectl get secret pullsecret -n drive; then
           echo "Creating Kubernetes Secret for the Pullsecret"
-          echo ${{ secrets.GAR_USER }} >> "./key.json"
+          echo ${{ secrets.GAR_USER }}>> "./key.json"
           kubectl create secret docker-registry pullsecret -n drive --docker-server=$GAR_LOCATION-docker.pkg.dev --docker-username=_json_key --docker-password="$(cat ./key.json)" --docker-email=gtsadmin@genesys.com
         else
           echo "Pullsecret already exists. Will use it."
@@ -101,8 +109,22 @@ jobs:
           echo "Certificate Secret already exists. Will use it."
         fi
  
+    # Create Env Variables from Kubernetes Secrets
+    - name: Env Secrets
+      run: |-
+        if ! kubectl get secret glabs-env-secrets -n drive; then
+          echo "Creating Kubernetes Secret for the glabs-frontend"
+          kubectl create secret generic glabs-env-secrets --namespace=drive --from-literal=jiratoken=${{ steps.secrets.outputs.glabs-jira-token }} --from-literal=gcoauth=${{ steps.secrets.outputs.glabs-jira-token }} --from-literal=ganalytics=${{ steps.secrets.outputs.glabs-google-analytics }}
+        else
+          echo "Glabs Frontend Secrets already exist. Will use it."
+        fi
+
     # Deploy the Docker image to the GKE cluster
     - name: Deploy
       run: |-
         kubectl apply -f ./drive-k8s.yml
     
+    # Re-Deploy for clean image
+    - name: Restart
+      run: |-
+        kubectl rollout restart deployment/drive-frontend -n drive
