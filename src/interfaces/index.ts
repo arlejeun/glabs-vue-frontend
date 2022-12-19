@@ -10,23 +10,45 @@ export interface ITag {
 export interface ICategory extends ITag, ITag { }
 export interface IPlatform extends ITag, ITag { }
 export interface IWorkshop {
-  image: string,
-  is_public?: boolean,
-  is_internal?: boolean,
-  permissions_groups: string[],
-  categories: ICategory[],
-  tags: ITag[],
-  platforms: IPlatform[],
-  active?: boolean,
-  id: string,
+  id: number,
   title: string,
+  name: string,
+  owner: string,
+  description: string,
+  active?: boolean,
+  image_filename: string,
   level: number,
   duration: string,
-  description: string,
-  workshop_url: URL
-  modified_at?: Date,
-  author?: string,
-  name?: string
+  modified_at: string,
+  workshop_url?: string,
+  manifest?: string,
+  tags: ITag[],
+
+  categories?: ICategory[],
+  platforms?: IPlatform[],
+  permissions_groups?: string[],
+  is_public?: boolean,
+  is_internal?: boolean,
+
+  /*
+    image: string,
+    is_public?: boolean,
+    is_internal?: boolean,
+    permissions_groups: string[],
+    categories: ICategory[],
+    tags: ITag[],
+    platforms: IPlatform[],
+    active?: boolean,
+    id: string,
+    title: string,
+    level: number,
+    duration: string,
+    description: string,
+    workshop_url: URL
+    modified_at?: Date,
+    author?: string,
+    name?: string
+  */
 }
 
 export interface IDriveGenericUser {
@@ -58,7 +80,7 @@ export interface IDriveCustomerRegistration {
 
 
 export interface ICountryConnect {
-  connect: {"id": number}
+  connect: { "id": number }
 }
 
 
@@ -78,7 +100,7 @@ export interface ICustomerRegistration extends ICustomerBase {
 }
 
 export interface ICustomerRegistrationDTO extends ICustomerBase {
-    "identifiers": IDriveIdentifierDTO
+  "identifiers": IDriveIdentifierDTO
 }
 
 export interface ICustomerRegistrationForm extends ICustomerRegistration {
@@ -93,7 +115,7 @@ export interface ICustomerCreate {
 
 export interface ISettingsCreate {
   create: {
-     "id_provider": string 
+    "id_provider": string
   }
 }
 
@@ -117,47 +139,47 @@ export interface IDriveUserRegistration {
 
 
 
-export interface IDriveBaseUser extends IDriveGenericUser{
+export interface IDriveBaseUser extends IDriveGenericUser {
   customer: IDriveCustomer,
   groups: ITag[]
 }
 export interface IDriveUser extends IDriveBaseUser {
-    orgs: IDriveCustomerOrg[],
-    settings: IDriveUserSettings,
-  }
+  orgs: IDriveCustomerOrg[],
+  settings: IDriveUserSettings,
+}
 
-  export interface IDriveUserDTO extends IDriveBaseUser {
-    orgs: IDriveCustomerOrg[],
-    settings: IDriveUserSettingsDTO,
-  }
+export interface IDriveUserDTO extends IDriveBaseUser {
+  orgs: IDriveCustomerOrg[],
+  settings: IDriveUserSettingsDTO,
+}
 
 export interface IDriveUserSettings {
-    [x: string]: string,
-  }
+  [x: string]: string,
+}
 export interface IDriveUserSettingsDTO {
   create?: IDriveUserSettings
-  }
-export interface IDriveCustomer extends ICustomerBase{
-    [x: string]: string | IDriveIdentifier[],
-    identifiers: IDriveIdentifier[]
-  }
+}
+export interface IDriveCustomer extends ICustomerBase {
+  [x: string]: string | IDriveIdentifier[],
+  identifiers: IDriveIdentifier[]
+}
 export interface IDriveCustomerDTO {
-    [x: string]: string | IDriveIdentifierDTO | IDriveIdentifier[],
-    identifiers: IDriveIdentifierDTO
-  }
+  [x: string]: string | IDriveIdentifierDTO | IDriveIdentifier[],
+  identifiers: IDriveIdentifierDTO
+}
 
-  export interface IDriveCustomerForm extends IDriveCustomer {
-    emails: IDriveIdentifier[],
-    phones: IDriveIdentifier[],
-    messengers: IDriveIdentifier[]
-  }
+export interface IDriveCustomerForm extends IDriveCustomer {
+  emails: IDriveIdentifier[],
+  phones: IDriveIdentifier[],
+  messengers: IDriveIdentifier[]
+}
 
-  export interface IDriveCustomerRegistration {
-    emails: IDriveIdentifier[],
-    phones: IDriveIdentifier[],
-    messengers: IDriveIdentifier[]
-  }
-  
+export interface IDriveCustomerRegistration {
+  emails: IDriveIdentifier[],
+  phones: IDriveIdentifier[],
+  messengers: IDriveIdentifier[]
+}
+
 export interface IDriveCustomerOrg {
   id: number,
   is_owned_by_gts: boolean,
