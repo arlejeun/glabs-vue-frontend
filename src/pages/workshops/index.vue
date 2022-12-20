@@ -164,6 +164,4 @@ Hotel grid END -->
 <route lang="yaml">
 meta:
   layout: BasicTopNavigationLayout
-  title: Workshops
-  requiresAuth: true
 </route>

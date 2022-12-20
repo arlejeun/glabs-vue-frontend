@@ -14,16 +14,17 @@ const GLABS_TOKEN = ref(GLABS_STORAGE.value.token as string | undefined)
 //const jira_access_token = ref(JIRA_TOKEN)
 
 
-const GDEMO_BASE_URL = import.meta.env.VITE_GLABS_API_URL || 'https://api.GitHub.com/'
+
+const GDEMO_BASE_URL = import.meta.env.VITE_GLABS_API_URL || 'http://localhost:3000/' || 'https://api.GitHub.com/'
 const JIRA_MIDDLEWARE_API_URL = import.meta.env.VITE_JIRA_MIDDLEWARE_API_URL || 'https://api.GitHub.com/'
 
 const GLabsApiClient = axios.create({
-    baseURL: GDEMO_BASE_URL,
-    timeout: 10 * 1000,
-    headers: {
-      'Accept': 'application/json'
-    }
-  });
+  baseURL: GDEMO_BASE_URL,
+  timeout: 10 * 1000,
+  headers: {
+    'Accept': 'application/json'
+  }
+});
 
   GLabsApiClient.interceptors.request.use((config: AxiosRequestConfig<any>) => {
     const headers =  {
