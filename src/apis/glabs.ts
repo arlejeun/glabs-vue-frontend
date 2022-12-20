@@ -44,6 +44,4 @@ const GLabsApiClient = axios.create({
   });
 
 
-
-
 export { GLabsApiClient, GLABS_STORAGE, GLABS_TOKEN, JiraMiddlewareApiClient }

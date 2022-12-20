@@ -118,11 +118,92 @@ async function mockSignOut() {
             <li class="nav-item dropdown">
               <router-link
                 class="nav-link text-white fw-bolder"
-                to="/environments"
+                to="/admin"
               >
                 Administration
               </router-link>
+              
             </li>
+
+
+            <li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="listingMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Listings</a>
+						<ul class="dropdown-menu" aria-labelledby="listingMenu">
+							<!-- Dropdown submenu -->
+							<li class="dropdown-submenu dropend">
+								<a class="dropdown-item dropdown-toggle" href="#">Hotel</a>
+								<ul class="dropdown-menu" data-bs-popper="none">
+									<li> <a class="dropdown-item" href="index.html">Hotel Home</a></li>
+									<li> <a class="dropdown-item" href="index-hotel-chain.html">Hotel Chain</a></li>
+									<li> <a class="dropdown-item" href="index-resort.html">Hotel Resort</a></li>
+									<li> <a class="dropdown-item" href="hotel-grid.html">Hotel Grid</a></li>
+									<li> <a class="dropdown-item" href="hotel-list.html">Hotel List</a></li>
+									<li> <a class="dropdown-item" href="hotel-detail.html">Hotel Detail</a></li>
+									<li> <a class="dropdown-item" href="room-detail.html">Room Detail</a></li>
+									<li> <a class="dropdown-item" href="hotel-booking.html">Hotel Booking</a></li>
+								</ul>
+							</li>
+
+							<!-- Dropdown submenu -->
+							<li class="dropdown-submenu dropend">
+								<a class="dropdown-item dropdown-toggle" href="#">Flight</a>
+								<ul class="dropdown-menu" data-bs-popper="none">
+									<li> <a class="dropdown-item" href="index-flight.html">Flight Home</a></li>
+									<li> <a class="dropdown-item" href="flight-list.html">Flight List</a></li>
+									<li> <a class="dropdown-item" href="flight-detail.html">Flight Detail</a></li>
+									<li> <a class="dropdown-item" href="flight-booking.html">Flight Booking</a></li>
+								</ul>
+							</li>
+
+							<!-- Dropdown submenu -->
+							<li class="dropdown-submenu dropend">
+								<a class="dropdown-item dropdown-toggle" href="#">Tour</a>
+								<ul class="dropdown-menu" data-bs-popper="none">
+									<li> <a class="dropdown-item" href="index-tour.html">Tour Home</a></li>
+									<li> <a class="dropdown-item" href="tour-grid.html">Tour Grid</a></li>
+									<li> <a class="dropdown-item" href="tour-detail.html">Tour Detail</a></li>
+									<li> <a class="dropdown-item" href="tour-booking.html">Tour Booking</a></li>
+								</ul>
+							</li>
+
+							<!-- Dropdown submenu -->
+							<li class="dropdown-submenu dropend">
+								<a class="dropdown-item dropdown-toggle" href="#">Cab</a>
+								<ul class="dropdown-menu" data-bs-popper="none">
+									<li> <a class="dropdown-item" href="index-cab.html">Cab Home</a></li>
+									<li> <a class="dropdown-item" href="cab-list.html">Cab List</a></li>
+									<li> <a class="dropdown-item" href="cab-detail.html">Cab Detail</a></li>
+									<li> <a class="dropdown-item" href="cab-booking.html">Cab Booking</a></li>
+								</ul>
+							</li>
+
+							<!-- Dropdown submenu -->
+							<li class="dropdown-submenu dropend">
+								<a class="dropdown-item dropdown-toggle" href="#">Add Listing</a>
+								<ul class="dropdown-menu" data-bs-popper="none">
+									<li> <a class="dropdown-item" href="join-us.html">Join us</a></li>
+									<li> <a class="dropdown-item" href="add-listing.html">Add Listing</a></li>
+									<li> <a class="dropdown-item" href="add-listing-minimal.html">Add Listing Minimal</a></li>
+									<li> <a class="dropdown-item" href="listing-added.html">Listing Added</a></li>
+								</ul>
+							</li>
+
+							<!-- Dropdown submenu -->
+							<li class="dropdown-submenu dropend">
+								<a class="dropdown-item dropdown-toggle" href="#">Hero</a>
+								<ul class="dropdown-menu" data-bs-popper="none">
+									<li> <a class="dropdown-item" href="hero-inline-form.html">Hero Inline Form</a></li>
+									<li> <a class="dropdown-item" href="hero-multiple-search.html">Hero Multiple Search</a></li>
+									<li> <a class="dropdown-item" href="hero-image-gallery.html">Hero Image Gallery</a></li>
+									<li> <a class="dropdown-item" href="hero-split.html">Hero Split</a></li>
+								</ul>
+							</li>
+
+							<li> <a class="dropdown-item" href="booking-confirm.html">Booking Confirmed</a></li>
+							<li> <a class="dropdown-item" href="compare-listing.html">Compare Listing</a></li>
+							<li> <a class="dropdown-item" href="offer-detail.html">Offer Detail</a></li>
+						</ul>
+					</li>
           </ul>
         </div>
         <!-- Main navbar END -->

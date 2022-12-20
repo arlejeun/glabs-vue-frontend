@@ -1,23 +1,15 @@
 <script setup lang="ts">
-import type platformClient from 'purecloud-platform-client-v2'
 
 import { Switch } from '@element-plus/icons-vue'
-import { useStorage} from '@vueuse/core'
-import { useRouteHash } from '@vueuse/router'
-import { getParameterByName } from '@/utils/string'
 import { useWorkspaceStore } from '@/stores/workspace'
 import genesysService from '@/services/genesyscloud-service'
 
 const workspaceStore = useWorkspaceStore()
-const { genesysUser, genesysOrg, genesysUserPermissions, isTokenActive, genesysUserToken } = storeToRefs(workspaceStore)
-const { getActiveOrg, getActiveUserPermissions, getActiveUser, setupUserToken, resetInfo } = workspaceStore
+const { genesysUser, genesysOrg, genesysUserPermissions, isTokenActive, genesysApiUrl, genesysLoginUrl, genesysRegion, gsysCloudClient } = storeToRefs(workspaceStore)
+const { setLoginURL, getActiveOrg, getActiveUserPermissions, getActiveUser, setupUserToken, resetInfo, refreshEnvironment } = workspaceStore
 
 const GLABS_APP_URL = import.meta.env.VITE_GLABS_APP_URL
 const GLABS_CLOUD_OAUTH_CLIENT_ID = import.meta.env.VITE_GLABS_CLOUD_OAUTH_CLIENT_ID
-const gsysCloudToken = useStorage('gsys-token', {region:'', access_token: '', login_url: '' })
-const genesysToken = ref(gsysCloudToken.value.access_token)
-const loginUrl = ref(gsysCloudToken.value.login_url)
-const showCloudProfile = ref(false)
 
 const regions = [
   {
@@ -82,46 +74,34 @@ const regions = [
   },
 ]
 
-const apiUrl = computed(() => { return loginUrl.value.replace('login','api')})
-
-const routeHash = useRouteHash()
-
-const refreshEnvironment = () => {
-  setupUserToken(gsysCloudToken.value.access_token)
-  genesysService.setAccessToken(gsysCloudToken.value.access_token)
-  genesysService.setEnvironment(gsysCloudToken.value.login_url.replace('https://login.',''))
-  getActiveUserPermissions()
-  getActiveUser()
-  getActiveOrg()
-}
-
 // Update the login/api url when region changes
 watch(
-  () => gsysCloudToken.value.region,
+  () => gsysCloudClient.value.region,
   (reg) => {
-    loginUrl.value = getGenesysCloudLoginUrl(reg)
-    gsysCloudToken.value.login_url = loginUrl.value
-    genesysService.setEnvironment(gsysCloudToken.value.login_url.replace('https://login.',''))
+    setLoginURL(getGenesysCloudLoginUrl(reg))
+    gsysCloudClient.value.login_url = genesysLoginUrl.value
+    isTokenActive.value = false
+    genesysService.setEnvironment(genesysLoginUrl.value.replace('https://login.',''))
 })
 
 // Update token when route hash change in response to 
-watchEffect(async () => {
-  //console.log(routeHash.value)
-  if (routeHash.value.includes('access_token')) {
-    genesysToken.value = getParameterByName('access_token')
-    gsysCloudToken.value.access_token = genesysToken.value
-    routeHash.value = ''
-    // setupUserToken(genesysToken.value)
-    // genesysService.setAccessToken(genesysToken.value)
-    // genesysService.setEnvironment(gsysCloudToken.value.login_url.replace('https://login.',''))
-    refreshEnvironment()
-  }
+// watchEffect(async () => {
+//   //console.log(routeHash.value)
+//   if (routeHash.value.includes('access_token')) {
+//     genesysToken.value = getParameterByName('access_token')
+//     gsysCloudToken.value.access_token = genesysToken.value
+//     routeHash.value = ''
+//     // setupUserToken(genesysToken.value)
+//     // genesysService.setAccessToken(genesysToken.value)
+//     // genesysService.setEnvironment(gsysCloudToken.value.login_url.replace('https://login.',''))
+//     refreshEnvironment()
+//   }
 
-})
+// })
 
 onMounted(() =>{
    //page reload different page
-   if (gsysCloudToken.value?.access_token != '' && genesysUserToken.value == '') {
+   if (gsysCloudClient.value?.access_token != '' && !genesysUser.value?.email ) {
     refreshEnvironment()
   }
 })
@@ -134,9 +114,7 @@ function getGenesysCloudLoginUrl(region: string) : string {
 }
 
 function loginWithGenesysCloud () {
-  console.log('login URL: ' + gsysCloudToken.value.login_url)
-  location.href = `${gsysCloudToken.value.login_url}/oauth/authorize?client_id=${GLABS_CLOUD_OAUTH_CLIENT_ID}&response_type=token&redirect_uri=${GLABS_APP_URL}/workshops`
-  //location.href = `${gsysCloudToken.value.login_url}/oauth/authorize?client_id=51dbce28-867f-459c-b38d-182fc1d446cc&response_type=token&redirect_uri=${GLABS_APP_URL}/workshops/Genesys-Dialog-Engine-Build-a-Bot`
+  location.href = `${gsysCloudClient.value.login_url}/oauth/authorize?client_id=${GLABS_CLOUD_OAUTH_CLIENT_ID}&response_type=token&redirect_uri=${GLABS_APP_URL}/workshops`
 }
 
 </script>
@@ -167,10 +145,11 @@ function loginWithGenesysCloud () {
           :closable="false"
         />
         <el-row class="my-4">
-        <el-select v-model="gsysCloudToken.region" class="mx-4" placeholder="Select your region">
+        <el-select v-model="gsysCloudClient.region" class="mx-4" placeholder="Select your region">
         <el-option v-for="item in regions" :label="item.label" :value="item.value" :key="item.value" />
       </el-select>
-      <el-button @click="loginWithGenesysCloud" type="primary" :icon="Switch">Log in to Genesys</el-button>
+      <el-button @click="loginWithGenesysCloud" type="primary" :icon="Switch" :disabled="isTokenActive">Log in to Genesys</el-button>
+      <!-- <el-button @click="loginWithGenesysCloud" type="primary" :icon="Switch">Log in to Genesys</el-button> -->
 
     </el-row>
 

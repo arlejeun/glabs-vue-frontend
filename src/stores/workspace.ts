@@ -7,18 +7,23 @@ import type platformClient from 'purecloud-platform-client-v2'
 export const useWorkspaceStore = defineStore("workspace", () => {
   // const router = useRouter();
   const { notify } = useNotification();
-  const isTokenActive = ref(false);
+  const gsysCloudClient = useStorage('gsys-token', {region:'', access_token: '', login_url: '' })
   const gtsAvailableOrgs = ref([]);
-  const genesysUserToken = ref("");
   const genesysUserPermissions = ref({} as platformClient.Models.AuthzSubject | undefined);
   const genesysUser = ref({} as platformClient.Models.UserMe | undefined);
   const genesysOrg = ref({} as platformClient.Models.Organization | undefined);
-
+  const genesysRegion = ref('')
+  const genesysLoginUrl = ref(gsysCloudClient.value.login_url)
+  const genesysApiUrl = computed(() => { return genesysLoginUrl.value.replace('login','api')})
+  const isTokenActive = computed(() => gsysCloudClient.value.access_token != '')
   const hasAdminPermission = computed(() => genesysUserPermissions.value);
 
   function setupUserToken(token: string) {
-    genesysUserToken.value = token
-    isTokenActive.value = true
+    gsysCloudClient.value.access_token = token
+  }
+
+  function setLoginURL(url: string) {
+    genesysLoginUrl.value = url
   }
   
   async function getActiveOrg() {
@@ -61,27 +66,36 @@ export const useWorkspaceStore = defineStore("workspace", () => {
   }
 
   async function resetInfo() {
-    const gsysCloudStoredToken = useStorage('gsys-token', {region:'', access_token: '', login_url: '' })
-    gsysCloudStoredToken.value.access_token = ''
-    genesysUserToken.value = ''
-    isTokenActive.value = false
+    gsysCloudClient.value.access_token = ''
   }
 
+  async function refreshEnvironment () {
+    setupUserToken(gsysCloudClient.value.access_token)
+    genesysService.setAccessToken(gsysCloudClient.value.access_token)
+    genesysService.setEnvironment(gsysCloudClient.value.login_url.replace('https://login.',''))
+    getActiveUserPermissions()
+    getActiveUser()
+    getActiveOrg()
+  }
 
   return {
     gtsAvailableOrgs,
-    genesysUserToken,
     genesysUserPermissions,
     genesysUser,
     genesysOrg,
     hasAdminPermission,
     isTokenActive,
+    genesysRegion,
+    genesysApiUrl,
+    genesysLoginUrl,
+    gsysCloudClient,
     getActiveOrg,
     getActiveUser,
     getActiveUserPermissions,
     setupUserToken,
-    resetInfo
+    refreshEnvironment,
+    resetInfo,
+    setLoginURL
   };
 
-  // async updatePersonalProfile(user: IDriveUser)
 });

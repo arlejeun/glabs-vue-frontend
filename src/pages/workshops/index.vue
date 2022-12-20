@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { useAxios } from '@vueuse/integrations/useAxios'
 import { useWorkshopStore } from '@/stores/workshop'
+import { useWorkspaceStore } from '@/stores/workspace';
+import { getParameterByName } from '@/utils/string'
+import { useRouteHash } from '@vueuse/router';
 
-const gsysCloudStoredToken = useStorage('gsys-token', {region:'', access_token: '', login_url: '' })
-const token = ref(gsysCloudStoredToken.value.access_token)
-const isActive = computed(()=> token.value != '')
+const workspaceStore = useWorkspaceStore()
+const { isTokenActive, gsysCloudClient } = storeToRefs(workspaceStore)
+const { refreshEnvironment } = workspaceStore
+const routeHash = useRouteHash()
 
 const GLABS_APP_URL = import.meta.env.VITE_GLABS_APP_URL
 
@@ -22,13 +26,22 @@ const isMobile = computed(() => width.value < 1200)
 const drawerSize = ref('45%')
 drawerSize.value = isMobile.value ? '85%':'45%'
 const url = `${GLABS_APP_URL}/demo/api/workshops.json`;
-const connectCloudPanel = ref(true)
+const connectCloudPanel = ref(false)
 const { data, isLoading, isFinished: isWorkshopsLoaded, error } = useAxios(url, config)
 
 watch(isWorkshopsLoaded, () => {
 	wStore.setWorkshops(data.value?.data);
 })
 
+watchEffect(async () => {
+  //Token parameters must be read from the the oauth client redirects uri
+  if (routeHash.value.includes('access_token')) {
+    gsysCloudClient.value.access_token = getParameterByName('access_token')
+    routeHash.value = ''
+    refreshEnvironment()
+  }
+
+})
 
 const availableWorkshops = computed(() => {
 	return wStore.getAllWorkshops
@@ -61,8 +74,8 @@ Title and Tabs START -->
 						complex solutions within Genesys Cloud.</p>
 				</div>
 				<div class="col-auto pt-2">
-					<el-button v-show="!isActive" type="warning" @click.prevent="connectToCloud" text bg>Connect to Genesys</el-button>
-					<el-button v-show="isActive" type="success" @click.prevent="connectToCloud" text bg>Genesys Session</el-button>
+					<el-button v-show="!isTokenActive" type="warning" @click.prevent="connectToCloud" text bg>Connect to Genesys</el-button>
+					<el-button v-show="isTokenActive" type="success" @click.prevent="connectToCloud" text bg>Active Genesys Session</el-button>
 				</div>
 			</div>
 
