@@ -30,7 +30,7 @@ import TheWelcome from '../components/TheWelcome.vue'
           </div>
         </div>
       </section>
-      <section class="highlights-section pb-2" role="banner">
+      <section class="highlights-section pb-0" role="banner">
         <div class="container">
           <div class="row">
             <div class="col-12 col-sm-4 d-flex">
@@ -80,7 +80,7 @@ import TheWelcome from '../components/TheWelcome.vue'
     </div>
   </div>
  
-  <section class="">
+  <section class="pt-4">
 	<div class="container">
 		<div class="row g-4 justify-content-between align-items-center">
 
@@ -88,15 +88,15 @@ import TheWelcome from '../components/TheWelcome.vue'
 			<div class="col-lg-5 position-relative">
 				<!-- Svg Decoration -->
 				<figure class="position-absolute top-0 start-0 translate-middle z-index-1 ms-4">
-					<svg class="fill-warning" width="77px" height="77px">
+					<svg class="fill-warning" fill="#ff6900" width="77px" height="77px">
 						<path d="M76.997,41.258 L45.173,41.258 L67.676,63.760 L63.763,67.673 L41.261,45.171 L41.261,76.994 L35.728,76.994 L35.728,45.171 L13.226,67.673 L9.313,63.760 L31.816,41.258 L-0.007,41.258 L-0.007,35.725 L31.816,35.725 L9.313,13.223 L13.226,9.311 L35.728,31.813 L35.728,-0.010 L41.261,-0.010 L41.261,31.813 L63.763,9.311 L67.676,13.223 L45.174,35.725 L76.997,35.725 L76.997,41.258 Z"/>
 					</svg>
 				</figure>
 
 				<!-- Svg decoration -->
 				<figure class="position-absolute bottom-0 end-0 d-none d-md-block mb-n5 me-n4">
-					<svg height="400" class="fill-primary opacity-2" viewBox="0 0 340 340">
-						<circle cx="194.2" cy="2.2" r="2.2"></circle>
+					<svg height="400" class="fill-primary opacity-2" fill="var(--bs-primary)" viewBox="0 0 340 340">
+						<!-- <circle cx="194.2" cy="2.2" r="2.2"></circle>
 						<circle cx="2.2" cy="2.2" r="2.2"></circle>
 						<circle cx="218.2" cy="2.2" r="2.2"></circle>
 						<circle cx="26.2" cy="2.2" r="2.2"></circle>
@@ -110,7 +110,7 @@ import TheWelcome from '../components/TheWelcome.vue'
 						<circle cx="122.2" cy="2.2" r="2.2"></circle>
 						<circle cx="338.2" cy="2.2" r="2.2"></circle>
 						<circle cx="146.2" cy="2.2" r="2.2"></circle>
-						<circle cx="170.2" cy="2.2" r="2.2"></circle>
+						<circle cx="170.2" cy="2.2" r="2.2"></circle> -->
 						<circle cx="194.2" cy="26.2" r="2.2"></circle>
 						<circle cx="2.2" cy="26.2" r="2.2"></circle>
 						<circle cx="218.2" cy="26.2" r="2.2"></circle>
@@ -325,7 +325,7 @@ import TheWelcome from '../components/TheWelcome.vue'
 				</figure>
 
 				<!-- Image -->
-				<img src="@/assets/images/bg/03.jpg" class="rounded-3 position-relative" alt="">
+				<img src="@/assets/images/bg/f1.webp" class="rounded-3 position-relative" alt="">
 
 			</div>
 			<!-- Left side END -->
@@ -373,6 +373,9 @@ import TheWelcome from '../components/TheWelcome.vue'
 </template>
 
 <style lang="scss">
+  .z-index-1 {
+	z-index: 1;
+   }
   .title-text {
     text-align: left;
     color: var(--bs-primary)
